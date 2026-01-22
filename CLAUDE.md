@@ -10,29 +10,63 @@ This is a collection of curated Railway templates for deploying self-hosted tool
 
 ```
 railway-templates/
-└── solutions/           # Multi-service deployment solutions
+└── solutions/
     └── <solution-name>/
-        ├── README.md    # User-facing documentation with architecture, setup, and usage
-        ├── TEMPLATE.md  # Railway template marketplace description
-        └── img/         # Screenshots for documentation
+        ├── README.md       # Technical docs: architecture, env vars, setup
+        ├── TEMPLATE.md     # Railway marketplace description
+        ├── img/            # Screenshots
+        └── <service>/      # Custom service code (Dockerfiles, scripts)
 ```
 
-## Template Architecture Pattern
+## Template Architecture Patterns
 
-Templates follow a consistent pattern:
-- **Internal service**: The main application (e.g., BentoPDF) runs on Railway's private network, not exposed to the internet
-- **Auth gateway**: Caddy reverse proxy handles authentication and is the only public-facing service
-- **Service isolation**: Traffic flows: Internet → Caddy (auth) → Internal service
+### Pattern 1: External Auth Gateway
+For apps without built-in auth. Caddy proxy is the only public service.
+```
+Internet → Caddy (auth, public) → App (private)
+```
+Example: `bentopdf-caddy`
+
+### Pattern 2: Built-in Auth
+For apps with native authentication. App is directly public.
+```
+Internet → App (public) → Backend services (private)
+```
+Example: `nocodb-minio`
+
+### Sidecar Pattern
+One-time initialization services that auto-disable after setup:
+- Run initialization logic (create buckets, seed data, etc.)
+- Track state in JSON file to survive restarts
+- Auto-disable via `IS_ACTIVE` env var after N healthy cycles
+- Use Python + Dockerfile pattern from `nocodb-minio/minio-init/`
 
 ## Adding New Templates
 
 Each solution requires:
-1. `README.md`: Technical documentation including architecture diagram, environment variables, and setup instructions
-2. `TEMPLATE.md`: Marketing-friendly description for Railway's template marketplace
+1. `README.md`: Include ASCII architecture diagram, services table, env vars (split user-configurable vs auto-configured), troubleshooting section
+2. `TEMPLATE.md`: Marketing copy for Railway's template marketplace
 
-## Conventions
+## Documentation Conventions
 
-- Environment variables that are auto-configured should be clearly marked "Do Not Change" in documentation
-- Include ASCII architecture diagrams showing service relationships and ports
-- Document both user-configurable and auto-configured environment variables separately
-- Screenshots go in `img/` subdirectory within each solution
+**Environment Variables Tables:**
+- Separate "User-Configurable" and "Auto-Configured (Do Not Change)" sections
+- For auto-configured vars, explain what they connect to and why changing breaks things
+- Use Railway variable references: `${{ServiceName.VAR_NAME}}`
+
+**Architecture Diagrams:**
+- Show public vs private services clearly
+- Include port numbers
+- Show data flow direction with arrows
+
+**Services Table Format:**
+| Service | Source | Role |
+|---------|--------|------|
+| App | `image:tag` or `path/Dockerfile` | Description (public/private) |
+
+## Railway-Specific Notes
+
+- Internal services use `.railway.internal` hostnames
+- Railway volumes persist data across redeploys
+- Use Railway plugins for PostgreSQL/Redis when possible
+- Custom services need Dockerfiles with explicit build context
