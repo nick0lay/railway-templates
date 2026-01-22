@@ -2,7 +2,7 @@
 
 A production-ready NocoDB deployment with PostgreSQL, Redis caching, and MinIO for persistent file storage.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/nocodb-complete?referralCode=CG2P3Y)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/nocodb-minio-console-and-storage?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 
@@ -51,6 +51,30 @@ Unlike basic NocoDB deployments, this template includes MinIO to ensure file att
 3. Access NocoDB via the generated Railway domain
 4. Create your super admin account on first visit
 
+## Accessing Services After Deployment
+
+### Accessing NocoDB
+
+After deployment, click on the **NocoDB** service to find your URL:
+
+1. **Deployments Tab**: The URL is displayed directly under the service name
+2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
+
+On first visit, you'll be prompted to create a super admin account using `NC_ADMIN_EMAIL` and `NC_ADMIN_PASSWORD`.
+
+### Accessing MinIO Console
+
+The MinIO Console allows you to manage buckets, view files, and monitor storage. Click on the **Console** service:
+
+1. **Deployments Tab**: The URL is displayed directly under the service name
+2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
+
+**Login credentials:**
+- **Username**: Find `MINIO_ROOT_USER` in the MinIO service Variables tab
+- **Password**: Find `MINIO_ROOT_PASSWORD` in the MinIO service Variables tab
+
+**Note**: The Console service is separate from the MinIO API service. NocoDB connects to MinIO internally via the private network, while the Console provides a web UI for administration.
+
 ## Environment Variables
 
 ### NocoDB Service
@@ -60,7 +84,7 @@ Unlike basic NocoDB deployments, this template includes MinIO to ensure file att
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `NC_ADMIN_EMAIL` | - | Super admin email (set on first run) |
-| `NC_ADMIN_PASSWORD` | - | Super admin password (set on first run) |
+| `NC_ADMIN_PASSWORD` | Auto-generated (32 chars) | Super admin password. A secure random password is generated on deploy. You can change it to your own (minimum 8 characters). |
 | `NC_PUBLIC_URL` | Auto-detected | Public URL of your NocoDB instance |
 
 #### Auto-Configured (Do Not Change)
