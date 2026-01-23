@@ -4,8 +4,7 @@ FROM stirlingtools/stirling-pdf:latest
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Single volume mount point
-VOLUME ["/data"]
+# Volume mount point /data is configured via Railway platform (not Dockerfile)
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["java", "-jar", "/app.jar"]
