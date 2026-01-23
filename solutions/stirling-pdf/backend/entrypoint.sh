@@ -4,14 +4,14 @@ set -e
 # Single volume mount point
 DATA_DIR="/data"
 
-# Tesseract OCR data path (actual path used by Stirling-PDF)
-TESSDATA_SYSTEM_PATH="/usr/share/tesseract-ocr/5/tessdata"
-
-# Create subdirectories in the single volume
+# Create subdirectories in the single volume with full permissions
 mkdir -p "$DATA_DIR/configs"
 mkdir -p "$DATA_DIR/pipeline"
 mkdir -p "$DATA_DIR/logs"
 mkdir -p "$DATA_DIR/tessdata"
+
+# Ensure tessdata is writable
+chmod 777 "$DATA_DIR/tessdata"
 
 # Remove existing directories/symlinks if they exist
 rm -rf /configs /pipeline /logs
@@ -21,24 +21,37 @@ ln -sf "$DATA_DIR/configs" /configs
 ln -sf "$DATA_DIR/pipeline" /pipeline
 ln -sf "$DATA_DIR/logs" /logs
 
-# Tessdata - copy defaults if volume is empty, then symlink
+# Handle tessdata - symlink both possible paths to our writable volume
+# Path 1: /usr/share/tesseract-ocr/5/tessdata (newer Tesseract)
+TESSDATA_PATH_1="/usr/share/tesseract-ocr/5/tessdata"
+# Path 2: /usr/share/tessdata (legacy/alternate path)
+TESSDATA_PATH_2="/usr/share/tessdata"
+
+# Copy default tessdata files if volume is empty
 if [ -z "$(ls -A $DATA_DIR/tessdata 2>/dev/null)" ]; then
-    # Copy default tessdata files if they exist
-    if [ -d "$TESSDATA_SYSTEM_PATH" ] && [ "$(ls -A $TESSDATA_SYSTEM_PATH 2>/dev/null)" ]; then
-        cp -r "$TESSDATA_SYSTEM_PATH"/* "$DATA_DIR/tessdata/" 2>/dev/null || true
+    if [ -d "$TESSDATA_PATH_1" ] && [ "$(ls -A $TESSDATA_PATH_1 2>/dev/null)" ]; then
+        cp -r "$TESSDATA_PATH_1"/* "$DATA_DIR/tessdata/" 2>/dev/null || true
+    elif [ -d "$TESSDATA_PATH_2" ] && [ "$(ls -A $TESSDATA_PATH_2 2>/dev/null)" ]; then
+        cp -r "$TESSDATA_PATH_2"/* "$DATA_DIR/tessdata/" 2>/dev/null || true
     fi
 fi
 
-# Remove existing tessdata and create symlink
-rm -rf "$TESSDATA_SYSTEM_PATH"
-mkdir -p "$(dirname $TESSDATA_SYSTEM_PATH)"
-ln -sf "$DATA_DIR/tessdata" "$TESSDATA_SYSTEM_PATH"
+# Remove and symlink tessdata paths
+rm -rf "$TESSDATA_PATH_1" "$TESSDATA_PATH_2"
+mkdir -p "$(dirname $TESSDATA_PATH_1)"
+ln -sf "$DATA_DIR/tessdata" "$TESSDATA_PATH_1"
+ln -sf "$DATA_DIR/tessdata" "$TESSDATA_PATH_2"
+
+# Set TESSDATA_PREFIX environment variable for Tesseract
+export TESSDATA_PREFIX="$DATA_DIR"
 
 echo "Volume symlinks configured:"
 echo "  /configs -> $DATA_DIR/configs"
 echo "  /pipeline -> $DATA_DIR/pipeline"
 echo "  /logs -> $DATA_DIR/logs"
-echo "  $TESSDATA_SYSTEM_PATH -> $DATA_DIR/tessdata"
+echo "  $TESSDATA_PATH_1 -> $DATA_DIR/tessdata"
+echo "  $TESSDATA_PATH_2 -> $DATA_DIR/tessdata"
+echo "  TESSDATA_PREFIX=$TESSDATA_PREFIX"
 
 # Execute the original entrypoint or command
 exec "$@"
