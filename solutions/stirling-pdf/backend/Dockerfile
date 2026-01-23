@@ -6,7 +6,8 @@ RUN chmod +x /entrypoint.sh
 
 # Volume mount point /data is configured via Railway platform (not Dockerfile)
 
-# Set tessdata directory to writable volume location
+# Configure Stirling-PDF to use writable tessdata directory
+ENV SYSTEM_TESSDATADIR=/data/tessdata
 ENV TESSDATA_PREFIX=/data
 
 ENTRYPOINT ["/entrypoint.sh"]
