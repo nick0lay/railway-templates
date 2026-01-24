@@ -63,9 +63,11 @@ For manual deployment, see [deployment.md](./deployment.md).
 | Service | Source | Mode | Visibility |
 |---------|--------|------|------------|
 | Backend | `backend/Dockerfile` (custom wrapper) | `BACKEND` | Private |
-| Frontend | `stirlingtools/stirling-pdf:latest` | `FRONTEND` | Public |
+| Frontend | `frontend/Dockerfile` (custom wrapper) | `FRONTEND` | Public |
 
-The Backend uses a custom Dockerfile that wraps the official image to support Railway's single-volume requirement via symlinks.
+Both services use custom Dockerfiles:
+- **Backend**: Wraps the official image to support Railway's single-volume requirement via symlinks
+- **Frontend**: Wraps the official image to provide writable tessdata directory for OCR language management
 
 ## Accessing Stirling-PDF After Deployment
 
@@ -131,7 +133,7 @@ The custom Dockerfile creates symlinks from `/data` subdirectories to expected p
 - `/data/configs` → `/configs` (settings, database, encryption keys)
 - `/data/pipeline` → `/pipeline` (automation workflows)
 - `/data/logs` → `/logs` (application logs)
-- `/data/tessdata` → `/usr/share/tessdata` (OCR language files)
+- `/data/tessdata` - Used directly via `TESSDATA_PREFIX` env var (OCR language files)
 
 Data persists across redeployments. The Frontend service requires no volumes.
 
@@ -248,8 +250,11 @@ Split architecture enables flexible scaling:
 ### OCR not working
 
 OCR requires Tesseract language data. The default image includes English. For additional languages:
-1. Download `.traineddata` files from [tessdata repository](https://github.com/tesseract-ocr/tessdata)
-2. Upload to `/data/tessdata` on Backend (symlinked to `/usr/share/tessdata`)
+1. Download additional language packs via the Stirling-PDF admin panel
+2. **Note**: Languages downloaded via the Frontend are ephemeral (lost on redeploy since Frontend has no volume)
+3. For persistent OCR languages, either:
+   - Mount a volume to Frontend's `/data` directory, OR
+   - Access the Backend directly to download languages (they persist in the Backend's `/data/tessdata`)
 
 ### File upload fails
 
