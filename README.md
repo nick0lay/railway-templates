@@ -24,7 +24,6 @@ railway-templates/
     │   └── minio-init/     # Bucket initialization sidecar
     └── stirling-pdf/       # Stirling-PDF single service
         ├── README.md
-        ├── deployment.md   # Manual deployment guide
         └── app/            # Custom Dockerfile for single-volume support
 ```
 
