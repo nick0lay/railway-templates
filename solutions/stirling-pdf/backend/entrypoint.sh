@@ -6,6 +6,10 @@ DATA_DIR="/data"
 TESSDATA_SYSTEM_PATH="/usr/share/tesseract-ocr/5/tessdata"
 
 echo "=== Stirling-PDF Volume Setup ==="
+echo "Environment check:"
+echo "  TESSDATA_PREFIX=${TESSDATA_PREFIX:-not set}"
+echo "  SYSTEM_TESSDATADIR=${SYSTEM_TESSDATADIR:-not set}"
+echo ""
 
 # Create subdirectories in the single volume
 mkdir -p "$DATA_DIR/configs"
@@ -73,6 +77,13 @@ echo "  /configs -> $DATA_DIR/configs"
 echo "  /pipeline -> $DATA_DIR/pipeline"
 echo "  /logs -> $DATA_DIR/logs"
 echo "  $TESSDATA_SYSTEM_PATH -> $DATA_DIR/tessdata"
+echo ""
+
+# Final verification
+echo "=== Final Verification ==="
+echo "TESSDATA_PREFIX=$TESSDATA_PREFIX"
+echo "SYSTEM_TESSDATADIR=$SYSTEM_TESSDATADIR"
+ls -la /data/tessdata/ | head -5
 echo ""
 
 # Execute the original entrypoint or command
