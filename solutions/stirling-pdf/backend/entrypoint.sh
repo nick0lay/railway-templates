@@ -10,8 +10,8 @@ mkdir -p "$DATA_DIR/pipeline"
 mkdir -p "$DATA_DIR/logs"
 mkdir -p "$DATA_DIR/tessdata"
 
-# Ensure tessdata is writable
-chmod 777 "$DATA_DIR/tessdata"
+# Ensure directories are writable
+chmod -R 777 "$DATA_DIR"
 
 # Remove existing directories/symlinks if they exist
 rm -rf /configs /pipeline /logs
@@ -21,25 +21,21 @@ ln -sf "$DATA_DIR/configs" /configs
 ln -sf "$DATA_DIR/pipeline" /pipeline
 ln -sf "$DATA_DIR/logs" /logs
 
-# Copy default tessdata files to volume if empty (for OCR to work out of the box)
+# Copy default tessdata files to volume if empty (from backup location)
 if [ -z "$(ls -A $DATA_DIR/tessdata 2>/dev/null)" ]; then
-    echo "Copying default tessdata files to volume..."
-    # Try multiple possible source locations
-    for src in "/usr/share/tesseract-ocr/5/tessdata" "/usr/share/tessdata"; do
-        if [ -d "$src" ] && [ "$(ls -A $src 2>/dev/null)" ]; then
-            cp -r "$src"/* "$DATA_DIR/tessdata/" 2>/dev/null || true
-            echo "Copied from $src"
-            break
-        fi
-    done
+    echo "Initializing tessdata from defaults..."
+    if [ -d "/opt/tessdata-default" ] && [ "$(ls -A /opt/tessdata-default 2>/dev/null)" ]; then
+        cp -r /opt/tessdata-default/* "$DATA_DIR/tessdata/"
+        echo "Copied default tessdata files"
+    fi
 fi
 
-echo "Volume configuration:"
+echo "Volume configuration complete:"
 echo "  /configs -> $DATA_DIR/configs"
 echo "  /pipeline -> $DATA_DIR/pipeline"
 echo "  /logs -> $DATA_DIR/logs"
-echo "  SYSTEM_TESSDATADIR -> $DATA_DIR/tessdata"
-echo "  tessdata contents: $(ls $DATA_DIR/tessdata 2>/dev/null | head -5)..."
+echo "  /usr/share/tesseract-ocr/5/tessdata -> $DATA_DIR/tessdata (symlink from Dockerfile)"
+echo "  tessdata files: $(ls $DATA_DIR/tessdata 2>/dev/null | wc -l) files"
 
 # Execute the original entrypoint or command
 exec "$@"
