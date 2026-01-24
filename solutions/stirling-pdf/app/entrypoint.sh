@@ -20,11 +20,11 @@ if [ "$WORKDIR" != "/" ]; then
 fi
 
 # Create symlinks for expected paths (matching official split deployment volumes)
-rm -rf /configs /pipeline /logs /usr/share/tessdata
+rm -rf /configs /pipeline /logs /usr/share/tesseract-ocr/5/tessdata
 ln -sf "$DATA_DIR/configs" /configs
 ln -sf "$DATA_DIR/pipeline" /pipeline
 ln -sf "$DATA_DIR/logs" /logs
-ln -sf "$DATA_DIR/tessdata" /usr/share/tessdata
+ln -sf "$DATA_DIR/tessdata" /usr/share/tesseract-ocr/5/tessdata
 
 # Copy default tessdata files to volume if empty
 if [ -z "$(ls -A $DATA_DIR/tessdata 2>/dev/null)" ]; then
