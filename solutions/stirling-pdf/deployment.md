@@ -1,40 +1,35 @@
 # Stirling-PDF Railway Deployment Guide
 
-Step-by-step instructions for deploying Stirling-PDF with split architecture (separate backend + frontend services).
+Step-by-step instructions for deploying Stirling-PDF on Railway.
 
 ## Architecture Overview
 
 ```
-Internet → Frontend (Public, UI) → Backend (Private, API + Processing)
-                                         ↓
-                                    Single Volume (/data)
+Internet → Stirling-PDF (Public) → Volume (/data)
 ```
 
-Both services use the same base Docker image. Backend uses a custom Dockerfile wrapper to enable single-volume deployment.
+Single service handles both UI and PDF processing with built-in authentication.
 
 ---
 
-## Step 1: Create Backend Service
+## Step 1: Create Service
 
 ### Service Settings
 
 | Setting | Value |
 |---------|-------|
-| **Name** | `Backend` |
-| **Source** | GitHub repo → `solutions/stirling-pdf/backend` directory |
+| **Name** | `Stirling-PDF` |
+| **Source** | GitHub repo → `solutions/stirling-pdf/app` directory |
 | **Port** | `8080` |
-| **Visibility** | Private (no public domain) |
+| **Visibility** | Public (generate domain) |
 
-**Note**: The Backend uses a custom Dockerfile that wraps the official image to support Railway's single-volume requirement.
+**Note**: The service uses a custom Dockerfile that wraps the official image to support Railway's single-volume requirement.
 
 ### Environment Variables
 
-Copy and paste these variables into the Backend service:
+Copy and paste these variables into the service:
 
 ```
-# Mode Configuration
-MODE=BACKEND
-
 # Security (Required)
 DOCKER_ENABLE_SECURITY=true
 SECURITY_ENABLELOGIN=true
@@ -58,7 +53,7 @@ UI_APPNAMENAVBAR=Stirling-PDF
 
 ### Volume Mount
 
-Create **one volume** for the Backend service:
+Create **one volume** for persistent data:
 
 | Volume Name | Mount Path | Purpose |
 |-------------|------------|---------|
@@ -68,10 +63,10 @@ The custom Dockerfile automatically creates symlinks:
 - `/data/configs` → `/configs` (settings, database, encryption keys)
 - `/data/pipeline` → `/pipeline` (automation workflows)
 - `/data/logs` → `/logs` (application logs)
-- `/data/tessdata` → `/usr/share/tessdata` (OCR language files)
+- `/data/tessdata` - Used via TESSDATA_PREFIX (OCR language files)
 
 **To create the volume in Railway:**
-1. Click on the Backend service
+1. Click on the service
 2. Go to **Settings** tab
 3. Scroll to **Volumes**
 4. Click **+ New Volume**
@@ -79,40 +74,9 @@ The custom Dockerfile automatically creates symlinks:
 
 ---
 
-## Step 2: Create Frontend Service
+## Step 2: Generate Public Domain
 
-### Service Settings
-
-| Setting | Value |
-|---------|-------|
-| **Name** | `Frontend` |
-| **Image** | `stirlingtools/stirling-pdf:latest` |
-| **Port** | `8080` |
-| **Visibility** | Public (generate domain) |
-
-### Environment Variables
-
-Copy and paste these variables into the Frontend service:
-
-```
-# Mode Configuration
-MODE=FRONTEND
-
-# Backend Connection (Railway variable reference)
-BACKEND_URL=http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:8080
-```
-
-**Note**: `${{Backend.RAILWAY_PRIVATE_DOMAIN}}` references the Backend service via Railway's private networking.
-
-### No Volume Needed
-
-The Frontend service serves only the React UI and does not require any persistent storage.
-
----
-
-## Step 3: Generate Public Domain
-
-1. Click on the **Frontend** service
+1. Click on the **Stirling-PDF** service
 2. Go to **Settings** tab
 3. Scroll to **Networking**
 4. Click **Generate Domain** under Public Networking
@@ -121,53 +85,47 @@ Your Stirling-PDF instance will be accessible at the generated URL.
 
 ---
 
-## Step 4: Deploy and Verify
+## Step 3: Deploy and Verify
 
-1. Click **Deploy** for both services
-2. Wait for both services to show healthy status
-3. Access the Frontend URL in your browser
+1. Click **Deploy**
+2. Wait for the service to show healthy status
+3. Access the public URL in your browser
 4. Login with credentials:
    - **Username**: `admin` (or your configured username)
-   - **Password**: Value of `SECURITY_INITIALLOGIN_PASSWORD` from Backend variables
+   - **Password**: Value of `SECURITY_INITIALLOGIN_PASSWORD` from Variables tab
 
 ---
 
 ## Verification Checklist
 
-### Backend Health
-Check the Backend service logs for:
+### Service Health
+Check the service logs for:
 ```
-Volume symlinks configured:
-  /configs -> /data/configs
-  /pipeline -> /data/pipeline
-  /logs -> /data/logs
-  /usr/share/tessdata -> /data/tessdata
+=== Stirling-PDF Volume Setup ===
+Configuration:
+  TESSDATA_PREFIX=/data/tessdata
+  Contents: X files
+  Permissions: 777
 Started StirlingPdfApplication
 ```
 
-### Frontend Connection
-The Frontend logs should show successful connection to Backend.
-
 ### Test PDF Operations
-1. Login via the Frontend URL
+1. Login via the URL
 2. Upload a test PDF
 3. Try a basic operation (e.g., compress or split)
 4. Verify the operation completes successfully
 
 ### Volume Persistence
 1. Create a pipeline automation or change a setting
-2. Redeploy the Backend service
+2. Redeploy the service
 3. Verify your changes persist
 
 ---
 
 ## Environment Variables Reference
 
-### Backend Service (All Variables)
-
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `MODE` | Yes | - | Must be `BACKEND` |
 | `DOCKER_ENABLE_SECURITY` | Yes | - | Must be `true` for auth |
 | `SECURITY_ENABLELOGIN` | Yes | - | Must be `true` for login |
 | `SECURITY_INITIALLOGIN_USERNAME` | Yes | `admin` | Initial admin username |
@@ -179,57 +137,42 @@ The Frontend logs should show successful connection to Backend.
 | `UI_APPNAMENAVBAR` | No | `Stirling-PDF` | App name in navbar |
 | `SECURITY_CUSTOMGLOBALAPIKEY` | No | - | API key for REST access |
 
-### Frontend Service (All Variables)
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `MODE` | Yes | - | Must be `FRONTEND` |
-| `BACKEND_URL` | Yes | - | Backend service URL |
-
 ---
 
 ## Troubleshooting
 
-### Frontend shows "Cannot connect to backend"
-
-1. Verify Backend service is running and healthy
-2. Check `BACKEND_URL` uses correct reference: `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:8080`
-3. Ensure both services are in the same Railway project
-
 ### Login fails with correct credentials
 
-1. Verify `DOCKER_ENABLE_SECURITY=true` on Backend
-2. Verify `SECURITY_ENABLELOGIN=true` on Backend
+1. Verify `DOCKER_ENABLE_SECURITY=true`
+2. Verify `SECURITY_ENABLELOGIN=true`
 3. Check `/data` volume is mounted (stores user database in `/data/configs`)
 4. Initial credentials only work for first login
 
 ### Changes not persisting after redeploy
 
-1. Verify volume is mounted at `/data` on Backend service
-2. Check Backend logs show "Volume symlinks configured" on startup
+1. Verify volume is mounted at `/data`
+2. Check logs show "Stirling-PDF Volume Setup" on startup
 
 ### OCR not working
 
 1. Default image includes English OCR data
-2. For additional languages, download `.traineddata` files from [tessdata](https://github.com/tesseract-ocr/tessdata)
-3. Upload to the `/data/tessdata` directory via Railway shell or volume access
+2. Download additional language packs via the admin panel
+3. Languages are stored in `/data/tessdata` and persist across redeploys
 
 ### API returns 401 Unauthorized
 
 1. Login via web UI to establish session, or
-2. Set `SECURITY_CUSTOMGLOBALAPIKEY` on Backend
+2. Set `SECURITY_CUSTOMGLOBALAPIKEY`
 3. Include `X-API-Key: your-key` header in requests
 
 ---
 
 ## Scaling Considerations
 
-The split architecture enables independent scaling:
+To scale for higher load:
+- **Vertical Scaling**: Increase CPU/memory for heavier PDF operations
+- **Replica Scaling**: Add replicas for higher throughput (requires shared volume or external storage for configs)
 
-- **Multiple Frontends**: Add more Frontend replicas for UI traffic
-- **Single Backend**: Backend handles all processing (typically the bottleneck)
-- **Vertical Scaling**: Increase Backend CPU/memory for heavier PDF operations
-
-To scale Frontend replicas in Railway:
-1. Go to Frontend service → Settings
-2. Adjust replica count under Scaling
+To adjust resources in Railway:
+1. Go to service → Settings
+2. Adjust resources under Scaling

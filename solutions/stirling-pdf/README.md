@@ -1,18 +1,16 @@
 # Stirling-PDF
 
-A self-hosted PDF manipulation toolkit with 50+ tools, REST API, and built-in authentication—deployed with split architecture for scalability.
+A self-hosted PDF manipulation toolkit with 50+ tools, REST API, and built-in authentication.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/stirling-pdf?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 
-This solution deploys Stirling-PDF using split architecture:
-- **Backend**: API server, PDF processing engine, authentication, and storage
-- **Frontend**: React web UI served separately
+This solution deploys Stirling-PDF as a single service with:
+- **PDF Processing**: 50+ tools for merging, splitting, converting, OCR, and more
 - **Built-in Authentication**: Native login system with configurable admin credentials
-- **Persistent Storage**: Railway volumes for configs, pipeline, logs, and OCR data
-
-Split architecture enables independent scaling—add frontend replicas for UI traffic while the backend handles processing.
+- **REST API**: Full API access with Swagger documentation
+- **Persistent Storage**: Railway volume for configs, logs, and OCR language data
 
 ## Architecture
 
@@ -23,19 +21,9 @@ Split architecture enables independent scaling—add frontend replicas for UI tr
                                 │
                                 ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Frontend (Public)                             │
+│                    Stirling-PDF (Public)                         │
 │                    Port 8080                                     │
-│                    React Web UI                                  │
-│                    No volumes needed                             │
-└───────────────────────────────┬─────────────────────────────────┘
-                                │
-                                │ BACKEND_URL (internal)
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    Backend (Private)                             │
-│                    Port 8080                                     │
-│                    API + PDF Processing                          │
-│                    Built-in Auth                                 │
+│                    Web UI + API + PDF Processing                 │
 └───────────────────────────────┬─────────────────────────────────┘
                                 │
                                 ▼
@@ -52,26 +40,23 @@ Split architecture enables independent scaling—add frontend replicas for UI tr
 ## Quick Start
 
 1. Click the **Deploy on Railway** button above
-2. Wait for both services to deploy
-3. Access Stirling-PDF via the Frontend's generated Railway domain
+2. Wait for the service to deploy
+3. Access Stirling-PDF via the generated Railway domain
 4. Login with the default credentials (see below)
 
-For manual deployment, see [deployment.md](./deployment.md).
+For local testing, see [local/docker-compose.yml](./local/docker-compose.yml).
 
-## Services Included
+## Service
 
-| Service | Source | Mode | Visibility |
-|---------|--------|------|------------|
-| Backend | `backend/Dockerfile` (custom wrapper) | `BACKEND` | Private |
-| Frontend | `frontend/Dockerfile` (custom wrapper) | `FRONTEND` | Public |
+| Service | Source | Description |
+|---------|--------|-------------|
+| Stirling-PDF | `app/Dockerfile` | Web UI, API, and PDF processing with authentication |
 
-Both services use custom Dockerfiles:
-- **Backend**: Wraps the official image to support Railway's single-volume requirement via symlinks
-- **Frontend**: Wraps the official image to provide writable tessdata directory for OCR language management
+The custom Dockerfile wraps the official image to support Railway's single-volume requirement via symlinks.
 
 ## Accessing Stirling-PDF After Deployment
 
-After deployment, click on the **Frontend** service to find your URL:
+After deployment, click on the service to find your URL:
 
 1. **Deployments Tab**: The URL is displayed directly under the service name
 2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
@@ -81,11 +66,11 @@ After deployment, click on the **Frontend** service to find your URL:
 | Credential | Default Value |
 |------------|---------------|
 | Username | `admin` |
-| Password | Value of `SECURITY_INITIALLOGIN_PASSWORD` in Backend variables |
+| Password | Value of `SECURITY_INITIALLOGIN_PASSWORD` in Variables |
 
 To find or change your password:
 1. Open your Railway project dashboard
-2. Click on the **Backend** service
+2. Click on the **Stirling-PDF** service
 3. Go to the **Variables** tab
 4. Find `SECURITY_INITIALLOGIN_PASSWORD` - click the eye icon to reveal
 
@@ -93,9 +78,7 @@ To find or change your password:
 
 ## Environment Variables
 
-### Backend Service
-
-#### User-Configurable Variables
+### User-Configurable Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -107,23 +90,15 @@ To find or change your password:
 | `SYSTEM_MAXFILESIZE` | `100` | Maximum file upload size in MB |
 | `SECURITY_CUSTOMGLOBALAPIKEY` | - | Optional: Set a custom API key for REST API access |
 
-#### Auto-Configured (Do Not Change)
+### Auto-Configured (Do Not Change)
 
 | Variable | Value | Description |
 |----------|-------|-------------|
-| `MODE` | `BACKEND` | Service mode. Enables API and processing. |
 | `DOCKER_ENABLE_SECURITY` | `true` | Enables security features. Required for auth. |
 | `SECURITY_ENABLELOGIN` | `true` | Enables login requirement. Required for auth. |
 | `METRICS_ENABLED` | `true` | Enables application metrics endpoint. |
 
-### Frontend Service
-
-| Variable | Value | Description |
-|----------|-------|-------------|
-| `MODE` | `FRONTEND` | Service mode. Serves UI only. |
-| `BACKEND_URL` | `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:8080` | Backend service URL via Railway internal networking. |
-
-## Volume (Backend Only)
+## Volume
 
 | Mount Path | Purpose |
 |------------|---------|
@@ -135,7 +110,7 @@ The custom Dockerfile creates symlinks from `/data` subdirectories to expected p
 - `/data/logs` → `/logs` (application logs)
 - `/data/tessdata` - Used directly via `TESSDATA_PREFIX` env var (OCR language files)
 
-Data persists across redeployments. The Frontend service requires no volumes.
+Data persists across redeployments.
 
 ## PDF Tools Available
 
@@ -184,20 +159,20 @@ Stirling-PDF provides a comprehensive REST API for automation.
 
 Access the built-in Swagger documentation at:
 ```
-https://your-frontend-url.railway.app/swagger-ui/index.html
+https://your-url.railway.app/swagger-ui/index.html
 ```
 
 ### Authentication
 
 For API access, you can either:
 1. Use session-based auth (login via web UI first)
-2. Set `SECURITY_CUSTOMGLOBALAPIKEY` on Backend and use the `X-API-Key` header
+2. Set `SECURITY_CUSTOMGLOBALAPIKEY` and use the `X-API-Key` header
 
 ### Example API Call
 
 ```bash
 # Merge two PDFs
-curl -X POST "https://your-frontend-url.railway.app/api/v1/general/merge-pdfs" \
+curl -X POST "https://your-url.railway.app/api/v1/general/merge-pdfs" \
   -H "X-API-Key: your-api-key" \
   -F "fileInput=@file1.pdf" \
   -F "fileInput=@file2.pdf" \
@@ -217,59 +192,38 @@ Stirling-PDF includes built-in user management:
 
 - Authentication required to access all features
 - No documents sent to external services—all processing is local
-- Backend runs on private network (not directly accessible from internet)
-- Frontend is the only public-facing service
 - Password-protected PDF operations available
 - API key authentication for programmatic access
 
-## Scaling
-
-Split architecture enables flexible scaling:
-
-| Scenario | Action |
-|----------|--------|
-| High UI traffic | Add Frontend replicas |
-| Heavy PDF processing | Increase Backend CPU/memory |
-| Large file uploads | Increase `SYSTEM_MAXFILESIZE` and Backend resources |
-
 ## Troubleshooting
-
-### Frontend shows "Cannot connect to backend"
-
-1. Verify Backend service is running and healthy
-2. Check `BACKEND_URL` in Frontend uses correct format: `http://${{Backend.RAILWAY_PRIVATE_DOMAIN}}:8080`
-3. Ensure both services are in the same Railway project
 
 ### Cannot login with default credentials
 
-1. Verify `DOCKER_ENABLE_SECURITY=true` and `SECURITY_ENABLELOGIN=true` on Backend
-2. Check `SECURITY_INITIALLOGIN_PASSWORD` in Backend's Variables tab
+1. Verify `DOCKER_ENABLE_SECURITY=true` and `SECURITY_ENABLELOGIN=true`
+2. Check `SECURITY_INITIALLOGIN_PASSWORD` in the Variables tab
 3. Initial credentials only work for first login; if you've already logged in and changed password, use that instead
-4. Verify `/data` volume is mounted on Backend (stores user database in `/data/configs`)
+4. Verify `/data` volume is mounted (stores user database in `/data/configs`)
 
 ### OCR not working
 
 OCR requires Tesseract language data. The default image includes English. For additional languages:
 1. Download additional language packs via the Stirling-PDF admin panel
-2. **Note**: Languages downloaded via the Frontend are ephemeral (lost on redeploy since Frontend has no volume)
-3. For persistent OCR languages, either:
-   - Mount a volume to Frontend's `/data` directory, OR
-   - Access the Backend directly to download languages (they persist in the Backend's `/data/tessdata`)
+2. Languages are stored in `/data/tessdata` and persist across redeploys
 
 ### File upload fails
 
-Check `SYSTEM_MAXFILESIZE` setting on Backend. Default is 100MB. Increase if needed for larger files.
+Check `SYSTEM_MAXFILESIZE` setting. Default is 100MB. Increase if needed for larger files.
 
 ### API returns 401 Unauthorized
 
 Either:
 - Login via web UI first to establish a session
-- Or set `SECURITY_CUSTOMGLOBALAPIKEY` on Backend and include `X-API-Key` header in requests
+- Or set `SECURITY_CUSTOMGLOBALAPIKEY` and include `X-API-Key` header in requests
 
 ### Changes not persisting after redeploy
 
-1. Verify `/data` volume is mounted on Backend
-2. Check Backend logs show "Volume symlinks configured" on startup
+1. Verify `/data` volume is mounted
+2. Check service logs for "Stirling-PDF Volume Setup" message on startup
 
 ## Resources
 
