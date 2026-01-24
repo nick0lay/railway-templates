@@ -4,15 +4,10 @@ FROM stirlingtools/stirling-pdf:latest
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Backup default tessdata files before creating symlink
+# Backup default tessdata files before we modify anything
 # (Volume mount will overlay /data, so we need defaults elsewhere)
 RUN mkdir -p /opt/tessdata-default && \
     cp -r /usr/share/tesseract-ocr/5/tessdata/* /opt/tessdata-default/ 2>/dev/null || true
-
-# Replace system tessdata with symlink to volume mount point
-RUN rm -rf /usr/share/tesseract-ocr/5/tessdata && \
-    mkdir -p /usr/share/tesseract-ocr/5 && \
-    ln -sf /data/tessdata /usr/share/tesseract-ocr/5/tessdata
 
 # Configure Stirling-PDF to use writable tessdata directory
 ENV SYSTEM_TESSDATADIR=/data/tessdata
