@@ -24,9 +24,9 @@ if [ -z "$(ls -A $DATA_DIR/tessdata 2>/dev/null)" ]; then
     fi
 fi
 
-# Ensure proper permissions
-chmod 755 "$DATA_DIR/tessdata"
-chmod 644 "$DATA_DIR/tessdata"/*.traineddata 2>/dev/null || true
+# Ensure tessdata is fully writable (Java's Files.isWritable() checks POSIX metadata)
+chmod 777 "$DATA_DIR/tessdata"
+chmod 666 "$DATA_DIR/tessdata"/*.traineddata 2>/dev/null || true
 
 # Verification
 echo ""
