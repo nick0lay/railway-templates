@@ -2,7 +2,7 @@
 
 A self-hosted PDF manipulation toolkit with 50+ tools, REST API, and built-in authentication.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/stirling-pdf?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ylMH5M?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 
