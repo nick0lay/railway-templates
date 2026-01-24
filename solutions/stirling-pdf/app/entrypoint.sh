@@ -5,8 +5,10 @@ DATA_DIR="/data"
 
 echo "=== Stirling-PDF Volume Setup ==="
 
-# Create subdirectories in the single volume
+# Create subdirectories in the single volume with write permissions
+# Railway mounts volumes as root, but app runs as non-root user
 mkdir -p "$DATA_DIR/configs" "$DATA_DIR/pipeline" "$DATA_DIR/logs" "$DATA_DIR/tessdata"
+chmod 777 "$DATA_DIR/configs" "$DATA_DIR/pipeline" "$DATA_DIR/logs" "$DATA_DIR/tessdata"
 
 # Create symlinks for expected paths (matching official split deployment volumes)
 rm -rf /configs /pipeline /logs /usr/share/tessdata
