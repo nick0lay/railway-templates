@@ -44,7 +44,7 @@ This solution deploys Stirling-PDF as a single service with:
 3. Access Stirling-PDF via the generated Railway domain
 4. Login with the default credentials (see below)
 
-For local testing, see [local/docker-compose.yml](./local/docker-compose.yml).
+For local testing, run the official Docker image with the same environment variables.
 
 ## Service
 
