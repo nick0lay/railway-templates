@@ -13,3 +13,4 @@ RUN mkdir -p /opt/tessdata-default && \
 ENV RAILWAY_RUN_UID=0
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["tini", "--", "/scripts/init.sh"]
