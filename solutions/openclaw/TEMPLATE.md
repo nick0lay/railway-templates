@@ -30,24 +30,14 @@ After deployment, click on the **OpenClaw** service to find your URL:
 
 ### Connecting to the Control UI
 
-The gateway supports two auth modes (set one, not both):
+The template generates both `OPENCLAW_GATEWAY_PASSWORD` and `OPENCLAW_GATEWAY_TOKEN` by default. When both are set, password mode is used.
 
-- **Password mode** (recommended): Set `OPENCLAW_GATEWAY_PASSWORD` in Variables to a memorable password, then type it in the Control UI login screen
-- **Token mode**: If no password is set, find `OPENCLAW_GATEWAY_TOKEN` in the Variables tab and paste it when the UI prompts you
+- **Password mode** (default): Enter the password each time you open the Control UI. You can change `OPENCLAW_GATEWAY_PASSWORD` in Variables to a memorable value
+- **Token mode**: The token is persisted on the client — after the first login, the UI reconnects automatically on subsequent visits. To switch to token mode, remove `OPENCLAW_GATEWAY_PASSWORD` from Variables and use the `OPENCLAW_GATEWAY_TOKEN` value instead
 
-Password mode is recommended for browser access — no need to copy long tokens.
+### Backup
 
-### Initial Setup
-
-1. Open the public URL — you will see the onboarding wizard
-2. Enter the `SETUP_PASSWORD` you configured in Variables
-3. Complete the setup and start chatting with your OpenClaw agent
-
-### Setting Up Backup
-
-1. Attach a **Railway Bucket** to the OpenClaw service
-2. The backup credentials (`BUCKET`, `ACCESS_KEY_ID`, etc.) are auto-injected
-3. Backup starts automatically — check logs for `[backup-sync]` messages
+A Railway Bucket is already attached to the template. Backup is enabled by default and runs automatically every 5 minutes — check logs for `[backup-sync]` messages. Fresh deploys auto-restore from the bucket if the volume is lost. See the [backup & local sync guide](https://github.com/nick0lay/openclaw/blob/railway-deployment/railway/README.md) for instructions on downloading your backup to a local machine.
 
 ## Common Use Cases
 
@@ -63,7 +53,7 @@ Password mode is recommended for browser access — no need to copy long tokens.
 
 - Docker (OpenClaw is built from source inside the container)
 - Node.js 22 (included in the Docker image)
-- Railway Bucket (optional, for S3 backup)
+- Railway Bucket (included in the template)
 
 ### Deployment Dependencies
 
@@ -77,16 +67,29 @@ Password mode is recommended for browser access — no need to copy long tokens.
 
 ### Environment Variables
 
+**User-Configurable:**
+
 | Variable | Description |
 |----------|-------------|
-| `SETUP_PASSWORD` | Password for the onboarding setup wizard |
 | `OPENCLAW_GATEWAY_PASSWORD` | Gateway login password for browser access (recommended) |
 | `OPENCLAW_GATEWAY_TOKEN` | Gateway auth token for machine-to-machine access (alternative to password) |
+| `ANTHROPIC_API_KEY` | API key from [Anthropic Console](https://console.anthropic.com). Required for the agent to respond to messages |
+| `OPENAI_API_KEY` | API key from [OpenAI Platform](https://platform.openai.com). Enables memory embeddings (vector search over past conversations) and allows using OpenAI models as an alternative AI provider |
 | `BACKUP_ENABLED` | Enable/disable S3 backup (default: `true`) |
 | `BACKUP_INTERVAL_SEC` | Seconds between backup cycles (default: `300`) |
-| `BACKUP_S3_PREFIX` | S3 prefix for backup data (default: `openclaw-state`) |
-| `PORT` | Container port (auto-configured: `8080`) |
-| `OPENCLAW_STATE_DIR` | State directory (auto-configured: `/data/.openclaw`) |
+
+**Auto-Configured (Do Not Change):**
+
+| Variable | Description |
+|----------|-------------|
+| `OPENCLAW_STATE_DIR` | State directory (`/data/.openclaw`) |
+| `OPENCLAW_GATEWAY_ALLOW_REMOTE_CONTROL_UI` | Enables remote Control UI access (`true`) |
+| `BACKUP_S3_PREFIX` | S3 key prefix, references `${{OpenClaw.OPENCLAW_STATE_DIR}}` |
+| `BUCKET` | Backup bucket name, references `${{Bucket.BUCKET}}` |
+| `REGION` | Backup bucket region, references `${{Bucket.REGION}}` |
+| `ENDPOINT` | Backup bucket endpoint, references `${{Bucket.ENDPOINT}}` |
+| `ACCESS_KEY_ID` | Backup bucket access key, references `${{Bucket.ACCESS_KEY_ID}}` |
+| `SECRET_ACCESS_KEY` | Backup bucket secret key, references `${{Bucket.SECRET_ACCESS_KEY}}` |
 
 ### Volume
 
@@ -100,7 +103,7 @@ Password mode is recommended for browser access — no need to copy long tokens.
 Automatic state sync to a Railway Bucket every 5 minutes. SQLite databases are safely copied using the `.backup` API without locking. Fresh deploys auto-restore from the bucket. A final backup runs on graceful shutdown.
 
 ### Local Sync
-Download your full Railway backup locally using `aws s3 sync` or any S3-compatible CLI. Useful for local development, migration, or offline access to your data.
+Download your full Railway backup locally using `aws s3 sync` or any S3-compatible CLI. Useful for local development, migration, or offline access to your data. See the [backup & local sync guide](https://github.com/nick0lay/openclaw/blob/railway-deployment/railway/README.md) for step-by-step instructions.
 
 ### Multi-Channel Chat
 Connect WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, Teams, and more through a single gateway.
@@ -112,7 +115,7 @@ Agent skills for GitHub, Slack, coding, file management, web search, and more �
 Memory plugin with search and embeddings stored in SQLite. Conversations and context persist across restarts and redeploys.
 
 ### Railway Skills (Infrastructure Self-Awareness)
-Install [Railway Agent Skills](https://github.com/railwayapp/railway-skills) to let OpenClaw manage its own Railway infrastructure — list projects, check deployments, view logs, manage variables, add databases, and more through natural language. Provide a [Railway API token](https://railway.com/account/tokens) and the agent can operate on your Railway account autonomously. See the [full setup guide](./README.md#railway-skills-infrastructure-self-awareness) for step-by-step instructions.
+Let OpenClaw manage its own Railway infrastructure — list projects, check deployments, view logs, manage variables, add databases, and more through natural language. To install, simply ask OpenClaw to install the skill by providing the repository link: `https://github.com/railwayapp/railway-skills`. OpenClaw will handle the rest. Then provide a [Railway API token](https://railway.com/account/tokens) and the agent can operate on your Railway account autonomously.
 
 ### Extensible Plugins
 Load custom extensions for additional capabilities. Memory, skills, and integrations are modular and configurable.
