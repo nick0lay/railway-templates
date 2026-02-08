@@ -1,0 +1,124 @@
+# OpenClaw Railway Template
+
+## Template Overview
+
+# Deploy and Host OpenClaw on Railway
+
+OpenClaw is an open-source personal AI assistant platform that runs on your own infrastructure. It supports multi-channel chat (WhatsApp, Telegram, Slack, Discord, and more), 50+ built-in agent skills, persistent memory with embeddings, and extensible plugin architecture. This template deploys a durable instance with automatic S3-backed backup and disaster recovery.
+
+## About Hosting OpenClaw
+
+This template deploys OpenClaw as a single service with:
+
+- **AI Gateway**: Multi-channel agent runtime with Control UI
+- **50+ Skills**: Built-in agent skills for GitHub, Slack, coding, and more
+- **Memory Plugin**: Persistent memory with search and embeddings (SQLite-backed)
+- **S3 Backup**: Automatic state sync to a Railway Bucket every 5 minutes
+- **Disaster Recovery**: Fresh deploys auto-restore from the last backup
+- **Local Sync**: Download your backup locally with any S3-compatible CLI
+
+Railway volumes persist your state across redeployments. The attached Railway Bucket provides an additional layer of durability — if the volume is ever lost, the service auto-restores from the bucket on next boot.
+
+## Getting Started After Deployment
+
+### Accessing OpenClaw
+
+After deployment, click on the **OpenClaw** service to find your URL:
+
+1. **Deployments Tab**: The URL is displayed directly under the service name
+2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
+
+### Connecting to the Control UI
+
+The gateway supports two auth modes (set one, not both):
+
+- **Password mode** (recommended): Set `OPENCLAW_GATEWAY_PASSWORD` in Variables to a memorable password, then type it in the Control UI login screen
+- **Token mode**: If no password is set, find `OPENCLAW_GATEWAY_TOKEN` in the Variables tab and paste it when the UI prompts you
+
+Password mode is recommended for browser access — no need to copy long tokens.
+
+### Initial Setup
+
+1. Open the public URL — you will see the onboarding wizard
+2. Enter the `SETUP_PASSWORD` you configured in Variables
+3. Complete the setup and start chatting with your OpenClaw agent
+
+### Setting Up Backup
+
+1. Attach a **Railway Bucket** to the OpenClaw service
+2. The backup credentials (`BUCKET`, `ACCESS_KEY_ID`, etc.) are auto-injected
+3. Backup starts automatically — check logs for `[backup-sync]` messages
+
+## Common Use Cases
+
+- Self-hosted AI assistant accessible from WhatsApp, Telegram, Slack, or Discord
+- Private coding agent with GitHub integration and persistent memory
+- Multi-channel team assistant with custom skills and workflows
+- Personal AI with full data ownership — no data leaves your infrastructure
+- Durable deployment with S3 backup for disaster recovery
+- Infrastructure-aware agent that can manage its own Railway deployment via Railway Skills
+- Local development with Railway as production backend (sync state via S3)
+
+## Dependencies for OpenClaw Hosting
+
+- Docker (OpenClaw is built from source inside the container)
+- Node.js 22 (included in the Docker image)
+- Railway Bucket (optional, for S3 backup)
+
+### Deployment Dependencies
+
+- [OpenClaw GitHub Repository](https://github.com/openclaw/openclaw)
+
+### Service
+
+| Service | Source | Description |
+|---------|--------|-------------|
+| OpenClaw | [`nick0lay/openclaw@railway-deployment`](https://github.com/nick0lay/openclaw/tree/railway-deployment) | AI gateway with Control UI, agent runtime, and S3 backup |
+
+### Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `SETUP_PASSWORD` | Password for the onboarding setup wizard |
+| `OPENCLAW_GATEWAY_PASSWORD` | Gateway login password for browser access (recommended) |
+| `OPENCLAW_GATEWAY_TOKEN` | Gateway auth token for machine-to-machine access (alternative to password) |
+| `BACKUP_ENABLED` | Enable/disable S3 backup (default: `true`) |
+| `BACKUP_INTERVAL_SEC` | Seconds between backup cycles (default: `300`) |
+| `BACKUP_S3_PREFIX` | S3 prefix for backup data (default: `openclaw-state`) |
+| `PORT` | Container port (auto-configured: `8080`) |
+| `OPENCLAW_STATE_DIR` | State directory (auto-configured: `/data/.openclaw`) |
+
+### Volume
+
+| Mount Path | Purpose |
+|------------|---------|
+| `/data` | All persistent data (state, workspace, memory databases) |
+
+## Key Features
+
+### S3-Backed Backup & Disaster Recovery
+Automatic state sync to a Railway Bucket every 5 minutes. SQLite databases are safely copied using the `.backup` API without locking. Fresh deploys auto-restore from the bucket. A final backup runs on graceful shutdown.
+
+### Local Sync
+Download your full Railway backup locally using `aws s3 sync` or any S3-compatible CLI. Useful for local development, migration, or offline access to your data.
+
+### Multi-Channel Chat
+Connect WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, Teams, and more through a single gateway.
+
+### 50+ Built-in Skills
+Agent skills for GitHub, Slack, coding, file management, web search, and more — all included out of the box.
+
+### Persistent Memory
+Memory plugin with search and embeddings stored in SQLite. Conversations and context persist across restarts and redeploys.
+
+### Railway Skills (Infrastructure Self-Awareness)
+Install [Railway Agent Skills](https://github.com/railwayapp/railway-skills) to let OpenClaw manage its own Railway infrastructure — list projects, check deployments, view logs, manage variables, add databases, and more through natural language. Provide a [Railway API token](https://railway.com/account/tokens) and the agent can operate on your Railway account autonomously. See the [full setup guide](./README.md#railway-skills-infrastructure-self-awareness) for step-by-step instructions.
+
+### Extensible Plugins
+Load custom extensions for additional capabilities. Memory, skills, and integrations are modular and configurable.
+
+## Why Deploy OpenClaw on Railway?
+
+Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
+
+By deploying OpenClaw on Railway, you get a fully managed AI assistant platform with automatic S3 backup, disaster recovery, and persistent storage — all configured and ready to use. Host your servers, databases, AI agents, and more on Railway.
