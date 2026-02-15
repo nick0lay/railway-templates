@@ -99,6 +99,48 @@ The gateway requires authentication when binding to a network address (which thi
 
 On first access you will see the setup wizard. Use the `SETUP_PASSWORD` you configured in Variables to complete onboarding. After completing the wizard, you can start chatting with your OpenClaw agent through the Control UI.
 
+### Accessing via CLI (SSH)
+
+Once your instance is running, you can SSH into the container using the Railway CLI for advanced configuration tasks:
+
+- Configure Claude subscriptions and API keys interactively
+- Run OpenClaw CLI commands directly on the instance
+- Manage credentials and debug the running environment
+
+**Prerequisites:** Install the [Railway CLI](https://docs.railway.com/guides/cli) and authenticate:
+
+```bash
+# Install (macOS/Linux)
+curl -fsSL https://railway.app/install.sh | sh
+
+# Or via npm
+npm install -g @railway/cli
+
+# Authenticate
+railway login
+```
+
+**Connect to the service:**
+
+```bash
+# Link your local CLI to the project
+railway link
+
+# SSH into the OpenClaw service
+railway ssh --service OpenClaw --environment production
+```
+
+> **Note:** Replace `OpenClaw` with your actual service name if you renamed it during deployment. You can find the service name in the Railway dashboard.
+
+Once connected, use the OpenClaw CLI:
+
+```bash
+npx openclaw --help
+
+# Example: configure a Claude subscription
+npx openclaw models auth setup-token --provider anthropic
+```
+
 ## Environment Variables
 
 ### User-Configurable Variables

@@ -35,6 +35,18 @@ The template generates both `OPENCLAW_GATEWAY_PASSWORD` and `OPENCLAW_GATEWAY_TO
 - **Password mode** (default): Enter the password each time you open the Control UI. You can change `OPENCLAW_GATEWAY_PASSWORD` in Variables to a memorable value
 - **Token mode**: The token is persisted on the client — after the first login, the UI reconnects automatically on subsequent visits. To switch to token mode, remove `OPENCLAW_GATEWAY_PASSWORD` from Variables and use the `OPENCLAW_GATEWAY_TOKEN` value instead
 
+### Accessing via CLI (SSH)
+
+You can SSH into the running container using the [Railway CLI](https://docs.railway.com/guides/cli) for advanced tasks — configuring Claude subscriptions, managing credentials, or running CLI commands directly:
+
+```bash
+railway link
+railway ssh --service OpenClaw --environment production
+npx openclaw --help
+```
+
+See the [full CLI access guide](https://github.com/nick0lay/openclaw/blob/railway-deployment/railway/README.md#accessing-your-instance-via-cli) for detailed setup instructions.
+
 ### Backup
 
 A Railway Bucket is already attached to the template. Backup is enabled by default and runs automatically every 5 minutes — check logs for `[backup-sync]` messages. Fresh deploys auto-restore from the bucket if the volume is lost. See the [backup & local sync guide](https://github.com/nick0lay/openclaw/blob/railway-deployment/railway/README.md) for instructions on downloading your backup to a local machine.
@@ -113,6 +125,9 @@ Agent skills for GitHub, Slack, coding, file management, web search, and more �
 
 ### Persistent Memory
 Memory plugin with search and embeddings stored in SQLite. Conversations and context persist across restarts and redeploys.
+
+### CLI Access via SSH
+SSH into the running container using `railway ssh` for advanced configuration — manage credentials, configure Claude subscriptions, run OpenClaw CLI commands, and debug the environment without leaving your terminal.
 
 ### Railway Skills (Infrastructure Self-Awareness)
 Let OpenClaw manage its own Railway infrastructure — list projects, check deployments, view logs, manage variables, add databases, and more through natural language. To install, simply ask OpenClaw to install the skill by providing the repository link: `https://github.com/railwayapp/railway-skills`. OpenClaw will handle the rest. Then provide a [Railway API token](https://railway.com/account/tokens) and the agent can operate on your Railway account autonomously.
