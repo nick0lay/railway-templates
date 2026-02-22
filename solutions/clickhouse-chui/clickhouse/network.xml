@@ -1,0 +1,7 @@
+<clickhouse>
+    <!-- Force external binding for Railway -->
+    <listen_host>0.0.0.0</listen_host>
+    <listen_try>1</listen_try>
+    <!-- Use Railway's dynamic PORT environment variable -->
+    <http_port from_env="PORT" replace="true">8123</http_port>
+</clickhouse>
