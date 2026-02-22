@@ -2,7 +2,7 @@
 
 Deploy a full-featured e-commerce store with EverShop and PostgreSQL on Railway.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/Tx9I1u?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 

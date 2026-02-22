@@ -13,7 +13,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Stirling-PDF](./solutions/stirling-pdf/) | PDF manipulation platform with 50+ tools, REST API, and built-in authentication | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ylMH5M?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [OpenClaw](./solutions/openclaw/) | AI assistant platform with multi-channel chat and S3-backed backup | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openclaw-moltbot-clawdbot-data-backupres?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [ClickHouse + CH-UI](./solutions/clickhouse-chui/) | OLAP database with web SQL editor and database explorer | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickhouse-ch-ui-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
-| [EverShop](./solutions/evershop/) | E-commerce platform with React storefront, admin panel, and GraphQL API | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [EverShop](./solutions/evershop/) | E-commerce platform with React storefront, admin panel, and GraphQL API | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/Tx9I1u?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
