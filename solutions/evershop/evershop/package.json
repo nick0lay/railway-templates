@@ -1,0 +1,13 @@
+{
+  "name": "evershop-railway",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "evershop build",
+    "start": "evershop start"
+  },
+  "dependencies": {
+    "@evershop/evershop": "^2.1.1",
+    "@evershop/sendgrid": "^2.1.1"
+  }
+}

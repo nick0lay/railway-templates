@@ -1,0 +1,19 @@
+{
+  "system": {
+    "file_storage": "local",
+    "extensions": [
+      {
+        "name": "sendGrid",
+        "resolve": "node_modules/@evershop/sendgrid",
+        "enabled": true,
+        "priority": 10
+      }
+    ],
+    "notification_emails": {
+      "from": "",
+      "order_confirmation": { "enabled": true },
+      "customer_welcome": { "enabled": true },
+      "customer_password_reset": { "enabled": true }
+    }
+  }
+}
