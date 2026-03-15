@@ -14,6 +14,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [OpenClaw](./solutions/openclaw/) | AI assistant platform with multi-channel chat and S3-backed backup | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openclaw-moltbot-clawdbot-data-backupres?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [ClickHouse + CH-UI](./solutions/clickhouse-chui/) | OLAP database with web SQL editor and database explorer | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickhouse-ch-ui-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [EverShop](./solutions/evershop/) | E-commerce platform with React storefront, admin panel, and GraphQL API | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/Tx9I1u?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [QuestDB](./solutions/questdb/) | Time-series database with built-in web console and multi-protocol access | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/AdmJg1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -33,9 +34,12 @@ railway-templates/
     ├── clickhouse-chui/    # ClickHouse OLAP database with CH-UI web interface
     │   ├── README.md
     │   └── clickhouse/     # Custom Dockerfile for Railway networking
-    └── evershop/           # EverShop e-commerce platform with PostgreSQL
+    ├── evershop/           # EverShop e-commerce platform with PostgreSQL
+    │   ├── README.md
+    │   └── evershop/       # Custom Dockerfile with admin auto-setup
+    └── questdb/            # QuestDB time-series database
         ├── README.md
-        └── evershop/       # Custom Dockerfile with admin auto-setup
+        └── questdb/        # Custom Dockerfile for Railway PORT mapping
 ```
 
 ## Contributing
