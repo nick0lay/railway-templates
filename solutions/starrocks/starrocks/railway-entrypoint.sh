@@ -9,6 +9,7 @@ set -e
 SR_HOME="${SR_HOME:-/data/deploy/starrocks}"
 DATA_DIR="${STARROCKS_DATA_DIR:-/var/lib/starrocks}"
 PASSWORD_MARKER="$DATA_DIR/.root_password_set"
+SUPERVISORD_CONF="$SR_HOME/supervisor/supervisord.conf"
 FE_QUERY_PORT=9030
 
 log() { echo "$(date --rfc-3339=seconds) [railway] $*" >&2; }
@@ -42,36 +43,64 @@ fi
 
 # 4. Root password. StarRocks always boots with a passwordless root account, so
 #    the Railway-generated password has to be applied over SQL once.
-if [ -n "$STARROCKS_PASSWORD" ]; then
-    if [ -f "$PASSWORD_MARKER" ]; then
-        # Already applied on an earlier boot. The image's own bootstrap client
-        # reads MYSQL_PWD, so it needs the password to authenticate.
-        export MYSQL_PWD="$STARROCKS_PASSWORD"
-        log "root password already applied; MYSQL_PWD exported for the bootstrap client"
-    else
-        # First boot: MYSQL_PWD must stay unset, because sending a password to
-        # an account that has none fails with error 1045 and the image's
-        # director treats that as fatal. Wait for bootstrap_done — director
-        # touches it after its last SQL statement — then set the password.
-        (
-            set +e
-            while [ ! -f "$SR_HOME/bootstrap_done" ]; do sleep 2; done
-            escaped=${STARROCKS_PASSWORD//\\/\\\\}
-            escaped=${escaped//\'/\\\'}
-            for _ in $(seq 1 30); do
-                if mysql -h 127.0.0.1 -P "$FE_QUERY_PORT" -u root --batch \
-                        -e "SET PASSWORD FOR 'root'@'%' = PASSWORD('$escaped');"; then
-                    touch "$PASSWORD_MARKER"
-                    log "root password applied"
-                    exit 0
-                fi
-                sleep 2
-            done
-            log "ERROR: could not set the root password; root is still passwordless"
-        ) &
-    fi
+if [ -z "$STARROCKS_PASSWORD" ]; then
+    log "WARNING: STARROCKS_PASSWORD is empty — the root account will accept"
+    log "WARNING: connections with no password. Set it and redeploy before"
+    log "WARNING: exposing this service."
+elif [ -f "$PASSWORD_MARKER" ]; then
+    # Applied on an earlier boot. The image's own bootstrap client reads
+    # MYSQL_PWD, so it needs the password to authenticate.
+    export MYSQL_PWD="$STARROCKS_PASSWORD"
+    log "root password already applied; MYSQL_PWD exported for the bootstrap client"
 else
-    log "STARROCKS_PASSWORD is empty; leaving the root account passwordless"
+    # First boot. Two constraints pull against each other: the image's director
+    # registers the BE over a passwordless connection and dies if that fails
+    # with 1045, so the password cannot be set until it is finished — yet until
+    # the password exists, the FE web UI accepts root with an empty one.
+    #
+    # So hold the public HTTP surface down until the password is in place:
+    # disable feproxy's autostart here and start it from the job below. Railway
+    # simply sees the service as not yet healthy while that happens.
+    awk '/^\[program:feproxy\]/ { in_feproxy = 1 }
+         in_feproxy && /^autostart[[:space:]]*=/ { sub(/=.*/, "=false"); in_feproxy = 0 }
+         { print }' "$SUPERVISORD_CONF" > "$SUPERVISORD_CONF.railway" \
+        && mv "$SUPERVISORD_CONF.railway" "$SUPERVISORD_CONF"
+    log "public HTTP deferred until the root password is applied"
+
+    (
+        # MYSQL_PWD stays unset in here: sending a password to an account that
+        # has none is itself a 1045. bootstrap_done is touched by director
+        # after its last SQL statement.
+        while [ ! -f "$SR_HOME/bootstrap_done" ]; do sleep 2; done
+
+        escaped=${STARROCKS_PASSWORD//\\/\\\\}
+        escaped=${escaped//\'/\\\'}
+        applied=0
+        for _ in $(seq 1 30); do
+            # Piped rather than passed with -e: argv is world-readable in /proc.
+            if printf "SET PASSWORD FOR 'root'@'%%' = PASSWORD('%s');\n" "$escaped" \
+                    | mysql -h 127.0.0.1 -P "$FE_QUERY_PORT" -u root --batch; then
+                applied=1
+                break
+            fi
+            sleep 2
+        done
+
+        if [ "$applied" = "1" ]; then
+            touch "$PASSWORD_MARKER"
+            log "root password applied"
+            supervisorctl start feproxy >/dev/null 2>&1 \
+                && log "public HTTP enabled" \
+                || log "ERROR: could not start feproxy; check supervisor logs"
+            exit 0
+        fi
+
+        # Fail closed. Staying up would leave a passwordless root reachable over
+        # the MySQL port; exiting makes Railway restart and try again, and the
+        # failure is visible in the deploy logs.
+        log "ERROR: could not set the root password after 30 attempts; stopping"
+        kill 1
+    ) &
 fi
 
 # 5. Hand over to the image's own entrypoint (WORKDIR is /data/deploy).
