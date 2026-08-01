@@ -47,7 +47,7 @@ FE and BE communicate over `127.0.0.1` inside the container. That is what makes 
 ## Quick Start
 
 1. Click the **Deploy on Railway** button above
-2. Wait for the first boot — it pulls a ~1.9 GB image and bootstraps the cluster. The service is ready when the logs show `cluster initialization DONE!`
+2. Wait for the first boot — it pulls a ~1.9 GB image and bootstraps the cluster. The public URL deliberately stays unavailable until the logs show `root password applied` followed by `public HTTP enabled`; until the password is in place, the web UI would accept `root` with an empty one
 3. Find the public URL in **Settings → Networking** and open it. The FE web UI asks for credentials: user `root`, password from `STARROCKS_PASSWORD`
 4. For SQL access, enable **TCP Proxy** on port `9030` in **Settings → Networking**. Railway returns a host and port to point your SQL client at
 
@@ -100,7 +100,7 @@ The bundled nginx proxy is what makes this work over a public domain. StarRocks'
 |----------|---------|-------------|
 | `STARROCKS_PASSWORD` | `${{secret(32)}}` | Password for the `root` account. Railway generates it at install time — read it any time from the **Variables** tab. Applied on first boot |
 | `STARROCKS_IMAGE_TAG` | `latest` | StarRocks image tag (see [Image Tags](#image-tags)) |
-| `STARROCKS_BE_MEM_LIMIT` | `80%` | Memory ceiling for the Backend. Accepts a percentage (`80%`) or an absolute size (`4G`) |
+| `STARROCKS_BE_MEM_LIMIT` | `80%` | Memory ceiling for the Backend. Accepts a percentage (`80%`) or an absolute size (`4G`). Written into the Backend config at container start, so changes take effect on redeploy. StarRocks applies its own margin below the value — set `4G` and the Backend reports roughly 3.6 GB |
 
 ### Auto-Configured (Do Not Change)
 
@@ -118,7 +118,7 @@ The bundled nginx proxy is what makes this work over a public domain. StarRocks'
 
 The image keeps FE metadata and BE storage inside its own install directory, which cannot be a Railway mount point — mounting there would hide the StarRocks binaries. The entrypoint symlinks both directories into the volume instead. Data persists across redeployments.
 
-If you mount the volume somewhere other than `/var/lib/starrocks`, set `STARROCKS_DATA_DIR` to the same path so the symlinks follow it.
+If you mount the volume somewhere other than `/var/lib/starrocks`, set `STARROCKS_DATA_DIR` to the same path so the symlinks follow it. Move the existing contents — including the `.root_password_set` marker — along with it. Left behind, the marker's absence makes the service treat the next boot as a first boot: it tries to set an already-set password, fails, and stops itself rather than come up with an unknown credential.
 
 ## Image Tags
 
@@ -204,9 +204,33 @@ Check that a volume is mounted at `/var/lib/starrocks` in **Settings → Volumes
 
 Should not occur on Railway. The image pins the FE to `127.0.0.1`, which makes the check short-circuit, so changing container hostnames across deploys do not invalidate persisted metadata. If it does appear, the volume holds metadata from a differently-configured StarRocks instance.
 
-### First boot takes several minutes
+### First boot takes several minutes, and the URL 502s until it finishes
 
-Normal. The image is ~1.9 GB and cluster bootstrap registers the BE with the FE before the database accepts connections. Watch for `cluster initialization DONE!` in the deploy logs.
+Normal. The image is ~1.9 GB, cluster bootstrap registers the BE with the FE before the database accepts connections, and the public HTTP surface is held down until the root password has been applied. The sequence to watch for in the deploy logs is `cluster initialization DONE!` → `root password applied` → `public HTTP enabled`.
+
+On later deploys the password already exists, so HTTP comes up as soon as the proxy starts.
+
+### Logs end at `could not set the root password after 30 attempts; stopping`
+
+The service stopped itself on purpose rather than run with a `root` account whose password is unknown — most likely the Frontend never became reachable within the retry window. Check the deploy logs above that line for Frontend startup errors, then redeploy.
+
+## Publishing This Template
+
+Like the other templates in this repository, the repo holds the service source (Dockerfile + entrypoint) while the service configuration lives in Railway's template editor. When publishing, set:
+
+| Setting | Value |
+|---------|-------|
+| Source | This repository, root directory `solutions/starrocks/starrocks` |
+| Variable | `STARROCKS_PASSWORD` = `${{secret(32)}}` |
+| Variable | `STARROCKS_IMAGE_TAG` = `latest` |
+| Variable | `STARROCKS_BE_MEM_LIMIT` = `80%` |
+| Volume | Mount path `/var/lib/starrocks` |
+
+`STARROCKS_PASSWORD` must be non-empty. Deployed without it, StarRocks comes up with a passwordless `root` account — the entrypoint logs a warning but cannot invent a credential. The volume is equally required: without it, every deploy starts from an empty database.
+
+TCP Proxy for port 9030 cannot be part of a template and stays a post-deploy step for each user.
+
+After publishing, replace the placeholder deploy-button URL in this file and in the repository root `README.md` with the real template URL.
 
 ## Limitations
 
