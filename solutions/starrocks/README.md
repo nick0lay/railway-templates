@@ -53,6 +53,8 @@ FE and BE communicate over `127.0.0.1` inside the container. That is what makes 
 
 Step 4 is manual — a template cannot pre-configure TCP Proxy. Without it, port 9030 is not reachable from outside the project and SQL clients will time out.
 
+One caveat if you keep TCP Proxy enabled: the startup gate that holds the public URL offline until the root password is applied covers HTTP only. Any boot that finds no `.root_password_set` marker on the volume — a first deploy, or a redeploy against a fresh volume — leaves port 9030 briefly reachable with a passwordless `root` while the cluster bootstraps. If you recreate the volume on a service whose TCP Proxy is already live, remove the proxy until the logs report `root password applied`.
+
 ## Services
 
 | Service | Source | Role |

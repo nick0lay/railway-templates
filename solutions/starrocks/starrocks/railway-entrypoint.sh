@@ -65,6 +65,19 @@ else
          in_feproxy && /^autostart[[:space:]]*=/ { sub(/=.*/, "=false"); in_feproxy = 0 }
          { print }' "$SUPERVISORD_CONF" > "$SUPERVISORD_CONF.railway" \
         && mv "$SUPERVISORD_CONF.railway" "$SUPERVISORD_CONF"
+
+    # Confirm the rewrite landed. If a future image reshapes supervisord.conf,
+    # the awk above turns into a no-op and feproxy would autostart while the
+    # log claims otherwise — a gate believed to be closed is worse than none.
+    if ! awk '/^\[program:/ { in_feproxy = ($0 == "[program:feproxy]") }
+              in_feproxy && /^autostart[[:space:]]*=[[:space:]]*false[[:space:]]*$/ { found = 1 }
+              END { exit !found }' "$SUPERVISORD_CONF"; then
+        log "ERROR: could not defer feproxy startup — the image's supervisor"
+        log "ERROR: config has an unexpected layout. Refusing to start rather"
+        log "ERROR: than serve the web UI with a passwordless root account."
+        log "ERROR: Pin a known-good release with STARROCKS_IMAGE_TAG."
+        exit 1
+    fi
     log "public HTTP deferred until the root password is applied"
 
     (
