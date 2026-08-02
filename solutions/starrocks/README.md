@@ -2,7 +2,7 @@
 
 Deploy StarRocks — an MPP analytical database and ClickHouse alternative — on Railway, with a web UI, MySQL-protocol access, and HTTP data ingestion.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/starrocks?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/starrocks-is-an-open-source-mpp-analytic?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 
@@ -18,7 +18,7 @@ The service runs the official all-in-one image, which packages the Frontend (FE,
 ┌─────────────────────────────────────────────────────────────────┐
 │                          Internet                                │
 └──────────────┬────────────────────────────────┬─────────────────┘
-               │ HTTPS (public domain)          │ TCP Proxy (manual)
+               │ HTTPS (public domain)          │ TCP Proxy
                ▼                                ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    StarRocks (Public)                            │
@@ -49,11 +49,20 @@ FE and BE communicate over `127.0.0.1` inside the container. That is what makes 
 1. Click the **Deploy on Railway** button above
 2. Wait for the first boot — it pulls a ~1.9 GB image and bootstraps the cluster. The public URL deliberately stays unavailable until the logs show `root password applied` followed by `public HTTP enabled`; until the password is in place, the web UI would accept `root` with an empty one
 3. Find the public URL in **Settings → Networking** and open it. The FE web UI asks for credentials: user `root`, password from `STARROCKS_PASSWORD`
-4. For SQL access, enable **TCP Proxy** on port `9030` in **Settings → Networking**. Railway returns a host and port to point your SQL client at
+4. For SQL access, add a **TCP Proxy** on port `9030` under **Settings → Networking → Public Networking**. Railway returns a `<name>.proxy.rlwy.net:<port>` address to point your SQL client at — see [SQL clients](#sql-clients-mysql-protocol)
 
-Step 4 is manual — a template cannot pre-configure TCP Proxy. Without it, port 9030 is not reachable from outside the project and SQL clients will time out.
+Skip step 4 if the deployed service already shows a TCP Proxy — a template can ship one. Either way, without a proxy on 9030 that port is unreachable from outside the project and SQL clients will time out.
 
 One caveat if you keep TCP Proxy enabled: the startup gate that holds the public URL offline until the root password is applied covers HTTP only. Any boot that finds no `.root_password_set` marker on the volume — a first deploy, or a redeploy against a fresh volume — leaves port 9030 briefly reachable with a passwordless `root` while the cluster bootstraps. If you recreate the volume on a service whose TCP Proxy is already live, remove the proxy until the logs report `root password applied`.
+
+## Credentials
+
+| Field | Value |
+|-------|-------|
+| Username | `root` |
+| Password | The value of the `STARROCKS_PASSWORD` variable (**Variables** tab, eye icon to reveal) |
+
+There is no username variable. StarRocks' superuser account is always named `root` — the template generates and applies only its password. The same pair authenticates every entry point: the FE web UI, SQL clients over the MySQL protocol, and Stream Load's `-u root:<password>`.
 
 ## Services
 
@@ -65,16 +74,33 @@ One caveat if you keep TCP Proxy enabled: the startup gate that holds the public
 
 ### SQL clients (MySQL protocol)
 
-Use the host and port shown in the TCP Proxy panel — not the HTTPS domain:
+Port 9030 carries raw TCP, not HTTP, so it is reached through a Railway TCP Proxy rather than the public domain. To create one:
+
+**Settings** tab → **Networking** → **Public Networking** → under *Connect to your service over TCP using a proxied domain and port*, click **TCP Proxy** → enter port `9030`.
+
+Railway generates an address of the form `<name>.proxy.rlwy.net:<port>`, for example `sakura.proxy.rlwy.net:26024`. Connect with those values — the generated port, not 9030, which is only the internal port the proxy forwards to:
 
 ```bash
-mysql -h <proxy-host> -P <proxy-port> -u root -p
+mysql -h <name>.proxy.rlwy.net -P <port> -u root -p
 ```
 
 ```sql
 SELECT current_version();
-SHOW BACKENDS;
+SHOW BACKENDS\G   -- one backend, Alive: true
 ```
+
+**MySQL 9.x clients do not work.** They dropped the `mysql_native_password` plugin StarRocks authenticates with and fail with `ERROR 2059 (HY000): Authentication plugin 'mysql_native_password' cannot be loaded`, which looks like a credentials error but is not. Use an 8.x or MariaDB client:
+
+```bash
+# macOS — installs keg-only, alongside any existing mysql
+brew install mysql-client@8.0
+/opt/homebrew/opt/mysql-client@8.0/bin/mysql -h <name>.proxy.rlwy.net -P <port> -u root -p
+
+# no local install required
+docker run --rm -it mysql:8.0 mysql -h <name>.proxy.rlwy.net -P <port> -u root -p
+```
+
+Note that the TCP proxy carries unencrypted traffic. For sensitive data, tunnel over `railway ssh` instead of exposing the proxy publicly.
 
 ### BI tools and libraries
 
@@ -192,11 +218,25 @@ then update `STARROCKS_PASSWORD` to match and redeploy.
 
 ### Cannot connect on port 9030
 
-TCP Proxy is not enabled. Add it in **Settings → Networking** with target port `9030`, and connect to the host/port Railway shows there — not the HTTPS domain.
+TCP Proxy is not enabled, or the wrong address is being used. Add a proxy under **Settings → Networking → Public Networking** with port `9030`, then connect to the `<name>.proxy.rlwy.net:<port>` address Railway generates — not the HTTPS domain, and not port 9030 itself.
 
-### Public URL returns 401
+To separate a networking problem from an authentication one, check the socket first:
 
-Expected. The FE web UI requires credentials: user `root`, password from `STARROCKS_PASSWORD`.
+```bash
+nc -zv <name>.proxy.rlwy.net <port>
+```
+
+Refused means the proxy or the service is down. Succeeded means the port is open and any remaining failure is client-side or credentials.
+
+### `ERROR 2059 (HY000): Authentication plugin 'mysql_native_password' cannot be loaded`
+
+The client is MySQL 9.x, which removed that plugin. StarRocks authenticates with it, so no password will work. Use a MySQL 8.x or MariaDB client — see [SQL clients](#sql-clients-mysql-protocol).
+
+### Public URL asks for a username and password, or returns 401
+
+Expected — the FE web UI is behind HTTP basic auth. Sign in as `root` with the `STARROCKS_PASSWORD` value. There is no separate username variable; `root` is StarRocks' built-in superuser.
+
+If those credentials are rejected, check the deploy logs for `root password applied`. Without that line the account still has an empty password.
 
 ### Data lost after redeploy
 
@@ -216,9 +256,9 @@ On later deploys the password already exists, so HTTP comes up as soon as the pr
 
 The service stopped itself on purpose rather than run with a `root` account whose password is unknown — most likely the Frontend never became reachable within the retry window. Check the deploy logs above that line for Frontend startup errors, then redeploy.
 
-## Publishing This Template
+## Template Configuration
 
-Like the other templates in this repository, the repo holds the service source (Dockerfile + entrypoint) while the service configuration lives in Railway's template editor. When publishing, set:
+Like the other templates in this repository, the repo holds the service source (Dockerfile + entrypoint) while the service configuration lives in Railway's template editor. The published template is configured as:
 
 | Setting | Value |
 |---------|-------|
@@ -226,13 +266,11 @@ Like the other templates in this repository, the repo holds the service source (
 | Variable | `STARROCKS_PASSWORD` = `${{secret(32)}}` |
 | Variable | `STARROCKS_IMAGE_TAG` = `latest` |
 | Variable | `STARROCKS_BE_MEM_LIMIT` = `80%` |
+| Variable | `PORT` = `8080` |
 | Volume | Mount path `/var/lib/starrocks` |
+| Networking | HTTP domain targeting port `8080` |
 
 `STARROCKS_PASSWORD` must be non-empty. Deployed without it, StarRocks comes up with a passwordless `root` account — the entrypoint logs a warning but cannot invent a credential. The volume is equally required: without it, every deploy starts from an empty database.
-
-TCP Proxy for port 9030 cannot be part of a template and stays a post-deploy step for each user.
-
-After publishing, replace the placeholder deploy-button URL in this file and in the repository root `README.md` with the real template URL.
 
 ## Limitations
 

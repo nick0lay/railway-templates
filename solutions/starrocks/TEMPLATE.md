@@ -26,7 +26,14 @@ Click the **StarRocks** service to find your URL:
 1. **Deployments Tab**: the URL is displayed directly under the service name
 2. **Settings > Networking**: go to the Settings tab → scroll to Networking → find Public Networking
 
-Open it and sign in as `root` with your generated password.
+Opening it prompts for a username and password:
+
+| Field | Value |
+|-------|-------|
+| Username | `root` |
+| Password | The value of the `STARROCKS_PASSWORD` variable |
+
+There is no username variable to set. StarRocks' superuser account is always named `root` — the template only generates its password. The same `root` + `STARROCKS_PASSWORD` pair is used for the web UI, SQL clients, and Stream Load.
 
 First boot takes a few minutes. The image is large, the cluster registers its backend before accepting connections, and the public URL is deliberately held offline until the generated root password has been applied — otherwise the web UI would briefly accept `root` with no password. The service is ready when the logs read `public HTTP enabled`.
 
@@ -39,14 +46,42 @@ First boot takes a few minutes. The image is large, the cluster registers its ba
 
 ### Connecting SQL Clients
 
-The MySQL protocol runs on port 9030, which needs Railway's TCP Proxy:
+Queries run over the MySQL protocol on port 9030. That is a raw TCP port, not HTTP, so it is reached through a Railway **TCP Proxy** rather than the public HTTPS domain.
 
-1. Go to **Settings > Networking** on the StarRocks service
-2. Add a **TCP Proxy** with target port `9030`
-3. Connect your client to the host and port Railway returns:
+1. Click the **StarRocks** service and open the **Settings** tab
+2. Scroll to **Networking** → **Public Networking**
+3. Under *Connect to your service over TCP using a proxied domain and port*, click **TCP Proxy**
+4. Enter `9030` as the port your service listens on
+5. Railway generates a host and port, shown as `<name>.proxy.rlwy.net:<port>` — for example `sakura.proxy.rlwy.net:26024`
+
+Connect with those values, user `root`, and your `STARROCKS_PASSWORD`:
 
 ```bash
-mysql -h <proxy-host> -P <proxy-port> -u root -p
+mysql -h <name>.proxy.rlwy.net -P <port> -u root -p
+```
+
+The host and port both come from the TCP Proxy panel. Use the generated port, not 9030 — 9030 is the internal port the proxy forwards to.
+
+Any MySQL-compatible client works — DBeaver, TablePlus, Metabase, Superset, or a MySQL driver in your language of choice — using the MySQL driver with that host, port, user, and password.
+
+**One client caveat:** MySQL 9.x command-line clients removed the `mysql_native_password` plugin that StarRocks authenticates with, and fail with `ERROR 2059 (HY000): Authentication plugin 'mysql_native_password' cannot be loaded` no matter how correct the password is. Use a MySQL 8.x or MariaDB client:
+
+```bash
+# macOS, alongside an existing newer install
+brew install mysql-client@8.0
+/opt/homebrew/opt/mysql-client@8.0/bin/mysql -h <name>.proxy.rlwy.net -P <port> -u root -p
+
+# or with no local install at all
+docker run --rm -it mysql:8.0 mysql -h <name>.proxy.rlwy.net -P <port> -u root -p
+```
+
+GUI clients bundle their own drivers and are unaffected.
+
+Verify the connection end to end:
+
+```sql
+SELECT current_version();
+SHOW BACKENDS\G   -- one backend, Alive: true
 ```
 
 ### Loading Data
