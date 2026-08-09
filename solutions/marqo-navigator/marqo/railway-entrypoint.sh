@@ -37,4 +37,32 @@ mkdir -p "$MODEL_CACHE" /root/.cache
 rm -rf /root/.cache/huggingface
 ln -sfn "$MODEL_CACHE" /root/.cache/huggingface
 
+# Cap the CPU count Vespa sees, or it never finishes starting on Railway.
+#
+# Vespa sizes its thread pools from the detected core count, and Railway
+# reports the host's cores (48) rather than the service's share. Meanwhile the
+# container is capped at 1000 PIDs. Vespa provisions for 48 cores, exhausts that
+# cap, and both the jdisc container and searchnode die on pthread_create:
+#
+#   pthread_create failed (EAGAIN)
+#   OutOfMemoryError: unable to create native thread
+#   searchnode: std::system_error: Resource temporarily unavailable -> SIGABRT
+#
+# The config sentinel then restarts them with an escalating penalty, so Marqo
+# waits on a vector store that never arrives and never opens port 8882. The
+# failure is invisible from Railway's logs because Vespa runs under tmux and
+# logs to a file.
+#
+# nproc, the JVM's ActiveProcessorCount, and proton's hardware_concurrency all
+# derive from the CPU affinity mask, so restricting affinity is enough to make
+# every layer size itself sanely. Raise MARQO_CPU_LIMIT for more inference
+# throughput, but keep total threads under the PID cap.
+CPU_LIMIT="${MARQO_CPU_LIMIT:-4}"
+TOTAL_CPUS="$(nproc 2>/dev/null || echo 1)"
+
+if command -v taskset >/dev/null 2>&1 && [ "$TOTAL_CPUS" -gt "$CPU_LIMIT" ]; then
+    echo "[railway-entrypoint] host reports ${TOTAL_CPUS} CPUs; restricting Vespa to ${CPU_LIMIT}"
+    exec taskset -c "0-$((CPU_LIMIT - 1))" "$@"
+fi
+
 exec "$@"
