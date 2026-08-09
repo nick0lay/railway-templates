@@ -16,6 +16,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [EverShop](./solutions/evershop/) | E-commerce platform with React storefront, admin panel, and GraphQL API | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/Tx9I1u?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [QuestDB](./solutions/questdb/) | Time-series database with built-in web console and multi-protocol access | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/AdmJg1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [StarRocks](./solutions/starrocks/) | MPP analytical database with MySQL-protocol access and web UI | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/starrocks-is-an-open-source-mpp-analytic?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Marqo + Navigator](./solutions/marqo-navigator/) | Ecommerce & multimodal vector search with admin UI, both password-protected | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ukdruK?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -41,9 +42,14 @@ railway-templates/
     ├── questdb/            # QuestDB time-series database
     │   ├── README.md
     │   └── questdb/        # Custom Dockerfile for Railway PORT mapping
-    └── starrocks/          # StarRocks MPP analytical database
+    ├── starrocks/          # StarRocks MPP analytical database
+    │   ├── README.md
+    │   └── starrocks/      # Custom Dockerfile + Railway entrypoint wrapper
+    └── marqo-navigator/    # Marqo vector search with UI behind Caddy auth
         ├── README.md
-        └── starrocks/      # Custom Dockerfile + Railway entrypoint wrapper
+        ├── docker-compose.yml  # Local harness mirroring the Railway topology
+        ├── marqo/          # Custom Dockerfile + single-volume entrypoint
+        └── navigator/      # Custom Dockerfile pinning Express 4
 ```
 
 ## Contributing
