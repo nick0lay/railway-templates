@@ -35,8 +35,16 @@ query/content role gives each side its own budget:
 should deploy here.
 
 **Verified on Railway.** The topology below has been deployed and exercised end
-to end: cluster converged, index created, documents embedded, and semantic
-search returning correct results through the authenticated gateway.
+to end: cluster converged, index created, documents embedded, semantic search
+returning correct results through the authenticated gateway, and data surviving
+a redeploy.
+
+**Thread headroom is tight.** Measured on Railway after a working deploy:
+`vespa-admin` 914/1000 and `vespa-node` 990/1000, against 598 and 558 for the
+same services locally. The local harness reproduces Railway's cap but not its
+host, so it under-measures — treat compose as a smoke test, not proof of
+headroom. `VESPA_CPU_LIMIT` (default 4) restricts CPU affinity; raising it will
+make this worse.
 
 ---
 
@@ -155,7 +163,14 @@ while `VESPA_HOSTNAME` is each service's *own* domain.
 | Mount path | `/opt/vespa/var` |
 |---|---|
 
-This is where documents and vectors live. **Required.**
+This is where documents and vectors live. **Required, and easy to miss.**
+
+Without it `/opt/vespa/var` lands on the container's ephemeral overlay and every
+redeploy silently loses your data — the index still exists (its definition lives
+in the config server on `vespa-admin`), but `/indexes/<name>/stats` reports
+0 documents. Nothing errors. Confirm with
+`railway ssh --service vespa-node "df -h /opt/vespa/var"`: a real volume shows a
+`/dev/...` device, ephemeral storage shows `overlay`.
 
 ### Healthcheck
 
@@ -412,6 +427,22 @@ instead — Railway's start command replaces the image entrypoint, so Vespa's ro
 argument has to arrive as a variable. A variant of this, "The executable
 `configserver,` could not be found", means the value was typed with a space
 after the comma.
+
+### Index creation returns 500, but search still works
+
+Marqo fails in `_get_convergence_status` with `httpx.ReadTimeout`. Searches keep
+working because they go to `vespa-node`, while index creation needs the config
+server on `vespa-admin` — so it looks like a partial outage rather than a
+resource limit.
+
+`vespa-admin` has hit the 1000-PID ceiling. A container at the ceiling cannot
+fork at all: `railway ssh` fails with
+`crun: fork: Resource temporarily unavailable`. Redeploy it, and if it recurs,
+lower `VESPA_CPU_LIMIT` or move to a plan with a higher PID cap.
+
+### Index exists but reports 0 documents
+
+`vespa-node` is missing its volume — see Step 3.
 
 ### `pthread_create failed (EAGAIN)` anywhere
 
