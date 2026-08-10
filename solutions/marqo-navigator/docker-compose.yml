@@ -25,11 +25,11 @@ services:
       context: ./vespa
       args:
         VESPA_IMAGE_TAG: ${VESPA_IMAGE_TAG:-8.431.32}
-    command: configserver,services
     hostname: vespa-admin
     pids_limit: 1000
     restart: unless-stopped
     environment:
+      VESPA_ROLE: configserver,services
       VESPA_CONFIGSERVERS: vespa-admin
       VESPA_HOSTNAME: vespa-admin
     volumes:
@@ -48,11 +48,11 @@ services:
       context: ./vespa
       args:
         VESPA_IMAGE_TAG: ${VESPA_IMAGE_TAG:-8.431.32}
-    command: services
     hostname: vespa-node
     pids_limit: 1000
     restart: unless-stopped
     environment:
+      VESPA_ROLE: services
       VESPA_CONFIGSERVERS: vespa-admin
       VESPA_HOSTNAME: vespa-node
     volumes:

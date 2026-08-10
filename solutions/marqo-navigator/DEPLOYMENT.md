@@ -71,13 +71,14 @@ Create this first: four other services reference it.
 | Service name | `vespa-admin` |
 | Source | GitHub repo → `https://github.com/nick0lay/railway-templates` |
 | Root Directory | `solutions/marqo-navigator/vespa` |
-| Custom Start Command | `configserver,services` |
+| Custom Start Command | **leave empty** |
 | Public Networking | **None** |
 
 ### Variables
 
 | Variable | Value |
 |----------|-------|
+| `VESPA_ROLE` | `configserver,services` |
 | `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_HOSTNAME` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_IMAGE_TAG` | `8.431.32` |
@@ -91,6 +92,14 @@ cluster never converges.
 
 `PORT` is set only so Railway's healthcheck targets the config server; Vespa
 binds its own ports regardless.
+
+**Do not set a Custom Start Command.** The Vespa image takes its role as an
+argument to its entrypoint, and Railway's start command *replaces* the
+entrypoint rather than passing arguments to it — set it to `services` and the
+container dies with "The executable `services` could not be found". The role is
+therefore a variable, `VESPA_ROLE`, read by this template's entrypoint wrapper.
+Note there is no space after the comma in `configserver,services`; the upstream
+script accepts exactly one argument.
 
 ### Volume
 
@@ -116,13 +125,14 @@ redeploy loses the deployed application and the cluster bootstraps from nothing.
 | Service name | `vespa-node` |
 | Source | GitHub repo → `https://github.com/nick0lay/railway-templates` |
 | Root Directory | `solutions/marqo-navigator/vespa` (same as vespa-admin) |
-| Custom Start Command | `services` |
+| Custom Start Command | **leave empty** |
 | Public Networking | **None** |
 
 ### Variables
 
 | Variable | Value |
 |----------|-------|
+| `VESPA_ROLE` | `services` |
 | `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_HOSTNAME` | `${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_IMAGE_TAG` | `8.431.32` |
@@ -381,10 +391,18 @@ One of the four external-store variables is missing. Marqo needs
 `ORIGIN` is missing its port. `http://marqo.railway.internal` fails;
 `http://marqo.railway.internal:8882` works.
 
+### "The executable `services` could not be found"
+
+A Custom Start Command is set on a Vespa service. Clear it and set `VESPA_ROLE`
+instead — Railway's start command replaces the image entrypoint, so Vespa's role
+argument has to arrive as a variable. A variant of this, "The executable
+`configserver,` could not be found", means the value was typed with a space
+after the comma.
+
 ### `pthread_create failed (EAGAIN)` anywhere
 
 A container hit Railway's 1000-PID ceiling. Check the service is running the
-role it should be — most likely `vespa-node` was given `configserver,services`
+role it should be — most likely `vespa-node` has `VESPA_ROLE=configserver,services`
 instead of `services`, so it is running both roles in one container.
 
 ---

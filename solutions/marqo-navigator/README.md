@@ -127,6 +127,7 @@ All seven services build from source. **None of them is a Docker image reference
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `VESPA_IMAGE_TAG` | `8.431.32` | Vespa image tag. Marqo's tooling pins this version; changing it is untested here |
+| `VESPA_ROLE` | `services` | Which Vespa role the container runs: `configserver,services` on the admin service, `services` on the node. Passed as a variable rather than a Railway start command, because a start command replaces the image entrypoint instead of passing arguments to it |
 
 ### Navigator — User-Configurable
 
@@ -297,8 +298,8 @@ Summary of what is public and what is not:
 
 | Service | Root directory | Public domain | Volume |
 |---------|----------------|---------------|--------|
-| vespa-admin | `solutions/marqo-navigator/vespa` (start: `configserver,services`) | no | `/opt/vespa/var` |
-| vespa-node | `solutions/marqo-navigator/vespa` (start: `services`) | no | `/opt/vespa/var` |
+| vespa-admin | `solutions/marqo-navigator/vespa` (`VESPA_ROLE=configserver,services`) | no | `/opt/vespa/var` |
+| vespa-node | `solutions/marqo-navigator/vespa` (`VESPA_ROLE=services`) | no | `/opt/vespa/var` |
 | vespa-init | `solutions/marqo-navigator/vespa-init` | no | — |
 | Marqo | `solutions/marqo-navigator/marqo` | no | `/root/.cache/huggingface` |
 | Navigator | `solutions/marqo-navigator/navigator` | no | — |
