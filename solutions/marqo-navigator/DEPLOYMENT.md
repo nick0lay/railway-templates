@@ -34,6 +34,10 @@ query/content role gives each side its own budget:
 `docker-compose.yml` reproduces these caps locally, so anything that runs there
 should deploy here.
 
+**Verified on Railway.** The topology below has been deployed and exercised end
+to end: cluster converged, index created, documents embedded, and semantic
+search returning correct results through the authenticated gateway.
+
 ---
 
 ## Step 0 — Push the code
@@ -90,8 +94,8 @@ set container hostnames — so we tell Vespa what to call itself, and `vespa-ini
 writes the same value into `hosts.xml`. Get these two out of sync and the
 cluster never converges.
 
-`PORT` is set only so Railway's healthcheck targets the config server; Vespa
-binds its own ports regardless.
+`PORT` is informational here — Vespa binds its own ports regardless, and this
+service has no healthcheck and no domain.
 
 **Do not set a Custom Start Command.** The Vespa image takes its role as an
 argument to its entrypoint, and Railway's start command *replaces* the
@@ -111,10 +115,15 @@ redeploy loses the deployed application and the cluster bootstraps from nothing.
 
 ### Healthcheck
 
-| Setting | Value |
-|---------|-------|
-| Healthcheck Path | `/state/v1/health` |
-| Healthcheck Timeout | `300` |
+**Leave the healthcheck path empty.** Railway's healthcheck could not reach
+Vespa's config server on 19071 within its retry window and failed the deploy
+outright — `1/1 replicas never became healthy`. Vespa logs to a file rather than
+stdout, so this presents as a container that produced no output at all. The
+service is fine without one; `vespa-init` waits for real convergence before
+Marqo starts, which is the ordering that actually matters.
+
+Also turn **off** "Sleep when idle" (`serverless`). Vespa is a stateful cluster;
+suspending it when idle is not something it recovers from cleanly.
 
 ---
 
@@ -150,9 +159,7 @@ This is where documents and vectors live. **Required.**
 
 ### Healthcheck
 
-| Healthcheck Path | `/state/v1/health` |
-|---|---|
-| Healthcheck Timeout | `300` |
+Leave empty, and turn off "Sleep when idle" — same reasons as `vespa-admin`.
 
 ---
 
@@ -390,6 +397,13 @@ One of the four external-store variables is missing. Marqo needs
 
 `ORIGIN` is missing its port. `http://marqo.railway.internal` fails;
 `http://marqo.railway.internal:8882` works.
+
+### `1/1 replicas never became healthy` on a Vespa service
+
+A healthcheck path is set. Remove it — Railway cannot reach Vespa's config
+server on 19071 inside the retry window, and the deploy fails even though the
+container is running correctly. Verified: `vespa-node` without a healthcheck
+deployed successfully while `vespa-admin` with one failed on identical config.
 
 ### "The executable `services` could not be found"
 
