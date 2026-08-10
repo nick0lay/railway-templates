@@ -47,8 +47,11 @@ railway-templates/
     │   └── starrocks/      # Custom Dockerfile + Railway entrypoint wrapper
     └── marqo-navigator/    # Marqo vector search with UI behind Caddy auth
         ├── README.md
-        ├── docker-compose.yml  # Local harness mirroring the Railway topology
-        ├── marqo/          # Custom Dockerfile + single-volume entrypoint
+        ├── DEPLOYMENT.md   # Per-service Railway setup walkthrough
+        ├── docker-compose.yml  # Local harness (pids_limit mirrors Railway)
+        ├── vespa/          # Vespa image, run as admin and node roles
+        ├── vespa-init/     # One-shot cluster bootstrap + app package
+        ├── marqo/          # Custom Dockerfile, external vector store mode
         └── navigator/      # Custom Dockerfile pinning Express 4
 ```
 

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<services version="1.0" xmlns:deploy="vespa" xmlns:preprocess="properties">
+    <!-- Every admin-side service is pinned to a dedicated host, moving the
+         config server, log server, cluster controller and slobrok off the
+         node that serves queries. Marqo's bootstrap rewrites only <container>,
+         so this placement and the root <config> below both survive it. -->
+    <admin version="2.0">
+        <adminserver hostalias="admin0"/>
+        <configservers>
+            <configserver hostalias="admin0"/>
+        </configservers>
+        <logserver hostalias="admin0"/>
+        <slobroks>
+            <slobrok hostalias="admin0"/>
+        </slobroks>
+        <cluster-controllers>
+            <cluster-controller hostalias="admin0"/>
+        </cluster-controllers>
+    </admin>
+
+    <config name="container.handler.threadpool">
+        <maxthreads>8</maxthreads>
+        <corePoolSize>2</corePoolSize>
+    </config>
+
+    <container id="default" version="1.0">
+        <document-api/>
+        <search/>
+        <nodes>
+            <node hostalias="node1"/>
+        </nodes>
+    </container>
+
+    <content id="content_default" version="1.0">
+        <redundancy>1</redundancy>
+        <documents>
+            <document type="test_vespa_client" mode="index"/>
+        </documents>
+        <engine>
+            <proton>
+                <tuning>
+                    <searchnode>
+                        <requestthreads>
+                            <search>2</search><persearch>1</persearch><summary>2</summary>
+                        </requestthreads>
+                    </searchnode>
+                </tuning>
+            </proton>
+        </engine>
+        <tuning>
+            <resource-limits><disk>0.75</disk></resource-limits>
+        </tuning>
+        <nodes>
+            <node hostalias="node1" distribution-key="0"/>
+        </nodes>
+    </content>
+</services>

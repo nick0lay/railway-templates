@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Placeholders are substituted by deploy-app.sh from VESPA_ADMIN_HOST and
+     VESPA_NODE_HOST. Vespa matches these names against what each node reports
+     as its own hostname, so they must equal the VESPA_HOSTNAME set on the two
+     Vespa services — `vespa-admin` locally, `<service>.railway.internal` on
+     Railway. -->
+<hosts>
+    <host name="__ADMIN_HOST__">
+        <alias>admin0</alias>
+    </host>
+    <host name="__NODE_HOST__">
+        <alias>node1</alias>
+    </host>
+</hosts>

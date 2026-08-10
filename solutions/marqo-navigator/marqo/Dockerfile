@@ -1,31 +1,23 @@
-# Marqo — vector search engine (embedding inference + Vespa vector store).
+# Marqo — embedding inference and the search API.
 #
-# Can be overridden by Railway environment variable `MARQO_IMAGE_TAG`.
+# This template runs Marqo in EXTERNAL VECTOR STORE mode: given VESPA_CONFIG_URL,
+# VESPA_QUERY_URL, VESPA_DOCUMENT_URL and ZOOKEEPER_HOSTS, run_marqo.sh skips
+# starting its own Vespa entirely. That is what makes the template deployable —
+# bundled together, Marqo and Vespa need ~1010 threads and Railway caps a
+# container at 1000. Split out, this service runs on about 47.
 #
-# NOTE ON TAGS: unlike most projects, Marqo's `latest` is NOT the newest build.
-# Upstream deprecated the open-source project after 2.16.1 (Mar 2025) and now
-# publishes current releases only under `-cloud` tags. See the Image Tags table
-# in README.md before changing this.
+# It also means no entrypoint wrapper is needed here: with Vespa elsewhere, the
+# only state worth keeping is the downloaded model cache, and a volume mounts
+# straight onto it.
+#
+# NOTE ON TAGS: Marqo's `latest` is NOT the newest build. Upstream deprecated
+# the open-source project after 2.16.1 (Mar 2025) and now publishes current
+# releases only under `-cloud` tags. See README.md "Image Tags".
 ARG MARQO_IMAGE_TAG
 FROM marqoai/marqo:${MARQO_IMAGE_TAG:-latest}
 
-# Wrapper that adapts the image to Railway's one-volume-per-service limit.
-COPY railway-entrypoint.sh /railway-entrypoint.sh
-RUN chmod +x /railway-entrypoint.sh
-
-# Vespa ships a directory skeleton under /opt/vespa/var (config server state,
-# bundle cache, run dirs). Mounting a volume over that path hides it, so stash a
-# pristine copy the entrypoint can seed an empty volume from.
-RUN mkdir -p /opt/vespa-var-default && \
-    cp -a /opt/vespa/var/. /opt/vespa-var-default/ 2>/dev/null || true
-
 # Run as root to avoid volume permission issues (Railway recommendation).
-# The upstream image already runs as root; this makes it explicit.
 ENV RAILWAY_RUN_UID=0
 
-# The API listens on 8882. This service is private — Caddy reaches it over
-# Railway's internal network, so no PORT juggling is needed.
+# Private service — Caddy reaches it over Railway's internal network.
 EXPOSE 8882
-
-ENTRYPOINT ["/railway-entrypoint.sh"]
-CMD ["./run_marqo.sh"]

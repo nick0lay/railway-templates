@@ -2,73 +2,121 @@
 #
 #   Internet ─> caddy-ui  (public) ─> navigator (private) ─┐
 #   Internet ─> caddy-api (public) ─> marqo     (private) <┘
+#                                       │ external vector store
+#                          ┌────────────┴────────────┐
+#                     vespa-admin              vespa-node
+#                  (config, logs, CC)       (query + content)
 #
-# Only the two Caddy services publish ports here, exactly as only they get a
-# Railway domain. Marqo and Navigator stay on the internal network, standing in
-# for Railway's private networking. If you can reach them without going through
-# Caddy, the template is wrong.
-#
-# Both app services build from the same Dockerfiles Railway builds, and Marqo
-# uses the same single /data volume, so this exercises the real deployment path
-# rather than an approximation of it.
+# EVERY container carries `pids_limit: 1000`, reproducing Railway's per-container
+# thread ceiling. That limit is the reason Vespa is split across two services:
+# an all-in-one Vespa peaks at ~1010 threads and cannot start on Railway, while
+# the split runs at roughly 600 and 550. If a change here still comes up with
+# these caps in place, it should deploy.
 #
 #   cp .env.example .env
 #   docker compose up -d --build
 #   open http://localhost:8080   (UI)   http://localhost:8081/docs  (API + Swagger)
 
 services:
-  # Vector search engine: embedding inference + Vespa vector store in one image.
+  # Vespa admin role: config server, ZooKeeper, log server, cluster controller,
+  # slobrok. Holds the cluster's configuration, not its documents.
+  vespa-admin:
+    build:
+      context: ./vespa
+      args:
+        VESPA_IMAGE_TAG: ${VESPA_IMAGE_TAG:-8.431.32}
+    command: configserver,services
+    hostname: vespa-admin
+    pids_limit: 1000
+    restart: unless-stopped
+    environment:
+      VESPA_CONFIGSERVERS: vespa-admin
+      VESPA_HOSTNAME: vespa-admin
+    volumes:
+      - vespa-admin-var:/opt/vespa/var
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf localhost:19071/state/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 40
+      start_period: 60s
+
+  # Vespa node role: the query container and the content node (proton) that
+  # actually stores documents and vectors.
+  vespa-node:
+    build:
+      context: ./vespa
+      args:
+        VESPA_IMAGE_TAG: ${VESPA_IMAGE_TAG:-8.431.32}
+    command: services
+    hostname: vespa-node
+    pids_limit: 1000
+    restart: unless-stopped
+    environment:
+      VESPA_CONFIGSERVERS: vespa-admin
+      VESPA_HOSTNAME: vespa-node
+    volumes:
+      - vespa-node-var:/opt/vespa/var
+    depends_on:
+      vespa-admin:
+        condition: service_healthy
+
+  # One-shot: lays down the cluster topology. Idempotent — see deploy-app.sh.
+  vespa-init:
+    build:
+      context: ./vespa-init
+    environment:
+      VESPA_CONFIG_URL: http://vespa-admin:19071
+      VESPA_QUERY_URL: http://vespa-node:8080
+      VESPA_ADMIN_HOST: vespa-admin
+      VESPA_NODE_HOST: vespa-node
+    depends_on:
+      vespa-admin:
+        condition: service_healthy
+
+  # Embedding inference + search API. Runs against the external Vespa above, so
+  # it needs no vector store of its own.
   marqo:
     build:
       context: ./marqo
       args:
         MARQO_IMAGE_TAG: ${MARQO_IMAGE_TAG:-latest}
+    pids_limit: 1000
     restart: unless-stopped
     environment:
-      # Preloading loads the model during startup, so /health only goes green
-      # once the service can actually index. Must match the model used at index
-      # creation time.
+      VESPA_CONFIG_URL: http://vespa-admin:19071
+      VESPA_QUERY_URL: http://vespa-node:8080
+      VESPA_DOCUMENT_URL: http://vespa-node:8080
+      ZOOKEEPER_HOSTS: vespa-admin:2181
+      # Preloading makes /health meaningful: it only goes green once the service
+      # can actually embed. Must match the model used at index creation.
       MARQO_MODELS_TO_PRELOAD: '["hf/e5-base-v2"]'
       MARQO_ENABLE_THROTTLING: "TRUE"
-      LOG_LEVEL: WARN
     volumes:
-      # One volume, matching Railway's one-per-service limit. It mounts at
-      # Vespa's own state directory; the entrypoint nests the model cache inside
-      # it at hf-cache/ (see marqo/railway-entrypoint.sh for why not the other
-      # way around).
-      - marqo-data:/opt/vespa/var
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8882/health"]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-      # First boot is the slow one: Vespa config server + content node converge
-      # and the preload downloads ~420MB of model weights. Later boots hit the
-      # volume and settle in well under a minute. Set generously — Railway
-      # restart-loops a container that never passes its healthcheck.
-      start_period: 300s
+      # Model weights (~420MB). Not baked into the image — without this they
+      # re-download on every deploy.
+      - marqo-models:/root/.cache/huggingface
+    depends_on:
+      vespa-init:
+        condition: service_completed_successfully
 
-  # Admin UI. Talks to Marqo server-side over the internal network, so browser
-  # traffic never needs a second set of credentials.
+  # Admin UI. Reaches Marqo server-side, so browsing never needs the API password.
   navigator:
     build:
       context: ./navigator
       args:
         NAVIGATOR_IMAGE_TAG: ${NAVIGATOR_IMAGE_TAG:-v0.1.19}
-      # The upstream base image publishes amd64 only; pinning the platform keeps
-      # arm64 hosts (Apple Silicon) on emulation instead of failing the build.
       platforms:
         - linux/amd64
     platform: linux/amd64
+    pids_limit: 1000
     restart: unless-stopped
     environment:
       MARQO_API_URL: http://marqo:8882
     depends_on:
-      marqo:
-        condition: service_healthy
+      - marqo
 
-  # Auth gateway for the UI. Same image and env contract the Railway template
-  # uses, built from source so this test exercises the real thing.
+  # Auth gateway for the UI.
   caddy-ui:
     build: https://github.com/iliab1/caddy-password-auth.git
     restart: unless-stopped
@@ -81,23 +129,21 @@ services:
     depends_on:
       - navigator
 
-  # Auth gateway for the raw Marqo API and its Swagger page.
-  #
-  # Deliberately a separate credential from the UI: this password grants
-  # DELETE /indexes/{name} and DELETE /models. Handing someone read access to
-  # the UI should not also hand them the ability to destroy every index.
+  # Auth gateway for the raw API and Swagger. Deliberately a separate credential
+  # from the UI: this password can DELETE every index.
   caddy-api:
     build: https://github.com/iliab1/caddy-password-auth.git
     restart: unless-stopped
     environment:
       ORIGIN: http://marqo:8882
       BASIC_AUTH: ${API_USERNAME:-admin}:${API_PASSWORD:-changeme-api}
-      PORT: "8081"
+      PORT: "8080"
     ports:
-      - "8081:8081"
+      - "8081:8080"
     depends_on:
-      marqo:
-        condition: service_healthy
+      - marqo
 
 volumes:
-  marqo-data:
+  vespa-admin-var:
+  vespa-node-var:
+  marqo-models:

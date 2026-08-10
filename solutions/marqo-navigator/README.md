@@ -8,13 +8,13 @@ Deploy Marqo vector search with the Navigator admin UI, both behind Caddy passwo
 
 Marqo is an AI-native search platform aimed at online retail — product search and discovery for fashion, beauty, electronics, and home goods — and equally usable as a general-purpose vector search engine. It ships purpose-built [ecommerce and fashion embedding models](#embedding-models) that load into this deployment by name.
 
-This template deploys a four-service stack:
+This template deploys a seven-service stack:
 
-- **Marqo**: Vector search engine — generates embeddings and stores them in an embedded Vespa index. You send plain text or image URLs; it matches on meaning rather than keywords.
-- **Marqo Navigator**: Web UI for index management, document upload, and search preview.
-- **Caddy × 2**: Two authentication gateways, one for the UI and one for the raw API. Marqo has no authentication of its own, so nothing reaches it without going through Caddy.
-
-Marqo exposes a FastAPI service with an interactive Swagger page at `/docs`. Both the UI and that API are published, each behind its own password.
+- **Vespa (×2)**: the vector store, split into an admin role (config server, ZooKeeper, log server, cluster controller) and a node role (query container + content node). See [Why Vespa is split](#why-vespa-is-split).
+- **vespa-init**: one-shot job that deploys the cluster topology, then gets out of the way.
+- **Marqo**: embedding inference and the search API, running against the external Vespa above.
+- **Marqo Navigator**: web UI for index management, document upload, and search preview.
+- **Caddy × 2**: authentication gateways for the UI and the raw API. Marqo has no authentication of its own, so nothing reaches it without going through Caddy.
 
 ## Architecture
 
@@ -22,44 +22,68 @@ Marqo exposes a FastAPI service with an interactive Swagger page at `/docs`. Bot
 ┌─────────────────────────────────────────────────────────────────┐
 │                            Internet                              │
 └─────────────┬───────────────────────────────────┬───────────────┘
-              │                                   │
               ▼                                   ▼
 ┌─────────────────────────┐         ┌─────────────────────────────┐
 │   Caddy-UI (Public)     │         │    Caddy-API (Public)       │
-│   Basic Auth            │         │    Basic Auth               │
 │   UI_USERNAME/PASSWORD  │         │    API_USERNAME/PASSWORD    │
 └─────────────┬───────────┘         └─────────────┬───────────────┘
-              │                                   │
               ▼                                   │
 ┌─────────────────────────┐                       │
 │  Navigator (Private)    │                       │
 │  Port 9882              │                       │
-│  Dashboard + Search UI  │                       │
 └─────────────┬───────────┘                       │
-              │ http://marqo.railway.internal:8882│
+              │  http://marqo.railway.internal:8882
               └─────────────────┬─────────────────┘
                                 ▼
               ┌─────────────────────────────────────┐
-              │        Marqo (Private)               │
-              │        Port 8882                     │
-              │        REST API + Swagger at /docs   │
-              │                                      │
-              │   ┌──────────────────────────────┐   │
-              │   │  /opt/vespa/var Volume        │   │
-              │   │  ├── db, vespa, zookeeper …   │   │
-              │   │  │   indexes, documents,      │   │
-              │   │  │   vectors                  │   │
-              │   │  └── hf-cache/                │   │
-              │   │      embedding model weights  │   │
-              │   └──────────────────────────────┘   │
-              └─────────────────────────────────────┘
+              │        Marqo (Private) :8882         │
+              │        API + embedding inference     │
+              │   volume: /root/.cache/huggingface   │
+              └──────────────┬──────────────────────┘
+                             │ external vector store
+              ┌──────────────┴──────────────┐
+              ▼                             ▼
+   ┌────────────────────┐       ┌────────────────────────┐
+   │ vespa-admin :19071 │◄──────│  vespa-node :8080      │
+   │ config server, ZK  │       │  query container +     │
+   │ logs, cluster ctrl │       │  content node (proton) │
+   │ vol /opt/vespa/var │       │  vol /opt/vespa/var    │
+   └────────────────────┘       └────────────────────────┘
+              ▲
+              │ deploys topology once, then exits
+        ┌─────────────┐
+        │ vespa-init  │
+        └─────────────┘
 ```
 
-Navigator reaches Marqo directly over Railway's private network, so browsing the UI never requires the API credential.
+## Why Vespa is split
+
+Railway caps every container at **1000 threads (PIDs)**. Marqo bundles a full
+Vespa cluster in one image, and that combination peaks at **~1010 threads** — it
+cannot start, and no configuration fixes it. Measured on the stock image:
+
+| Configuration | Peak threads | Fits in 1000? |
+|---------------|--------------|---------------|
+| Marqo + Vespa in one container | ~1010 | no |
+| Vespa alone in one container | ~1010 | no |
+| **vespa-admin** (this template) | **~600** | yes |
+| **vespa-node** (this template) | **~570** | yes |
+| **Marqo**, external vector store | **~34** | yes |
+
+Two further details make the split hold:
+
+- Marqo's `bootstrap_vespa()` rewrites `services.xml` on first start and
+  **wipes anything under `<container>`** — its own source says so. Tuning placed
+  under `<content>` or at the services root survives, which is where this
+  template's `<searchnode><requestthreads>` tuning lives (proton: 166 → 90
+  threads).
+- Vespa matches nodes by the hostname each reports for itself. Railway does not
+  let you set container hostnames, so both Vespa services set `VESPA_HOSTNAME`
+  and `vespa-init` substitutes the same values into `hosts.xml`.
 
 ## Quick Start
 
-1. Deploy the four services (see [Railway Service Configuration](#railway-service-configuration))
+1. Deploy the seven services (see [DEPLOYMENT.md](./DEPLOYMENT.md) for the step-by-step walkthrough)
 2. Set `UI_PASSWORD` and `API_PASSWORD` — use different values
 3. Wait for Marqo to go healthy. **First boot takes several minutes**: Vespa converges and ~420 MB of embedding weights download
 4. Open the **Caddy-UI** public URL and sign in
@@ -76,10 +100,15 @@ curl -u "admin:$API_PASSWORD" -X POST \
 
 | Service | Source | Role |
 |---------|--------|------|
-| Marqo | `marqo/Dockerfile` | Vector search engine (private) |
-| Navigator | `navigator/Dockerfile` | Admin UI and search console (private) |
-| Caddy-UI | [iliab1/caddy-password-auth](https://github.com/iliab1/caddy-password-auth) | Auth gateway for the UI (public) |
-| Caddy-API | [iliab1/caddy-password-auth](https://github.com/iliab1/caddy-password-auth) | Auth gateway for the API and Swagger (public) |
+| vespa-admin | This repo, `solutions/marqo-navigator/vespa` | Config server, ZooKeeper, log server, cluster controller (private) |
+| vespa-node | This repo, `solutions/marqo-navigator/vespa` | Query container + content node (private) |
+| vespa-init | This repo, `solutions/marqo-navigator/vespa-init` | One-shot topology bootstrap (private) |
+| Marqo | This repo, `solutions/marqo-navigator/marqo` | Embedding inference + search API (private) |
+| Navigator | This repo, `solutions/marqo-navigator/navigator` | Admin UI and search console (private) |
+| Caddy-UI | GitHub repo [iliab1/caddy-password-auth](https://github.com/iliab1/caddy-password-auth) | Auth gateway for the UI (public) |
+| Caddy-API | GitHub repo [iliab1/caddy-password-auth](https://github.com/iliab1/caddy-password-auth) | Auth gateway for the API and Swagger (public) |
+
+All seven services build from source. **None of them is a Docker image reference** — `iliab1/caddy-password-auth` is a GitHub repository, and no image by that name exists on Docker Hub. Selecting "Docker Image" as the source for the Caddy services produces a deploy that fails before the build starts.
 
 ## Environment Variables
 
@@ -92,6 +121,12 @@ curl -u "admin:$API_PASSWORD" -X POST \
 | `MARQO_ENABLE_THROTTLING` | `TRUE` | Caps concurrent search and indexing operations |
 | `MARQO_MAX_CPU_MODEL_MEMORY` | Image default | Memory ceiling in GB for loaded models. Raise if you preload several |
 | `LOG_LEVEL` | `WARN` | Set to `INFO` to see per-request logging |
+
+### vespa-admin / vespa-node — User-Configurable
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VESPA_IMAGE_TAG` | `8.431.32` | Vespa image tag. Marqo's tooling pins this version; changing it is untested here |
 
 ### Navigator — User-Configurable
 
@@ -114,20 +149,27 @@ curl -u "admin:$API_PASSWORD" -X POST \
 | `ORIGIN` | Caddy-UI | `http://${{Navigator.RAILWAY_PRIVATE_DOMAIN}}:9882` | Upstream for the UI gateway. Wrong value gives 502 |
 | `ORIGIN` | Caddy-API | `http://${{Marqo.RAILWAY_PRIVATE_DOMAIN}}:8882` | Upstream for the API gateway. Wrong value gives 502 |
 | `BASIC_AUTH` | Both Caddy | `${{USERNAME}}:${{PASSWORD}}` | Caddy hashes this at container start. Must stay in `user:pass` form |
+| `VESPA_HOSTNAME` | Each Vespa service | its **own** `RAILWAY_PRIVATE_DOMAIN` | What the node reports itself as. Must match `hosts.xml`, which `vespa-init` writes from `VESPA_ADMIN_HOST`/`VESPA_NODE_HOST`. Mismatch means the cluster never converges |
+| `VESPA_CONFIGSERVERS` | Both Vespa services | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` | Where every node finds configuration. Points at **admin** on both |
+| `VESPA_CONFIG_URL` / `VESPA_QUERY_URL` / `VESPA_DOCUMENT_URL` / `ZOOKEEPER_HOSTS` | Marqo | admin `:19071`, node `:8080`, admin `:2181` | Switch Marqo to external-vector-store mode. Must all four be set — a partial set is a fatal error, none at all makes Marqo start its own Vespa and exhaust the PID cap |
 
-## Volume
+## Volumes
+
+Three volumes, one per stateful service.
 
 | Service | Mount Path | Purpose |
 |---------|------------|---------|
-| Marqo | `/opt/vespa/var` | Vespa state (indexes, documents, vectors) **and** embedding model weights under `hf-cache/` |
+| vespa-admin | `/opt/vespa/var` | Cluster configuration and ZooKeeper state |
+| vespa-node | `/opt/vespa/var` | Documents, vectors, and the search index |
+| Marqo | `/root/.cache/huggingface` | Embedding model weights (~420 MB) |
 
-Railway allows one volume per service, and Marqo needs two paths to survive a redeploy. The usual trick — mount elsewhere and symlink both in — does not work here: the upstream image declares `VOLUME /opt/vespa/var`, so that path is always a live mountpoint and cannot be replaced with a symlink. Instead the volume mounts at Vespa's own directory and `railway-entrypoint.sh` nests the HuggingFace cache inside it.
+All three are **required**. Without the Vespa volumes every redeploy loses the
+deployed application and your data. Without Marqo's, the model re-downloads on
+every deploy and delays startup by minutes.
 
-Without the model cache on the volume, every redeploy re-downloads ~420 MB before the healthcheck can pass, which risks a restart loop.
-
-**The volume is required.** Deployed without it, every redeploy starts from an empty index.
-
-Verified from an empty volume on both a `latest` and a `-cloud` image: the entrypoint seeds the skeleton, Marqo reaches healthy, and after a container recreate the indexes and the cached weights are both still there with no re-download.
+Vespa **blocks all writes** once disk passes 75% of a volume — searches keep
+working, indexing returns HTTP 400. Size `vespa-node` with headroom; this is a
+correctness constraint, not a capacity preference.
 
 ## Image Tags
 
@@ -246,50 +288,22 @@ open http://localhost:8081/docs   # API + Swagger
 
 ## Railway Service Configuration
 
-Summary of the four services. For a step-by-step walkthrough of building the template in Railway's composer — including creation order, healthcheck timeouts, and post-deploy verification — see [DEPLOYMENT.md](./DEPLOYMENT.md).
+Seven services, three volumes, two public domains, and a set of cross-service
+references that must line up exactly. The full per-service walkthrough —
+sources, root directories, start commands, every variable, volumes, healthchecks
+and the order to create them in — is in **[DEPLOYMENT.md](./DEPLOYMENT.md)**.
 
-### Marqo
+Summary of what is public and what is not:
 
-| Setting | Value |
-|---------|-------|
-| Source | This repository, root directory `solutions/marqo-navigator/marqo` |
-| Variable | `MARQO_IMAGE_TAG` = `latest` |
-| Variable | `MARQO_MODELS_TO_PRELOAD` = `["hf/e5-base-v2"]` |
-| Variable | `MARQO_ENABLE_THROTTLING` = `TRUE` |
-| Variable | `PORT` = `8882` (Marqo binds this unconditionally and ignores Railway's injected value) |
-| Volume | Mount path `/opt/vespa/var` |
-| Healthcheck | Path `/health`, timeout `600` seconds |
-| Networking | No public domain — private only |
-
-### Navigator
-
-| Setting | Value |
-|---------|-------|
-| Source | This repository, root directory `solutions/marqo-navigator/navigator` |
-| Variable | `MARQO_API_URL` = `http://${{Marqo.RAILWAY_PRIVATE_DOMAIN}}:8882` |
-| Variable | `NAVIGATOR_IMAGE_TAG` = `v0.1.19` |
-| Variable | `PORT` = `9882` (hardcoded in the proxy) |
-| Networking | No public domain — private only |
-
-### Caddy-UI
-
-| Setting | Value |
-|---------|-------|
-| Source | [iliab1/caddy-password-auth](https://github.com/iliab1/caddy-password-auth) |
-| Variable | `ORIGIN` = `http://${{Navigator.RAILWAY_PRIVATE_DOMAIN}}:9882` |
-| Variable | `BASIC_AUTH` = `admin:${{secret(32)}}` |
-| Variable | `PORT` = `8080` |
-| Networking | HTTP domain, target port `8080` |
-
-### Caddy-API
-
-| Setting | Value |
-|---------|-------|
-| Source | [iliab1/caddy-password-auth](https://github.com/iliab1/caddy-password-auth) |
-| Variable | `ORIGIN` = `http://${{Marqo.RAILWAY_PRIVATE_DOMAIN}}:8882` |
-| Variable | `BASIC_AUTH` = `admin:${{secret(32)}}` |
-| Variable | `PORT` = `8080` |
-| Networking | HTTP domain, target port `8080` |
+| Service | Root directory | Public domain | Volume |
+|---------|----------------|---------------|--------|
+| vespa-admin | `solutions/marqo-navigator/vespa` (start: `configserver,services`) | no | `/opt/vespa/var` |
+| vespa-node | `solutions/marqo-navigator/vespa` (start: `services`) | no | `/opt/vespa/var` |
+| vespa-init | `solutions/marqo-navigator/vespa-init` | no | — |
+| Marqo | `solutions/marqo-navigator/marqo` | no | `/root/.cache/huggingface` |
+| Navigator | `solutions/marqo-navigator/navigator` | no | — |
+| Caddy-UI | *(external repo)* | **yes**, port 8080 | — |
+| Caddy-API | *(external repo)* | **yes**, port 8080 | — |
 
 ## Troubleshooting
 

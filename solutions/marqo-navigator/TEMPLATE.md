@@ -6,17 +6,18 @@
 
 Marqo is an AI-native search platform aimed at online retail — product search and discovery for categories like fashion, beauty, electronics, and home goods. Shoppers rarely search the words you put in your product titles. They type "something to keep me warm in the snow" and expect the down jacket. Marqo embeds your catalogue and their query into the same vector space, so intent matches inventory without a single synonym list or keyword rule.
 
-It is also a general-purpose vector search engine: embedding inference and vector storage in one service, with no separate model pipeline and no separate vector database to operate. This template pairs it with Marqo Navigator, a web UI for managing indexes and previewing searches, and puts both behind Caddy password authentication.
+It is also a general-purpose vector search engine: embedding inference and vector storage with no separate model pipeline to operate. This template pairs it with Marqo Navigator, a web UI for managing indexes and previewing searches, and puts both behind Caddy password authentication.
 
 ## About Hosting Marqo + Navigator
 
-This template deploys a four-service stack:
+This template deploys a seven-service stack:
 
-- **Marqo**: Embedding inference and vector storage in a single service, backed by an embedded Vespa engine
+- **Marqo**: Embedding inference and the search API
+- **Vespa (×2)**: The vector store, split across two services so each stays within Railway's per-container thread limit
 - **Marqo Navigator**: Web dashboard for index management, document upload, and search preview
 - **Caddy × 2**: Separate authentication gateways for the UI and the raw API — Marqo ships with no authentication of its own, so neither service is ever exposed directly
 - **Private Networking**: Marqo and Navigator run on Railway's internal network; only the Caddy gateways hold public domains
-- **Persistent Storage**: One Railway volume holds both the vector index and the downloaded embedding model weights
+- **Persistent Storage**: Railway volumes for the cluster configuration, the vector index, and the cached embedding model weights
 
 ## Purpose-Built Ecommerce Models
 
@@ -104,7 +105,7 @@ Or use the interactive Swagger page at `https://your-api-url.railway.app/docs`, 
 
 ## Dependencies for Marqo + Navigator Hosting
 
-- Docker (all four services run as containers)
+- Docker (all seven services run as containers)
 
 ### Deployment Dependencies
 
@@ -116,10 +117,13 @@ Or use the interactive Swagger page at `https://your-api-url.railway.app/docs`, 
 
 | Service | Source | Description |
 |---------|--------|-------------|
-| Marqo | Custom Dockerfile | Vector search engine (private) |
+| vespa-admin | Custom Dockerfile | Vespa config server, ZooKeeper, cluster controller (private) |
+| vespa-node | Custom Dockerfile | Vespa query container + content node (private) |
+| vespa-init | Custom Dockerfile | One-shot cluster bootstrap (private) |
+| Marqo | Custom Dockerfile | Embedding inference + search API (private) |
 | Navigator | Custom Dockerfile | Admin UI and search console (private) |
-| Caddy-UI | `iliab1/caddy-password-auth` | Auth gateway for the UI (public) |
-| Caddy-API | `iliab1/caddy-password-auth` | Auth gateway for the API and Swagger (public) |
+| Caddy-UI | GitHub repo `iliab1/caddy-password-auth` | Auth gateway for the UI (public) |
+| Caddy-API | GitHub repo `iliab1/caddy-password-auth` | Auth gateway for the API and Swagger (public) |
 
 ### Environment Variables
 
@@ -150,7 +154,9 @@ Or use the interactive Swagger page at `https://your-api-url.railway.app/docs`, 
 
 | Service | Mount Path | Purpose |
 |---------|------------|---------|
-| Marqo | `/opt/vespa/var` | Vector index, documents, and cached embedding model weights |
+| vespa-admin | `/opt/vespa/var` | Cluster configuration and ZooKeeper state |
+| vespa-node | `/opt/vespa/var` | Documents, vectors, and the search index |
+| Marqo | `/root/.cache/huggingface` | Cached embedding model weights |
 
 ## Key Features
 
@@ -176,7 +182,7 @@ Marqo has no built-in authentication, and its API can delete every index. This t
 The bundled Swagger page works through the auth gateway. Sign in once and explore all endpoints interactively from the browser.
 
 ### Persistent Storage
-A Railway volume holds the vector index and the downloaded model weights together, so redeployments preserve your data and skip the model download.
+Railway volumes hold the vector index, the cluster configuration, and the downloaded model weights, so redeployments preserve your data and skip the model download.
 
 ## Why Deploy Marqo + Navigator on Railway?
 

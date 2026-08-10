@@ -1,97 +1,238 @@
 # Creating the Railway Template
 
-Step-by-step build of the four-service template in Railway's template composer.
+Seven services. Follow the order below — Railway reference variables like
+`${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` only resolve once the service they
+name exists.
 
-**Order matters.** Cross-service variables like `${{Marqo.RAILWAY_PRIVATE_DOMAIN}}` only resolve once the referenced service exists, so create the services in the order below.
+**Service names are load-bearing.** `vespa-admin`, `vespa-node`, `Marqo` and
+`Navigator` are referenced by other services; type them exactly. The two Caddy
+services are referenced by nothing, so their names are cosmetic.
 
-**Service names matter.** `Marqo` and `Navigator` are referenced by other services — type them exactly as written. The two Caddy services are referenced by nothing, so their names are cosmetic.
-
----
-
-## Step 0 — Push the code first
-
-Railway builds from GitHub, so the repository must contain this solution before you start.
-
-```bash
-cd /Users/nin/Own/source/nick0lay/railway-templates
-git add solutions/marqo-navigator README.md
-git commit -m "Add Marqo + Navigator Railway template"
-git push origin main
+```
+Internet ─> caddy-ui  (domain) ─> navigator ─┐
+Internet ─> caddy-api (domain) ─> marqo    <─┘
+                                     │  external vector store
+                        ┌────────────┴────────────┐
+                   vespa-admin               vespa-node
+              config server, ZooKeeper,   query container +
+              log server, cluster ctrl    content node (proton)
 ```
 
-Verify these paths exist on GitHub before continuing — Railway will fail the build if they don't:
+## Why seven services
 
-- `solutions/marqo-navigator/marqo/Dockerfile`
-- `solutions/marqo-navigator/marqo/railway-entrypoint.sh`
-- `solutions/marqo-navigator/navigator/Dockerfile`
+Railway caps each container at **1000 threads (PIDs)**. Marqo bundles a full
+Vespa cluster, and that combination peaks at ~1010 threads — it cannot start,
+and no amount of configuration fixes it. Splitting Vespa's admin role from its
+query/content role gives each side its own budget:
 
-If the repository is private, connect the GitHub account to Railway first (**Account Settings → GitHub**) and grant access to `nick0lay/railway-templates`.
+| Service | Threads (measured) |
+|---------|--------------------|
+| `vespa-admin` | ~600 / 1000 |
+| `vespa-node` | ~570 / 1000 |
+| `marqo` | ~34 / 1000 |
+
+`docker-compose.yml` reproduces these caps locally, so anything that runs there
+should deploy here.
 
 ---
+
+## Step 0 — Push the code
+
+Railway builds from GitHub, so these paths must exist on `main` first:
+
+- `solutions/marqo-navigator/vespa/Dockerfile`
+- `solutions/marqo-navigator/vespa-init/` (Dockerfile, `deploy-app.sh`, `app/`)
+- `solutions/marqo-navigator/marqo/Dockerfile`
+- `solutions/marqo-navigator/navigator/Dockerfile`
 
 ## Step 1 — Open the template composer
 
-1. Go to your **Workspace → Templates** page
-2. Click **New Template**
+**Workspace → Templates → New Template**, then add services with **Add New**.
 
-You now have an empty canvas. Add each service with **Add New** (top right) or **⌘K → + New Service**.
+### Two settings that silently break the deploy
+
+**Every service is a GitHub repo source, not a Docker image.** That includes the
+Caddy services — `iliab1/caddy-password-auth` is a *repository*; no image by
+that name exists. Choosing "Docker Image" produces a service that fails before
+the build starts, with no build logs to explain why.
+
+**Root Directory is mandatory** on every service built from this repo. Without
+it Railway analyses the repository root, finds no Dockerfile, and fails with
+"Railpack could not determine how to build the app."
 
 ---
 
-## Step 2 — Marqo service
+## Step 2 — `vespa-admin`
 
-Create this one first — two other services reference it.
+Create this first: four other services reference it.
 
 | Setting | Value |
 |---------|-------|
-| **Service name** | `Marqo` |
-| **Source** | GitHub repo → `https://github.com/nick0lay/railway-templates` |
-| **Root Directory** | `solutions/marqo-navigator/marqo` |
-| **Public Networking** | **None** — do not add a domain |
+| Service name | `vespa-admin` |
+| Source | GitHub repo → `https://github.com/nick0lay/railway-templates` |
+| Root Directory | `solutions/marqo-navigator/vespa` |
+| Custom Start Command | `configserver,services` |
+| Public Networking | **None** |
 
 ### Variables
 
 | Variable | Value |
 |----------|-------|
-| `MARQO_IMAGE_TAG` | `latest` |
-| `MARQO_MODELS_TO_PRELOAD` | `["hf/e5-base-v2"]` |
-| `MARQO_ENABLE_THROTTLING` | `TRUE` |
-| `LOG_LEVEL` | `WARN` |
-| `PORT` | `8882` |
+| `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
+| `VESPA_HOSTNAME` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
+| `VESPA_IMAGE_TAG` | `8.431.32` |
+| `PORT` | `19071` |
 
-`PORT` is set explicitly because Marqo ignores Railway's injected value and binds 8882 unconditionally. Setting it keeps Railway's healthcheck pointed at the right port.
+`VESPA_HOSTNAME` is what makes this work on Railway at all. Vespa matches each
+node against the hostname it reports for itself, and Railway does not let you
+set container hostnames — so we tell Vespa what to call itself, and `vespa-init`
+writes the same value into `hosts.xml`. Get these two out of sync and the
+cluster never converges.
 
-> See [Image Tags](./README.md#image-tags) before shipping. Marqo inverts the usual convention — `latest` is 2.16.1 from March 2025, not the newest build. Use `cloud-latest` for the current release.
+`PORT` is set only so Railway's healthcheck targets the config server; Vespa
+binds its own ports regardless.
 
 ### Volume
 
-Right-click the service → **Attach Volume**:
+| Mount path | `/opt/vespa/var` |
+|---|---|
 
-| Setting | Value |
-|---------|-------|
-| **Mount path** | `/opt/vespa/var` |
-
-This volume is **required**. Without it every redeploy starts from an empty index and re-downloads ~420 MB of model weights. Size it with room to spare — Vespa blocks all writes above 75% utilisation.
+Holds cluster configuration and ZooKeeper state. **Required** — without it every
+redeploy loses the deployed application and the cluster bootstraps from nothing.
 
 ### Healthcheck
 
 | Setting | Value |
 |---------|-------|
-| **Healthcheck Path** | `/health` |
-| **Healthcheck Timeout** | `600` seconds |
-
-The generous timeout covers first boot, where Vespa converges *and* the embedding model downloads before the service can serve. Too short a timeout produces a restart loop that looks like a crash.
+| Healthcheck Path | `/state/v1/health` |
+| Healthcheck Timeout | `300` |
 
 ---
 
-## Step 3 — Navigator service
+## Step 3 — `vespa-node`
 
 | Setting | Value |
 |---------|-------|
-| **Service name** | `Navigator` |
-| **Source** | GitHub repo → `https://github.com/nick0lay/railway-templates` |
-| **Root Directory** | `solutions/marqo-navigator/navigator` |
-| **Public Networking** | **None** — do not add a domain |
+| Service name | `vespa-node` |
+| Source | GitHub repo → `https://github.com/nick0lay/railway-templates` |
+| Root Directory | `solutions/marqo-navigator/vespa` (same as vespa-admin) |
+| Custom Start Command | `services` |
+| Public Networking | **None** |
+
+### Variables
+
+| Variable | Value |
+|----------|-------|
+| `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
+| `VESPA_HOSTNAME` | `${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}` |
+| `VESPA_IMAGE_TAG` | `8.431.32` |
+| `PORT` | `8080` |
+
+Note the asymmetry: `VESPA_CONFIGSERVERS` points at **admin** on both services,
+while `VESPA_HOSTNAME` is each service's *own* domain.
+
+### Volume
+
+| Mount path | `/opt/vespa/var` |
+|---|---|
+
+This is where documents and vectors live. **Required.**
+
+### Healthcheck
+
+| Healthcheck Path | `/state/v1/health` |
+|---|---|
+| Healthcheck Timeout | `300` |
+
+---
+
+## Step 4 — `vespa-init`
+
+One-shot bootstrap that deploys the cluster topology.
+
+| Setting | Value |
+|---------|-------|
+| Service name | `vespa-init` |
+| Source | GitHub repo → `https://github.com/nick0lay/railway-templates` |
+| Root Directory | `solutions/marqo-navigator/vespa-init` |
+| Public Networking | **None** |
+| Volume | none |
+
+### Variables
+
+| Variable | Value |
+|----------|-------|
+| `VESPA_CONFIG_URL` | `http://${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}:19071` |
+| `VESPA_QUERY_URL` | `http://${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}:8080` |
+| `VESPA_ADMIN_HOST` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
+| `VESPA_NODE_HOST` | `${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}` |
+
+`VESPA_ADMIN_HOST` and `VESPA_NODE_HOST` must be **identical** to the
+`VESPA_HOSTNAME` values on the two Vespa services — they are substituted into
+`hosts.xml`, which Vespa matches against what each node reports.
+
+**This service exits when it finishes, and Railway will restart it.** That is
+expected and harmless: `deploy-app.sh` checks whether an application is already
+deployed and exits immediately if so. It must behave this way — once Marqo
+starts it rewrites the application package (adding its `marqo-custom-searchers`
+bundle), and redeploying the base package over that fails.
+
+---
+
+## Step 5 — `Marqo`
+
+| Setting | Value |
+|---------|-------|
+| Service name | `Marqo` |
+| Source | GitHub repo → `https://github.com/nick0lay/railway-templates` |
+| Root Directory | `solutions/marqo-navigator/marqo` |
+| Public Networking | **None** |
+
+### Variables
+
+| Variable | Value |
+|----------|-------|
+| `VESPA_CONFIG_URL` | `http://${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}:19071` |
+| `VESPA_QUERY_URL` | `http://${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}:8080` |
+| `VESPA_DOCUMENT_URL` | `http://${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}:8080` |
+| `ZOOKEEPER_HOSTS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}:2181` |
+| `MARQO_MODELS_TO_PRELOAD` | `["hf/e5-base-v2"]` |
+| `MARQO_ENABLE_THROTTLING` | `TRUE` |
+| `MARQO_IMAGE_TAG` | `latest` |
+| `PORT` | `8882` |
+
+All four Vespa/ZooKeeper variables must be set together — Marqo treats a partial
+external configuration as a fatal error. With all four present it skips starting
+its own Vespa, which is the whole point.
+
+> See [Image Tags](./README.md#image-tags) before shipping. Marqo inverts the
+> usual convention: `latest` is 2.16.1 from March 2025, not the newest build.
+
+### Volume
+
+| Mount path | `/root/.cache/huggingface` |
+|---|---|
+
+Embedding model weights (~420 MB). Not baked into the image — without this
+volume they re-download on every deploy, delaying startup.
+
+### Healthcheck
+
+Leave the healthcheck path **empty**. Marqo cannot start until the Vespa cluster
+is serving, and Railway has no service ordering, so it will crash-loop on a cold
+deploy until `vespa-init` finishes. That is self-healing; a healthcheck just
+turns it into a red deployment.
+
+---
+
+## Step 6 — `Navigator`
+
+| Setting | Value |
+|---------|-------|
+| Service name | `Navigator` |
+| Source | GitHub repo → `https://github.com/nick0lay/railway-templates` |
+| Root Directory | `solutions/marqo-navigator/navigator` |
+| Public Networking | **None** |
 
 ### Variables
 
@@ -101,24 +242,19 @@ The generous timeout covers first boot, where Vespa converges *and* the embeddin
 | `NAVIGATOR_IMAGE_TAG` | `v0.1.19` |
 | `PORT` | `9882` |
 
-The port in `MARQO_API_URL` is **not optional** — Navigator needs a full URL, and a bare hostname leaves every panel empty. Navigator also hardcodes 9882, hence the explicit `PORT`.
-
-No volume. No healthcheck path needed — it serves static files and comes up immediately.
+The port in `MARQO_API_URL` is **not optional** — a bare hostname leaves every
+panel in the UI empty.
 
 ---
 
-## Step 4 — Caddy-UI service
-
-The public front door for the dashboard.
+## Step 7 — `Caddy-UI`
 
 | Setting | Value |
 |---------|-------|
-| **Service name** | `Caddy-UI` |
-| **Source** | GitHub repo → `https://github.com/iliab1/caddy-password-auth` |
-| **Root Directory** | *(leave empty)* |
-| **Public Networking** | **HTTP domain** |
-
-### Variables
+| Service name | `Caddy-UI` |
+| Source | GitHub repo → `https://github.com/iliab1/caddy-password-auth` |
+| Root Directory | *(empty)* |
+| Public Networking | **HTTP domain, target port `8080`** |
 
 | Variable | Value |
 |----------|-------|
@@ -126,24 +262,16 @@ The public front door for the dashboard.
 | `BASIC_AUTH` | `admin:${{secret(32)}}` |
 | `PORT` | `8080` |
 
-When Railway asks for the domain's **target port**, enter `8080` to match.
-
-Setting `PORT` explicitly is worth the extra field. Caddy's entrypoint substitutes it into its config as `:${PORT}`, so what you set is exactly what Caddy listens on. Left unset it falls back to Railway's injected value or `80`, and you would have to read the deploy logs to know which to enter as the target port.
-
 ---
 
-## Step 5 — Caddy-API service
-
-The public front door for the REST API and its Swagger page.
+## Step 8 — `Caddy-API`
 
 | Setting | Value |
 |---------|-------|
-| **Service name** | `Caddy-API` |
-| **Source** | GitHub repo → `https://github.com/iliab1/caddy-password-auth` |
-| **Root Directory** | *(leave empty)* |
-| **Public Networking** | **HTTP domain** |
-
-### Variables
+| Service name | `Caddy-API` |
+| Source | GitHub repo → `https://github.com/iliab1/caddy-password-auth` |
+| Root Directory | *(empty)* |
+| Public Networking | **HTTP domain, target port `8080`** |
 
 | Variable | Value |
 |----------|-------|
@@ -151,97 +279,49 @@ The public front door for the REST API and its Swagger page.
 | `BASIC_AUTH` | `admin:${{secret(32)}}` |
 | `PORT` | `8080` |
 
-Target port `8080` again. These are separate containers, so both Caddy services using `8080` is fine.
+**Use a separate `${{secret(32)}}` from Caddy-UI** — entering the function twice
+generates two different values. This credential grants `DELETE /indexes/{name}`
+and `DELETE /models`; dashboard access should not also grant destruction rights.
 
-**Use a separate `${{secret(32)}}` from Caddy-UI.** Each call generates a distinct value, so simply entering the function twice is enough. This credential grants `DELETE /indexes/{name}` and `DELETE /models` — giving someone dashboard access should not also grant them the ability to destroy every index.
-
----
-
-## Public Networking Summary
-
-Only the two Caddy services get public networking. This is a security boundary, not a preference — Marqo has no authentication of its own, and its API can delete every index.
-
-| Service | Public Networking | Target Port | Why |
-|---------|-------------------|-------------|-----|
-| `Marqo` | **None** | — | No auth of its own. A domain here bypasses Caddy entirely |
-| `Navigator` | **None** | — | No auth of its own, and exposes destructive index operations |
-| `Caddy-UI` | **HTTP domain** | `8080` | Password-protected front door for the dashboard |
-| `Caddy-API` | **HTTP domain** | `8080` | Password-protected front door for the API and Swagger |
-
-To add a domain: select the service → **Settings → Networking → Public Networking → Generate Domain**, then enter `8080` as the target port.
-
-Use **Generate Domain** (HTTP), never **TCP Proxy**. TCP Proxy is raw passthrough with no TLS, and HTTP basic auth is base64-encoded rather than encrypted — over a TCP proxy the passwords would cross the internet in the clear. HTTP domains get automatic HTTPS, which is what makes basic auth safe here. Everything this template serves is HTTP.
-
-Both Caddy services can use `8080` because they are separate containers.
-
-Private networking needs no configuration at all. Railway gives every service a `*.railway.internal` hostname automatically; the reference variables in Steps 3–5 resolve to those.
-
-### One caveat on private networking
-
-Railway's private DNS behaviour depends on when the **environment** was created:
-
-- **Created after 16 October 2025** — resolves to both IPv4 and IPv6. Everything here works as documented.
-- **Created before that** — resolves to **IPv6 only**.
-
-That matters because Marqo binds `0.0.0.0:8882` (IPv4 only) and never opens an IPv6 listener — verified by inspecting its sockets. On a legacy IPv6-only environment, both `Caddy-API → Marqo` and `Navigator → Marqo` fail with 502 even though every variable is correct. Navigator itself binds `::` and is unaffected.
-
-Deploying the template creates a fresh project and environment, so this does not affect normal use. It only bites when adding these services to a Railway project created before October 2025. If that is your situation, create a new environment rather than debugging the 502.
+Use **Generate Domain** (HTTP), never **TCP Proxy**: basic auth is base64-encoded
+rather than encrypted, so it needs the automatic HTTPS an HTTP domain provides.
 
 ---
 
-## Step 6 — Review the graph
-
-Before publishing, confirm the topology:
-
-```
-Caddy-UI  (domain) ──> Navigator (no domain) ──┐
-                                                ├──> Marqo (no domain, volume)
-Caddy-API (domain) ─────────────────────────────┘
-```
-
-Checklist:
+## Step 9 — Review before publishing
 
 - [ ] Exactly **two** services have public domains: `Caddy-UI` and `Caddy-API`
-- [ ] `Marqo` and `Navigator` have **no** domain
-- [ ] `Marqo` has a volume at `/opt/vespa/var`
-- [ ] Three reference variables resolve to service names, not literal text
+- [ ] `vespa-admin`, `vespa-node`, `Marqo`, `Navigator`, `vespa-init` have **none**
+- [ ] Three volumes: `vespa-admin` and `vespa-node` at `/opt/vespa/var`, `Marqo` at `/root/.cache/huggingface`
+- [ ] `VESPA_HOSTNAME` on each Vespa service is its **own** private domain
+- [ ] `VESPA_ADMIN_HOST` / `VESPA_NODE_HOST` on `vespa-init` match those exactly
+- [ ] `VESPA_CONFIGSERVERS` points at **vespa-admin** on both Vespa services
 - [ ] The two `BASIC_AUTH` values differ
 
-If Marqo or Navigator has a public domain, the auth gateways are bypassable and the template is unsafe to publish — Marqo has no authentication of its own.
+If `Marqo` or `Navigator` has a public domain, the auth gateways are bypassable
+and the template is unsafe to publish — Marqo has no authentication of its own.
 
----
+## Step 10 — First deploy
 
-## Step 7 — Publish
+Expect a messy first few minutes. Railway starts everything at once, so:
 
-1. Fill in template metadata — name, description, and README from [`TEMPLATE.md`](./TEMPLATE.md)
-2. Suggested name: **Marqo + Navigator**
-3. Click **Publish**
+1. `vespa-admin` comes up (~1 min)
+2. `vespa-node` retries until the config server answers
+3. `vespa-init` deploys the topology, waits for convergence, exits
+4. `Marqo` crash-loops until the cluster serves, then downloads ~420 MB of model weights
 
-Railway gives you a deploy URL like `https://railway.com/deploy/<slug>` — for this template, `ukdruK`.
+Watch `vespa-init` logs for `[vespa-init] cluster ready`. Marqo settling after
+that is normal.
 
----
-
-## Step 8 — Deploy it once and verify
-
-Publishing does not prove it works. Deploy your own template before sharing it.
-
-**First deploy is slow** — several minutes while Vespa converges and the model downloads. Watch Marqo's deploy logs; `[railway-entrypoint] empty volume — seeding Vespa directory skeleton` on first boot is expected.
-
-Read both passwords from **Caddy-UI → Variables → `BASIC_AUTH`** and the same on **Caddy-API**.
+## Step 11 — Verify
 
 ```bash
-UI_URL="https://your-caddy-ui.up.railway.app"
 API_URL="https://your-caddy-api.up.railway.app"
 API_PASS="<from Caddy-API BASIC_AUTH>"
 
-# 1. Auth is enforced
-curl -so /dev/null -w '%{http_code}\n' "$API_URL/health"          # expect 401
-curl -so /dev/null -w '%{http_code}\n' "$UI_URL/"                 # expect 401
+curl -so /dev/null -w '%{http_code}\n' "$API_URL/health"          # 401
+curl -u "admin:$API_PASS" "$API_URL/health"                       # status green
 
-# 2. Marqo is healthy
-curl -u "admin:$API_PASS" "$API_URL/health"                       # expect status green
-
-# 3. Index and search end to end
 curl -u "admin:$API_PASS" -X POST "$API_URL/indexes/products" \
   -H 'Content-Type: application/json' \
   -d '{"type":"unstructured","model":"hf/e5-base-v2"}'
@@ -256,61 +336,62 @@ curl -u "admin:$API_PASS" -X POST "$API_URL/indexes/products/documents" \
 curl -u "admin:$API_PASS" -X POST "$API_URL/indexes/products/search" \
   -H 'Content-Type: application/json' \
   -d '{"q":"something to keep me warm in the snow"}'
-# Top hit must be Down Winter Jacket — no shared keywords with the query
+# Top hit must be Down Winter Jacket
 ```
 
-Then in a browser:
+Then in a browser: the UI URL with the **UI** password, `$API_URL/docs` with the
+**API** password, and confirm each password is rejected by the other gateway.
 
-- Open `$UI_URL`, sign in with the **UI** password, confirm the dashboard lists the `products` index
-- Open `$API_URL/docs`, sign in with the **API** password, confirm Swagger renders and **Try it out** works
-- Confirm the UI password is **rejected** on `$API_URL` and vice versa
-
-Finally, redeploy Marqo from the Railway dashboard and confirm the index survives and the model is not re-downloaded.
+Finally redeploy `Marqo` and confirm the index survives.
 
 ---
 
-## Step 9 — Record the deploy link
+## Troubleshooting
 
-**Done.** The template is published at:
+### Cluster never converges / `vespa-init` times out
 
-```
-https://railway.com/deploy/ukdruK?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic
-```
+`VESPA_HOSTNAME` does not match what `vespa-init` wrote into `hosts.xml`. Check
+all four values (`VESPA_HOSTNAME` × 2, `VESPA_ADMIN_HOST`, `VESPA_NODE_HOST`)
+are the two private domains and nothing else.
 
-The deploy button is in place in the repository root [`README.md`](../../README.md) Solutions table and under the heading in [`README.md`](./README.md).
+### `vespa-init` keeps restarting
 
-If the template is ever republished under a new slug, update both locations.
+Expected. It exits after finishing and Railway restarts it; the guard makes each
+restart a no-op. Confirm the logs say `application already deployed`.
 
----
+### `vespa-init` fails after the cluster has been running
 
-## Troubleshooting Template Creation
+It is trying to redeploy the base package over the one Marqo rewrote. The guard
+should prevent this — if it does not, the config server was unreachable when the
+guard ran.
 
-### Build fails: Dockerfile not found
+### Marqo: `VespaNotConvergedError` / `did not converge within 120 seconds`
 
-The **Root Directory** is wrong. It must be `solutions/marqo-navigator/marqo` — the directory holding the Dockerfile, not the solution folder and not the repository root.
+Marqo started before the cluster was ready. Self-heals on restart. If it
+persists, the cluster genuinely is not converging — see the first entry.
 
-### Reference variable shows as literal text
+### Marqo starts its own Vespa (thread exhaustion returns)
 
-The referenced service does not exist yet or is named differently. `${{Marqo.RAILWAY_PRIVATE_DOMAIN}}` requires a service named exactly `Marqo`. Rename the service and re-enter the variable.
+One of the four external-store variables is missing. Marqo needs
+`VESPA_CONFIG_URL`, `VESPA_QUERY_URL`, `VESPA_DOCUMENT_URL` **and**
+`ZOOKEEPER_HOSTS`; with a partial set it errors, with none it starts its own.
 
 ### 502 from a Caddy service
 
-`ORIGIN` is missing its port. `http://marqo.railway.internal` fails; `http://marqo.railway.internal:8882` works.
+`ORIGIN` is missing its port. `http://marqo.railway.internal` fails;
+`http://marqo.railway.internal:8882` works.
 
-### Marqo restart-loops on first deploy
+### `pthread_create failed (EAGAIN)` anywhere
 
-The healthcheck timeout is too short for the initial model download. Raise it to 600s, or remove the healthcheck path entirely for the first deploy and add it back afterwards.
-
-### Navigator crashes with "Missing parameter name at 1"
-
-The service is running the upstream image rather than this repository's Dockerfile. Confirm **Root Directory** is `solutions/marqo-navigator/navigator`.
-
-### UI loads but every panel is empty
-
-`MARQO_API_URL` is wrong or Marqo is not healthy yet. Navigator proxies server-side, so check its deploy logs rather than the browser console.
+A container hit Railway's 1000-PID ceiling. Check the service is running the
+role it should be — most likely `vespa-node` was given `configserver,services`
+instead of `services`, so it is running both roles in one container.
 
 ---
 
 ## Note on `docker-compose.yml`
 
-The compose file and `.env.example` are local development only — Railway ignores both. They exist so the stack can be exercised before touching the dashboard, and they build from the same Dockerfiles with the same volume layout. Run `docker compose up -d --build` from the solution directory to reproduce the deployed topology on your machine.
+Local development only; Railway ignores it. It builds from the same Dockerfiles,
+uses the same application package, and sets `pids_limit: 1000` on every
+container to reproduce Railway's ceiling. Run `docker compose up -d --build`
+from the solution directory to exercise the deployed topology locally.
