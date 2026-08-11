@@ -294,10 +294,19 @@ volume they re-download on every deploy, delaying startup.
 
 ### Healthcheck
 
-Leave the healthcheck path **empty**. Marqo cannot start until the Vespa cluster
-is serving, and Railway has no service ordering, so it will crash-loop on a cold
-deploy until `vespa-init` finishes. That is self-healing; a healthcheck just
-turns it into a red deployment.
+### Optional
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VESPA_WAIT_ATTEMPTS` | `90` | 10-second attempts the entrypoint makes waiting for the Vespa query container before starting anyway — 15 minutes. Raise it if a cold cluster regularly takes longer |
+| `MARQO_MAX_CPU_MODEL_MEMORY` | image default | Memory ceiling in GB for loaded models. Raise if you preload several |
+| `LOG_LEVEL` | `WARN` | Set to `INFO` for per-request logging |
+
+### Healthcheck
+
+Leave the healthcheck path **empty**. Marqo waits for the Vespa cluster in its
+entrypoint rather than crash-looping, so a deploy that looks slow is usually
+just waiting — and a healthcheck would fail it during that window.
 
 ---
 
@@ -482,7 +491,7 @@ resource limit.
 `vespa-admin` has hit the 1000-PID ceiling. A container at the ceiling cannot
 fork at all: `railway ssh` fails with
 `crun: fork: Resource temporarily unavailable`. Redeploy it, and if it recurs,
-lower `VESPA_CPU_LIMIT` or move to a plan with a higher PID cap.
+lower `VESPA_JVM_PROCESSOR_COUNT` (default 4) or move to a plan with a higher PID cap.
 
 ### Index exists but reports 0 documents
 

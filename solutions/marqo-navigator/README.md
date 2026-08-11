@@ -130,12 +130,21 @@ All seven services build from source. **None of them is a Docker image reference
 |----------|---------|-------------|
 | `VESPA_IMAGE_TAG` | `8.431.32` | Vespa image tag. Marqo's tooling pins this version; changing it is untested here |
 | `VESPA_ROLE` | `services` | Which Vespa role the container runs: `configserver,services` on the admin service, `services` on the node. Passed as a variable rather than a Railway start command, because a start command replaces the image entrypoint instead of passing arguments to it |
+| `VESPA_JVM_PROCESSOR_COUNT` | `4` | How many cores each JVM sizes its thread pools for. Vespa derives pool sizes from the host's core count, and Railway hosts report 48 — untuned that reaches the 1000-PID ceiling. Sets the two JVMARGS variables below and the `<jvm options>` in the application package. Raising it trades headroom for nothing measurable: concurrency is limited by Marqo, not by Vespa's pools |
+| `VESPA_CONFIGSERVER_JVMARGS` | `-XX:ActiveProcessorCount=4` | JVM arguments for the config server. Defaulted by the image from `VESPA_JVM_PROCESSOR_COUNT`; set explicitly only to pass additional flags |
+| `VESPA_CONFIGPROXY_JVMARGS` | `-XX:ActiveProcessorCount=4` | Same, for the config proxy |
 
 ### Navigator — User-Configurable
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `NAVIGATOR_IMAGE_TAG` | `v0.1.19` | Navigator image tag |
+
+### Marqo — Startup
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VESPA_WAIT_ATTEMPTS` | `90` | How many 10-second attempts Marqo's entrypoint makes waiting for the Vespa query container before starting anyway (15 minutes). Railway has no service ordering, so without this Marqo crash-loops through a cold deploy |
 
 ### Caddy-UI / Caddy-API — User-Configurable
 
@@ -155,6 +164,9 @@ All seven services build from source. **None of them is a Docker image reference
 | `VESPA_HOSTNAME` | Each Vespa service | its **own** `RAILWAY_PRIVATE_DOMAIN` | What the node reports itself as. Must match `hosts.xml`, which `vespa-init` writes from `VESPA_ADMIN_HOST`/`VESPA_NODE_HOST`. Mismatch means the cluster never converges |
 | `VESPA_CONFIGSERVERS` | Both Vespa services | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` | Where every node finds configuration. Points at **admin** on both |
 | `VESPA_CONFIG_URL` / `VESPA_QUERY_URL` / `VESPA_DOCUMENT_URL` / `ZOOKEEPER_HOSTS` | Marqo | admin `:19071`, node `:8080`, admin `:2181` | Switch Marqo to external-vector-store mode. Must all four be set — a partial set is a fatal error, none at all makes Marqo start its own Vespa and exhaust the PID cap |
+| `VESPA_CONFIG_URL` / `VESPA_QUERY_URL` | vespa-init | admin `:19071`, node `:8080` | Where the bootstrap job reaches the cluster |
+| `VESPA_ADMIN_HOST` / `VESPA_NODE_HOST` | vespa-init | the two `RAILWAY_PRIVATE_DOMAIN` values | Substituted into `hosts.xml`. Must equal the `VESPA_HOSTNAME` set on each Vespa service, or the cluster never converges |
+| `PORT` | Marqo, Navigator, both Vespa | `8882`, `9882`, `19071`/`8080` | Each of these binds its own port and ignores Railway's injected value; setting it keeps Railway pointed at the right one. On the Caddy services `PORT` is real — Caddy listens on it |
 
 ## Volumes
 
