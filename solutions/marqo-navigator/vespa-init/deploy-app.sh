@@ -112,7 +112,11 @@ curl -sf -X PUT --data-binary @/tmp/services.xml -H "Content-Type: application/x
     "$S/content/services.xml" >/dev/null
 curl -sf -X PUT "$S/prepared" >/dev/null
 if curl -s -X PUT "$S/active" | grep -q '"activated"\|activated'; then
-    echo "[vespa-init] repaired — the query container JVM will restart with the cap"
+    echo "[vespa-init] repaired."
+    echo "[vespa-init] NOTE: restart vespa-node to apply it — Vespa accepts the"
+    echo "[vespa-init]       new JVM options but does not recycle a running"
+    echo "[vespa-init]       container JVM for them. Fresh deployments are"
+    echo "[vespa-init]       unaffected: the JVM starts with the cap already set."
 else
     echo "[vespa-init] activation did not confirm; check the config server" >&2
     exit 1

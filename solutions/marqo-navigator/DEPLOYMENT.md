@@ -59,6 +59,12 @@ deployed before this existed: it clones the active application, patches
 `services.xml` and reactivates, keeping Marqo's bundle and schemas intact.
 Override `VESPA_JVM_PROCESSOR_COUNT` (default 4) to tune.
 
+**One manual step, and only on the repair path:** restart `vespa-node` after
+`vespa-init` logs `repaired`. Vespa accepts the new JVM options but does not
+recycle a running container JVM to apply them, so the count stays high until it
+restarts (measured 924 before, 432 after). Fresh deployments never hit this —
+the JVM starts with the cap already set.
+
 Note the local harness reproduces Railway's PID cap but not its core count, so
 compose under-measures: treat it as a smoke test, not proof of headroom.
 
