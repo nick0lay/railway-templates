@@ -92,6 +92,12 @@ services:
       # can actually embed. Must match the model used at index creation.
       MARQO_MODELS_TO_PRELOAD: '["hf/e5-base-v2"]'
       MARQO_ENABLE_THROTTLING: "TRUE"
+      # Marqo's own default is 8, which returns 429 from about 10 concurrent
+      # requests — well before Vespa's thread pools are a factor. 32 removes
+      # those rejections at a cost of ~120 threads on this service under load
+      # (69 idle, 187 peak), and none on Vespa.
+      MARQO_MAX_CONCURRENT_SEARCH: "32"
+      MARQO_MAX_CONCURRENT_INDEX: "32"
     volumes:
       # Model weights (~420MB). Not baked into the image — without this they
       # re-download on every deploy.

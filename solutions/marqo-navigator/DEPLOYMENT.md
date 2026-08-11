@@ -68,12 +68,25 @@ the JVM starts with the cap already set.
 Note the local harness reproduces Railway's PID cap but not its core count, so
 compose under-measures: treat it as a smoke test, not proof of headroom.
 
-**Load does not move the needle.** Thread pools are pre-allocated and bounded at
-deploy time, so concurrency changes the count by tens, not hundreds. Under 60
-concurrent indexing requests the count stayed flat and Marqo returned 429 for
-the excess in under a second — requests are rejected, never queued. Raise
-`MARQO_MAX_CONCURRENT_INDEX` / `MARQO_MAX_CONCURRENT_SEARCH`, batch documents
-into fewer calls, or have clients retry on 429.
+**Concurrency is limited by Marqo, not by Vespa's threads.** Marqo's own default
+is 8 concurrent requests per type, so it returns 429 from roughly 10 concurrent
+callers while Vespa's pools sit idle. This template sets both limits to 32:
+
+| Load test (200 requests, concurrency 10) | limit 8 | limit 32 |
+|---|---|---|
+| Succeeded | 160 | **200** |
+| 429s | 40 | **0** |
+| Vespa-node threads | 432 | **432** (unchanged) |
+
+Raising Vespa's thread budget would not have helped — it was never the
+constraint. Note that more concurrency buys fewer rejections, not more
+throughput: measured throughput stayed at 14–15 req/s across both settings while
+p50 latency rose from 0.47s to 0.90s, because the real limit is CPU for
+embedding inference. When p99 climbs without throughput rising, the answer is a
+larger Marqo service rather than higher limits.
+
+These variables need a **redeploy** to take effect, not just a variable change —
+Marqo keeps reporting the old limit until it restarts.
 
 ---
 
@@ -259,6 +272,8 @@ bundle), and redeploying the base package over that fails.
 | `ZOOKEEPER_HOSTS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}:2181` |
 | `MARQO_MODELS_TO_PRELOAD` | `["hf/e5-base-v2"]` |
 | `MARQO_ENABLE_THROTTLING` | `TRUE` |
+| `MARQO_MAX_CONCURRENT_SEARCH` | `32` |
+| `MARQO_MAX_CONCURRENT_INDEX` | `32` |
 | `MARQO_IMAGE_TAG` | `latest` |
 | `PORT` | `8882` |
 

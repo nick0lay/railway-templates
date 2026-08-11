@@ -119,6 +119,8 @@ All seven services build from source. **None of them is a Docker image reference
 | `MARQO_IMAGE_TAG` | `latest` | Marqo image tag (see [Image Tags](#image-tags)) |
 | `MARQO_MODELS_TO_PRELOAD` | `["hf/e5-base-v2"]` | Models loaded during startup. Preloading is what makes the healthcheck meaningful — `/health` only goes green once the service can actually index. Must include the model you create indexes with |
 | `MARQO_ENABLE_THROTTLING` | `TRUE` | Caps concurrent search and indexing operations |
+| `MARQO_MAX_CONCURRENT_SEARCH` | `32` | Concurrent searches before Marqo returns 429. Marqo's own default is 8, which rejects from ~10 concurrent callers while Vespa sits idle. Costs ~120 threads on the Marqo service under load, none on Vespa |
+| `MARQO_MAX_CONCURRENT_INDEX` | `32` | Same, for indexing |
 | `MARQO_MAX_CPU_MODEL_MEMORY` | Image default | Memory ceiling in GB for loaded models. Raise if you preload several |
 | `LOG_LEVEL` | `WARN` | Set to `INFO` to see per-request logging |
 
