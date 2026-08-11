@@ -143,8 +143,11 @@ resolves to Vespa 8.736.12, whose status response Marqo cannot parse: `/health`
 returns 400 on every request while search keeps working, so the cluster looks
 fine until something checks it. `8.431.32` is the version Marqo's tooling
 generates against and is the only one verified here. Trying a newer tag is
-reasonable — just confirm `/health` returns 200, and pin *before* indexing, since
-Vespa will not start on state written by a newer release.
+reasonable — just confirm `/health` returns 200 afterwards.
+
+> **Pin before you index.** Vespa refuses to start on state written by a newer
+> release, so a cluster that ran `latest` and accumulated data cannot simply be
+> pinned back — it needs both Vespa volumes wiped and a full reindex.
 
 `VESPA_HOSTNAME` is what makes this work on Railway at all. Vespa matches each
 node against the hostname it reports for itself, and Railway does not let you
@@ -214,6 +217,12 @@ while `VESPA_HOSTNAME` is each service's *own* domain.
 |---|---|
 
 This is where documents and vectors live. **Required, and easy to miss.**
+
+> **Pin before you index.** Vespa refuses to start on state written by a newer
+> release, so a cluster that ran `latest` and accumulated data cannot simply be
+> pinned back — it needs both Vespa volumes wiped and a full reindex.
+
+
 
 Without it `/opt/vespa/var` lands on the container's ephemeral overlay and every
 redeploy silently loses your data — the index still exists (its definition lives

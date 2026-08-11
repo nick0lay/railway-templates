@@ -43,8 +43,10 @@ Different indexes can use different models, so a fashion catalogue and a homewar
 **A note on versions:** Vespa is pinned to `8.431.32`, the release Marqo's own
 tooling targets. Newer Vespa releases change a status field Marqo reads, which
 makes its health endpoint return 400 while search continues working. You can
-raise `VESPA_IMAGE_TAG` and test a newer release, but pin it before indexing —
-Vespa will not start on data written by a newer version.
+raise `VESPA_IMAGE_TAG` and test a newer release, but **pin before you index**:
+Vespa refuses to start on state written by a newer release, so a cluster that
+ran `latest` and accumulated data cannot simply be pinned back — it needs both
+Vespa volumes wiped and a full reindex.
 
 **A note on the self-hosted project:** Marqo's open-source releases stopped at 2.16.1 in March 2025 and upstream has marked the OSS project deprecated. Current builds are published under `-cloud` tags, which self-host without a licence or credentials — this template runs either, selected with one variable. See the README for the trade-off.
 

@@ -231,9 +231,9 @@ You are welcome to try a newer tag: Marqo's schema expectations may line up
 again with some future release, and nothing here depends on `8.431.32`
 specifically. Verify `/health` returns 200 before trusting it.
 
-**Downgrading is not safe once you have data.** Vespa refuses to start on state
-written by a newer release, so moving from a newer tag back to `8.431.32` means
-wiping both Vespa volumes and reindexing. Pin before you index anything.
+> **Pin before you index.** Vespa refuses to start on state written by a newer
+> release, so a cluster that ran `latest` and accumulated data cannot simply be
+> pinned back — it needs both Vespa volumes wiped and a full reindex.
 
 ## Embedding Models
 
