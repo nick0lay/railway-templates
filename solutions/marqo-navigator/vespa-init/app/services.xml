@@ -33,7 +33,7 @@
                  report 48 cores: feedapi-handler alone goes from 57 threads to
                  193. Capping the processor count the JVM sees brings the pools
                  back in line with the 1000-PID ceiling. -->
-            <jvm options="-XX:ActiveProcessorCount=4"/>
+            <jvm options="__JVM_OPTIONS__"/>
             <node hostalias="node1"/>
         </nodes>
     </container>

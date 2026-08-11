@@ -51,12 +51,16 @@ Two settings fix it, and both are in this guide:
 | `vespa-admin` | 996 | **497** |
 | `vespa-node` | 957 | **430** |
 
-`VESPA_CONFIGSERVER_JVMARGS` caps the config server, and
-`-XX:ActiveProcessorCount=4` in `<container><nodes><jvm>` (see
-`vespa-init/app/services.xml`) caps the query container — `<nodes>` being the
-one element Marqo's bootstrap preserves. Note the local harness reproduces
-Railway's PID cap but not its core count, so compose under-measures: treat it as
-a smoke test, not proof of headroom.
+**Both are automatic — there is nothing to configure.** The Vespa image
+defaults `VESPA_CONFIGSERVER_JVMARGS` and `VESPA_CONFIGPROXY_JVMARGS`, and
+`vespa-init` puts the matching cap in `<container><nodes><jvm>`, which is the
+one element Marqo's bootstrap preserves. `vespa-init` also *repairs* a cluster
+deployed before this existed: it clones the active application, patches
+`services.xml` and reactivates, keeping Marqo's bundle and schemas intact.
+Override `VESPA_JVM_PROCESSOR_COUNT` (default 4) to tune.
+
+Note the local harness reproduces Railway's PID cap but not its core count, so
+compose under-measures: treat it as a smoke test, not proof of headroom.
 
 **Load does not move the needle.** Thread pools are pre-allocated and bounded at
 deploy time, so concurrency changes the count by tens, not hundreds. Under 60
@@ -110,8 +114,6 @@ Create this first: four other services reference it.
 | Variable | Value |
 |----------|-------|
 | `VESPA_ROLE` | `configserver,services` |
-| `VESPA_CONFIGSERVER_JVMARGS` | `-XX:ActiveProcessorCount=4` |
-| `VESPA_CONFIGPROXY_JVMARGS` | `-XX:ActiveProcessorCount=4` |
 | `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_HOSTNAME` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_IMAGE_TAG` | `8.431.32` |
@@ -171,7 +173,6 @@ suspending it when idle is not something it recovers from cleanly.
 | Variable | Value |
 |----------|-------|
 | `VESPA_ROLE` | `services` |
-| `VESPA_CONFIGPROXY_JVMARGS` | `-XX:ActiveProcessorCount=4` |
 | `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_HOSTNAME` | `${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_IMAGE_TAG` | `8.431.32` |
