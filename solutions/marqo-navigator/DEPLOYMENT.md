@@ -138,6 +138,14 @@ Create this first: four other services reference it.
 | `VESPA_IMAGE_TAG` | `8.431.32` |
 | `PORT` | `19071` |
 
+**Pin `VESPA_IMAGE_TAG` — do not leave it as `latest`.** `latest` currently
+resolves to Vespa 8.736.12, whose status response Marqo cannot parse: `/health`
+returns 400 on every request while search keeps working, so the cluster looks
+fine until something checks it. `8.431.32` is the version Marqo's tooling
+generates against and is the only one verified here. Trying a newer tag is
+reasonable — just confirm `/health` returns 200, and pin *before* indexing, since
+Vespa will not start on state written by a newer release.
+
 `VESPA_HOSTNAME` is what makes this work on Railway at all. Vespa matches each
 node against the hostname it reports for itself, and Railway does not let you
 set container hostnames — so we tell Vespa what to call itself, and `vespa-init`
@@ -480,6 +488,19 @@ instead — Railway's start command replaces the image entrypoint, so Vespa's ro
 argument has to arrive as a variable. A variant of this, "The executable
 `configserver,` could not be found", means the value was typed with a space
 after the comma.
+
+### `/health` returns 400 but search works
+
+Marqo cannot parse the Vespa status response:
+
+```json
+{"loc": ["nodes", 0, "services", 8, "status", "description"], "msg": "field required"}
+```
+
+`VESPA_IMAGE_TAG` is set to `latest` (or another release newer than
+`8.431.32`). Pin both Vespa services to `8.431.32` and redeploy. If the cluster
+already holds data, the volumes must be wiped first — Vespa refuses to start on
+state written by a newer version.
 
 ### Index creation returns 500, but search still works
 

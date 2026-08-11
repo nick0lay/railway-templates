@@ -205,6 +205,36 @@ The `-cloud` images are published publicly and require no credentials or licence
 
 Changing the tag triggers a rebuild. Bumping across versions against an existing volume is untested here — Vespa's upgrade path may clear directories it does not recognise, which would cost a one-time re-download of the model cache but not your indexes.
 
+## Vespa Version
+
+`VESPA_IMAGE_TAG` is pinned to **`8.431.32`**, the version Marqo's own tooling
+generates its application package against. This is not a preference — newer
+Vespa breaks Marqo.
+
+| Tag | Version | Result |
+|-----|---------|--------|
+| `8.431.32` | Apr 2025 | **Pinned default.** Cluster converges, `/health` returns 200, indexing and search work |
+| `latest` | 8.736.12 at time of writing | `/health` returns **400** on every request |
+
+With `latest`, Marqo cannot parse the newer Vespa's status response and fails
+validation on a field that no longer exists:
+
+```json
+{"loc": ["nodes", 0, "services", 8, "status", "description"],
+ "msg": "field required", "type": "value_error.missing"}
+```
+
+Search still works, which makes this easy to miss — the cluster looks healthy
+until something reads `/health`. Pinning back to `8.431.32` fixes it immediately.
+
+You are welcome to try a newer tag: Marqo's schema expectations may line up
+again with some future release, and nothing here depends on `8.431.32`
+specifically. Verify `/health` returns 200 before trusting it.
+
+**Downgrading is not safe once you have data.** Vespa refuses to start on state
+written by a newer release, so moving from a newer tag back to `8.431.32` means
+wiping both Vespa volumes and reindexing. Pin before you index anything.
+
 ## Embedding Models
 
 The model is chosen per index, not per deployment, so different catalogues can use different models in the same instance.
