@@ -28,15 +28,6 @@ Marqo publishes embedding models trained specifically on retail catalogues, and 
 | [Marqo-Ecommerce-B / L](https://huggingface.co/collections/Marqo/marqo-ecommerce-embeddings-66f611b9bb9d035a8d164fbb) | General product search | Marqo reports **+17.6% MRR** over the best open-source model (`ViT-SO400M-14-SigLIP`) and **+38.9% MRR** over Amazon-Titan-Multimodal on its `marqo-ecommerce-hard` benchmark |
 | [Marqo-FashionSigLIP / FashionCLIP](https://huggingface.co/Marqo/marqo-fashionSigLIP) | Apparel and accessories | Marqo reports both outperforming FashionCLIP 2.0 and OpenFashionCLIP across text-to-image, category-to-product, and sub-category-to-product tasks |
 
-```bash
-curl -u "admin:$API_PASSWORD" -X POST "$API/indexes/catalogue" \
-  -H 'Content-Type: application/json' \
-  -d '{"type":"unstructured",
-       "model":"marqo-ecommerce-B",
-       "modelProperties":{"name":"hf-hub:Marqo/marqo-ecommerce-embeddings-B",
-                          "type":"open_clip","dimensions":768},
-       "treatUrlsAndPointersAsImages":true}'
-```
 
 Different indexes can use different models, so a fashion catalogue and a homeware catalogue can each run the model that suits it.
 
@@ -58,25 +49,16 @@ Titles, descriptions, and photography can live on the same document and are each
 
 ## Getting Started After Deployment
 
-### Accessing the UI
+### Accessing the UI and Finding Your Credentials
 
-After deployment, click on the **Caddy-UI** service to find your URL:
+Click the **Caddy-UI** service to find its URL — shown on the Deployments tab, or
+under Settings → Networking. The **Caddy-API** service has its own URL for the
+REST API and Swagger page.
 
-1. **Deployments Tab**: The URL is displayed directly under the service name
-2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
-
-Sign in with `UI_USERNAME` and `UI_PASSWORD`.
-
-### Finding Your Credentials
-
-Two separate passwords are generated on deploy — one per gateway. To find them:
-
-1. Open your Railway project dashboard
-2. Click on the **Caddy-UI** or **Caddy-API** service
-3. Go to the **Variables** tab
-4. Find `BASIC_AUTH` — click the eye icon to reveal
-
-The API credential is deliberately separate from the UI credential: it grants index deletion, so it should not be handed out alongside read access to the dashboard.
+Each gateway generates its own password on deploy: open the service, go to the
+**Variables** tab and reveal `BASIC_AUTH`. The two are deliberately different —
+the API credential grants index deletion, so it should not be handed out
+alongside read access to the dashboard.
 
 ### First Boot Takes a Few Minutes
 
@@ -123,40 +105,22 @@ Or use the interactive Swagger page at `https://your-api-url.railway.app/docs`, 
 
 ### Services
 
-| Service | Source | Description |
-|---------|--------|-------------|
-| vespa-admin | Custom Dockerfile | Vespa config server, ZooKeeper, cluster controller (private) |
-| vespa-node | Custom Dockerfile | Vespa query container + content node (private) |
-| vespa-init | Custom Dockerfile | One-shot cluster bootstrap (private) |
-| Marqo | Custom Dockerfile | Embedding inference + search API (private) |
-| Navigator | Custom Dockerfile | Admin UI and search console (private) |
-| Caddy-UI | GitHub repo `iliab1/caddy-password-auth` | Auth gateway for the UI (public) |
-| Caddy-API | GitHub repo `iliab1/caddy-password-auth` | Auth gateway for the API and Swagger (public) |
+| Service | Role |
+|---------|------|
+| vespa-admin | Vespa config server, ZooKeeper, cluster controller (private) |
+| vespa-node | Vespa query container + content node (private) |
+| vespa-init | One-shot cluster bootstrap (private) |
+| Marqo | Embedding inference + search API (private) |
+| Navigator | Admin UI and search console (private) |
+| Caddy-UI | Auth gateway for the UI (public) |
+| Caddy-API | Auth gateway for the API and Swagger (public) |
 
 ### Environment Variables
 
-#### Marqo
-
-| Variable | Description |
-|----------|-------------|
-| `MARQO_IMAGE_TAG` | Docker image tag for version control (default: `latest`) |
-| `MARQO_MODELS_TO_PRELOAD` | Models loaded at startup (default: `["hf/e5-base-v2"]`) |
-| `MARQO_ENABLE_THROTTLING` | Caps concurrent operations (default: `TRUE`) |
-| `LOG_LEVEL` | Log verbosity (default: `WARN`) |
-
-#### Navigator
-
-| Variable | Description |
-|----------|-------------|
-| `MARQO_API_URL` | Internal connection to Marqo (auto-configured) |
-| `NAVIGATOR_IMAGE_TAG` | Docker image tag (default: `v0.1.19`) |
-
-#### Caddy-UI / Caddy-API
-
-| Variable | Description |
-|----------|-------------|
-| `ORIGIN` | Internal upstream URL (auto-configured) |
-| `BASIC_AUTH` | Login credentials in `user:pass` form (`${{secret(32)}}` auto-generates) |
+Every service is pre-configured. The ones worth knowing: `MARQO_IMAGE_TAG` and
+`VESPA_IMAGE_TAG` pin versions, `MARQO_MODELS_TO_PRELOAD` selects the embedding
+model, and `BASIC_AUTH` on each Caddy service holds the generated password. Full
+reference in the repository README.
 
 ### Volume
 
@@ -173,12 +137,6 @@ Marqo embeds documents and queries into the same vector space, so "something to 
 
 ### Retail-Trained Models, Swappable Per Index
 Marqo's own ecommerce and fashion embedding models beat both the leading open-source and leading commercial multimodal models on retail benchmarks, and load into this deployment by name at index creation. Start on the general-purpose default, switch to a retail model when your catalogue justifies it.
-
-### Multimodal Product Search
-Index product photography alongside titles and descriptions. Shoppers find items by describing them, which works even where listing text is thin or missing — the case keyword search cannot serve at all.
-
-### Embeddings Included
-Most vector search stacks need a separate embedding service plus a vector database. Marqo does both in one deployment — send raw text or image URLs, get semantic search.
 
 ### Web Dashboard
 Marqo Navigator provides index management, document upload, live search preview, and index statistics from the browser, so you can inspect and query your data without writing API calls.
