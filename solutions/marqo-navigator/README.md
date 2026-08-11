@@ -66,8 +66,8 @@ cannot start, and no configuration fixes it. Measured on the stock image:
 |---------------|--------------|---------------|
 | Marqo + Vespa in one container | ~1010 | no |
 | Vespa alone in one container | ~1010 | no |
-| **vespa-admin** (this template) | ~600 local, **914 on Railway** | yes, tightly |
-| **vespa-node** (this template) | ~570 local, **990 on Railway** | yes, tightly |
+| **vespa-admin** (this template, tuned) | **497 on Railway** | yes |
+| **vespa-node** (this template, tuned) | **430 on Railway** | yes |
 | **Marqo**, external vector store | **~34** | yes |
 
 Two further details make the split hold:

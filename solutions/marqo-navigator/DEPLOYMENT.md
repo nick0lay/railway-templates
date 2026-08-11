@@ -39,12 +39,31 @@ to end: cluster converged, index created, documents embedded, semantic search
 returning correct results through the authenticated gateway, and data surviving
 a redeploy.
 
-**Thread headroom is tight.** Measured on Railway after a working deploy:
-`vespa-admin` 914/1000 and `vespa-node` 990/1000, against 598 and 558 for the
-same services locally. The local harness reproduces Railway's cap but not its
-host, so it under-measures — treat compose as a smoke test, not proof of
-headroom. `VESPA_CPU_LIMIT` (default 4) restricts CPU affinity; raising it will
-make this worse.
+**Thread budget.** Vespa sizes its jdisc thread pools from the host's core
+count, and Railway hosts report 48. Untuned that put `vespa-admin` at 996/1000
+and `vespa-node` at 957/1000 — a few threads from the ceiling, at which point a
+container cannot fork and the config server stops answering.
+
+Two settings fix it, and both are in this guide:
+
+| | untuned | tuned |
+|---|---|---|
+| `vespa-admin` | 996 | **497** |
+| `vespa-node` | 957 | **430** |
+
+`VESPA_CONFIGSERVER_JVMARGS` caps the config server, and
+`-XX:ActiveProcessorCount=4` in `<container><nodes><jvm>` (see
+`vespa-init/app/services.xml`) caps the query container — `<nodes>` being the
+one element Marqo's bootstrap preserves. Note the local harness reproduces
+Railway's PID cap but not its core count, so compose under-measures: treat it as
+a smoke test, not proof of headroom.
+
+**Load does not move the needle.** Thread pools are pre-allocated and bounded at
+deploy time, so concurrency changes the count by tens, not hundreds. Under 60
+concurrent indexing requests the count stayed flat and Marqo returned 429 for
+the excess in under a second — requests are rejected, never queued. Raise
+`MARQO_MAX_CONCURRENT_INDEX` / `MARQO_MAX_CONCURRENT_SEARCH`, batch documents
+into fewer calls, or have clients retry on 429.
 
 ---
 
@@ -91,6 +110,8 @@ Create this first: four other services reference it.
 | Variable | Value |
 |----------|-------|
 | `VESPA_ROLE` | `configserver,services` |
+| `VESPA_CONFIGSERVER_JVMARGS` | `-XX:ActiveProcessorCount=4` |
+| `VESPA_CONFIGPROXY_JVMARGS` | `-XX:ActiveProcessorCount=4` |
 | `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_HOSTNAME` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_IMAGE_TAG` | `8.431.32` |
@@ -150,6 +171,7 @@ suspending it when idle is not something it recovers from cleanly.
 | Variable | Value |
 |----------|-------|
 | `VESPA_ROLE` | `services` |
+| `VESPA_CONFIGPROXY_JVMARGS` | `-XX:ActiveProcessorCount=4` |
 | `VESPA_CONFIGSERVERS` | `${{vespa-admin.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_HOSTNAME` | `${{vespa-node.RAILWAY_PRIVATE_DOMAIN}}` |
 | `VESPA_IMAGE_TAG` | `8.431.32` |
