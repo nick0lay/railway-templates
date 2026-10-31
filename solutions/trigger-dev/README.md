@@ -33,7 +33,7 @@ Self-hosted Trigger.dev v4 on Railway (webapp and data services) plus a DigitalO
 
 | Service | Source | Role |
 |---------|--------|------|
-| trigger.dev | `webapp/Dockerfile` (from `ghcr.io/nick0lay/trigger.dev-railway:v4.0.0`) | Webapp, API, dashboard (public) |
+| trigger.dev | `webapp/Dockerfile` (`ghcr.io/nick0lay/trigger.dev-railway:v4.0.0`) | Webapp, API, dashboard (public) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:16` | Primary database (private) |
 | Redis | `redis:8.2` (Railway's Redis) | Queues, cache, pub/sub (private) |
 | ClickHouse | `clickhouse/clickhouse-server` | Analytics for runs and logs (private) |
@@ -43,10 +43,14 @@ Self-hosted Trigger.dev v4 on Railway (webapp and data services) plus a DigitalO
 
 ## Where the code lives
 
-- **This directory**: the Railway packaging for the webapp. The Dockerfile starts from the patched image and swaps upstream's ~700 Prisma migrations for one consolidated migration (`webapp/consolidated-migration/`), using the matching `webapp/schema.prisma`.
+- **This directory**: the Railway packaging for the webapp: a Dockerfile that pins the patched image, docs and template copy.
 - **[nick0lay/trigger.dev](https://github.com/nick0lay/trigger.dev)** (fork of `triggerdotdev/trigger.dev`): the patches (dual-stack IPv6 for Redis/Postgres on Railway's private network, ClickHouse fixes), the GitHub Actions that build `ghcr.io/nick0lay/trigger.dev-railway` and `ghcr.io/nick0lay/trigger-ops-controller`, the ops-controller code, and detailed docs under `.railway/docs/`.
 
-The image tag, consolidated migration and `schema.prisma` must come from the same Trigger.dev version. Upgrade them together.
+To upgrade Trigger.dev, rebuild the patched image from the fork for the new version and change `TRIGGER_IMAGE_TAG`.
+
+### Database migrations
+
+The webapp applies upstream's Prisma migrations on boot (about 700 of them; under a minute on an empty database). An earlier version replaced them with one consolidated migration, but Railway's builder kept the original files. Both sets then ran, and the first boot failed with `type "AuthenticationMethod" already exists`.
 
 ### Why the webapp isn't built from the fork
 

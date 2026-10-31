@@ -17,6 +17,8 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [QuestDB](./solutions/questdb/) | Time-series database with built-in web console and multi-protocol access | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/AdmJg1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [StarRocks](./solutions/starrocks/) | MPP analytical database with MySQL-protocol access and web UI | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/starrocks-is-an-open-source-mpp-analytic?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Marqo + Navigator](./solutions/marqo-navigator/) | Ecommerce & multimodal vector search with admin UI, both password-protected | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ukdruK?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [ClickHouse](./solutions/clickhouse/) | Single-node OLAP database with persistent volume and ready-made connection URLs | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickhouse-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Trigger.dev](./solutions/trigger-dev/) | Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -45,14 +47,20 @@ railway-templates/
     ├── starrocks/          # StarRocks MPP analytical database
     │   ├── README.md
     │   └── starrocks/      # Custom Dockerfile + Railway entrypoint wrapper
-    └── marqo-navigator/    # Marqo vector search with UI behind Caddy auth
+    ├── marqo-navigator/    # Marqo vector search with UI behind Caddy auth
+    │   ├── README.md
+    │   ├── DEPLOYMENT.md   # Per-service Railway setup walkthrough
+    │   ├── docker-compose.yml  # Local harness (pids_limit mirrors Railway)
+    │   ├── vespa/          # Vespa image, run as admin and node roles
+    │   ├── vespa-init/     # One-shot cluster bootstrap + app package
+    │   ├── marqo/          # Custom Dockerfile, external vector store mode
+    │   └── navigator/      # Custom Dockerfile pinning Express 4
+    ├── clickhouse/         # Single ClickHouse server with volume
+    │   ├── README.md
+    │   └── clickhouse/     # Dockerfile, network + system-log config
+    └── trigger-dev/        # Trigger.dev webapp + data services
         ├── README.md
-        ├── DEPLOYMENT.md   # Per-service Railway setup walkthrough
-        ├── docker-compose.yml  # Local harness (pids_limit mirrors Railway)
-        ├── vespa/          # Vespa image, run as admin and node roles
-        ├── vespa-init/     # One-shot cluster bootstrap + app package
-        ├── marqo/          # Custom Dockerfile, external vector store mode
-        └── navigator/      # Custom Dockerfile pinning Express 4
+        └── webapp/         # Dockerfile pinning the patched Trigger.dev image
 ```
 
 ## Contributing
