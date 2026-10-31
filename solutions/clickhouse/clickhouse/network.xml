@@ -1,0 +1,8 @@
+<clickhouse>
+    <!-- "::" listens on IPv6 and IPv4, so the server is reachable over
+         Railway's IPv6 private network and through the public domain. -->
+    <listen_host>::</listen_host>
+    <listen_try>1</listen_try>
+    <!-- HTTP interface on Railway's PORT (the template sets PORT=8123). -->
+    <http_port from_env="PORT" replace="true">8123</http_port>
+</clickhouse>
