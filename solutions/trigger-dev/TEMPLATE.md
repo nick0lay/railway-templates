@@ -6,7 +6,7 @@ Trigger.dev is an open-source platform that lets developers reliably run long-du
 
 This template deploys Trigger.dev across two platforms: **Railway hosts the webapp** (orchestration, API, dashboard) while **DigitalOcean runs the supervisor** (task execution in Docker containers). This architecture is required because Railway doesn't provide Docker socket access needed for task execution, while DigitalOcean droplets have full Docker capabilities.
 
-The included **ops-controller automates the entire deployment process**—requiring only your DigitalOcean API token alongside Railway's auto-provided credentials. After one-click deployment, the system automatically provisions a DigitalOcean droplet, configures task execution, and maintains the supervisor without manual intervention.
+The included **ops-controller automates the entire deployment process**—requiring only a DigitalOcean API token and a Railway API token. After one-click deployment, the system automatically provisions a DigitalOcean droplet, configures task execution, and maintains the supervisor without manual intervention.
 
 ## Common Use Cases
 
@@ -27,7 +27,7 @@ Trigger.dev v4 requires a supervisor service to execute tasks in Docker containe
 1. **Railway Services**: Webapp, PostgreSQL, Redis, ClickHouse, Railway Bucket (object storage), Docker registry
 2. **DigitalOcean Service**: Supervisor droplet for task execution
 3. **ops-controller**: Automates cross-platform deployment and monitoring
-4. **One-Click Setup**: Deploy button requires only your DigitalOcean API token
+4. **One-Click Setup**: Deploy button requires only a DigitalOcean API token and a Railway account or workspace token
 
 ## Dependencies for Trigger.dev Hosting
 
@@ -42,7 +42,7 @@ Trigger.dev v4 requires a supervisor service to execute tasks in Docker containe
 ### Deployment Dependencies
 
 - **Trigger.dev v4.0.0** - [Latest stable release](https://github.com/triggerdotdev/trigger.dev/releases/tag/trigger.dev%404.0.0)
-- **Railway account** - [Sign up at railway.app](https://railway.app)
+- **Railway account** - [Sign up at railway.app](https://railway.app) and [create an account or workspace token](https://railway.com/account/tokens) (project tokens don't work)
 - **DigitalOcean account** - [Sign up at digitalocean.com](https://digitalocean.com) and [generate API token](https://cloud.digitalocean.com/account/api/tokens)
 - **ops-controller** - Automated deployment service (included in template)
 - **Documentation** - [Official Trigger.dev docs](https://trigger.dev/docs)
@@ -59,7 +59,7 @@ Trigger.dev v4 requires a supervisor service to execute tasks in Docker containe
 - ✅ **Railway Services**: Trigger.dev webapp, PostgreSQL, Redis, ClickHouse, Railway Bucket, Docker registry
 - ✅ **DigitalOcean Supervisor**: Automated droplet deployment for task execution
 - ✅ **ops-controller**: Cross-platform automation with health monitoring and auto-scaling
-- ✅ **One-Click Setup**: Deploy with just DigitalOcean API token, everything else auto-configured
+- ✅ **One-Click Setup**: Deploy with just a DigitalOcean and a Railway API token, everything else auto-configured
 - ✅ IPv6 DNS support for Railway internal networking
 - ✅ Auto-generated secure secrets (SESSION_SECRET, ENCRYPTION_KEY, etc.)
 - ✅ Vertical auto-scaling and health monitoring
@@ -81,6 +81,8 @@ docker login <registry-domain> -u trigger
 npx trigger.dev@4.0.0 login -a https://<webapp-domain>
 npx trigger.dev@4.0.0 deploy
 ```
+
+The first runs can wait up to about 20 minutes after the template deploy, while the supervisor droplet boots and connects.
 
 ## Email Configuration (Optional)
 

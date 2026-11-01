@@ -91,6 +91,11 @@ Before deploying tasks, run `docker login <registry-domain> -u trigger` with the
 
 ## Required input
 
-- `DIGITALOCEAN_TOKEN` on ops-controller: lets it create the supervisor droplet. Everything else is generated or wired automatically.
+Both go on the ops-controller service. Everything else is generated or wired automatically.
+
+- `DIGITALOCEAN_TOKEN`: lets it create the supervisor droplet. Create one at https://cloud.digitalocean.com/account/api/tokens.
+- `RAILWAY_API_TOKEN`: lets it read the other services' variables (registry domain and password, worker token) and configure Postgres. Use an account or workspace token from https://railway.com/account/tokens. A project token doesn't work, because the ops-controller sends it as a Bearer token.
+
+After the deploy, the supervisor can take up to about 20 minutes to boot and connect to the webapp. Runs triggered before that stay queued and start once it connects.
 
 See the fork's [.railway/docs](https://github.com/nick0lay/trigger.dev/tree/main/.railway/docs) for supervisor setup, data replication and troubleshooting.
