@@ -1,0 +1,21 @@
+<clickhouse>
+    <!-- ClickHouse writes many internal log tables by default. On a small
+         Railway service they fill the volume and add constant background
+         merges, so the high-volume ones are disabled. -->
+    <trace_log remove="remove"/>
+    <text_log remove="remove"/>
+    <metric_log remove="remove"/>
+    <asynchronous_metric_log remove="remove"/>
+    <processors_profile_log remove="remove"/>
+    <query_metric_log remove="remove"/>
+    <query_thread_log remove="remove"/>
+    <query_views_log remove="remove"/>
+    <asynchronous_insert_log remove="remove"/>
+    <opentelemetry_span_log remove="remove"/>
+    <background_schedule_pool_log remove="remove"/>
+
+    <!-- Useful for debugging; kept for 7 days. -->
+    <query_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></query_log>
+    <part_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></part_log>
+    <error_log><ttl>event_date + INTERVAL 7 DAY DELETE</ttl></error_log>
+</clickhouse>
