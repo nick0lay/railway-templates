@@ -6,7 +6,7 @@ Deploy a single ClickHouse server on Railway, with persistent storage and ready-
 
 ## Overview
 
-- **ClickHouse**: column-oriented OLAP database, from the official `clickhouse/clickhouse-server` image, pinned to a tested version
+- **ClickHouse**: column-oriented OLAP database, from the official `clickhouse/clickhouse-server` image, newest tested LTS release by default
 - **Volume** at `/var/lib/clickhouse`, so data survives redeploys and restarts
 - HTTP interface on port 8123, reachable over the public domain (HTTPS) and the private network
 - High-volume internal log tables disabled, so they don't fill the volume
@@ -45,7 +45,7 @@ For a web SQL editor on top, see [ClickHouse + CH-UI](../clickhouse-chui/).
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CLICKHOUSE_IMAGE_TAG` | `25.8` | Image tag from [Docker Hub](https://hub.docker.com/r/clickhouse/clickhouse-server/tags). Empty falls back to `25.8`. Test upgrades on a copy first: downgrading after ClickHouse has written data with a newer version is not supported. |
+| `CLICKHOUSE_IMAGE_TAG` | empty | Empty uses the newest ClickHouse LTS release tested with this template (currently `26.8`). Set any tag from [Docker Hub](https://hub.docker.com/r/clickhouse/clickhouse-server/tags) (for example `26.8`, `26.10` or `latest`) to choose the version yourself. Test upgrades on a copy first: downgrading after ClickHouse has written data with a newer version is not supported. |
 | `CLICKHOUSE_USER` | `clickhouse` | User created on first start |
 | `CLICKHOUSE_PASSWORD` | generated | Password for that user |
 | `CLICKHOUSE_DB` | `railway` | Database created on first start |
@@ -92,6 +92,10 @@ From another service in the same project, use `${{ClickHouse.CLICKHOUSE_URL}}`.
 - **`Authentication failed`**: user and password are only applied on the first start. If you changed the variables later, the old credentials still apply.
 - **Out of memory**: ClickHouse uses about 1 GiB when idle. Give the service at least 2 GB for real workloads.
 - **Data gone after redeploy**: check the volume is attached at `/var/lib/clickhouse` in the service settings.
+
+## Version updates
+
+ClickHouse publishes two LTS releases a year (`YY.3` and `YY.8`), each supported for a year. A weekly GitHub Action (`.github/workflows/clickhouse-lts.yml`) opens a PR when a newer LTS appears on Docker Hub. After the PR is tested and merged, new deployments with an empty `CLICKHOUSE_IMAGE_TAG` get that version. Existing deployments change only when they are rebuilt from the new commit. Moving from one LTS to the next is a supported upgrade, but it can't be undone, so set `CLICKHOUSE_IMAGE_TAG` to a fixed tag if you want to control when that happens.
 
 ## History
 

@@ -4,7 +4,7 @@ ClickHouse is an open-source column-oriented database for real-time analytics. I
 
 ## About Hosting ClickHouse
 
-This template runs the official ClickHouse server image on Railway, pinned to a tested version, with a persistent volume for your data. User, password and database are created on first start, and the template exposes ready-made connection URLs for other services in your project and for clients outside Railway. ClickHouse's high-volume internal log tables are switched off and the useful ones are kept for 7 days, so the volume holds your data, not diagnostics. A `/ping` healthcheck and restart-on-failure policy keep the service available.
+This template runs the official ClickHouse server image on Railway (the newest tested LTS release by default), with a persistent volume for your data. User, password and database are created on first start, and the template exposes ready-made connection URLs for other services in your project and for clients outside Railway. ClickHouse's high-volume internal log tables are switched off and the useful ones are kept for 7 days, so the volume holds your data, not diagnostics. A `/ping` healthcheck and restart-on-failure policy keep the service available.
 
 ## Common Use Cases
 
@@ -15,7 +15,7 @@ This template runs the official ClickHouse server image on Railway, pinned to a 
 
 ## Dependencies for ClickHouse Hosting
 
-- Official `clickhouse/clickhouse-server` image (default tag `25.8`)
+- Official `clickhouse/clickhouse-server` image (newest tested LTS release by default)
 - A Railway volume at `/var/lib/clickhouse` (included)
 
 ### Deployment Dependencies
@@ -38,7 +38,7 @@ Query from your machine:
 curl -u "clickhouse:<password>" "https://<your-domain>/" --data-binary "SELECT version()"
 ```
 
-Change `CLICKHOUSE_IMAGE_TAG` to run another version. Test upgrades on a copy first: ClickHouse can't be downgraded once newer versions have written data.
+Leave `CLICKHOUSE_IMAGE_TAG` empty to get the newest LTS release tested with this template, or set any tag from Docker Hub (for example `26.10` or `latest`) to pick the version yourself. Test upgrades on a copy first: ClickHouse can't be downgraded once newer versions have written data.
 
 ## Why Deploy ClickHouse on Railway?
 

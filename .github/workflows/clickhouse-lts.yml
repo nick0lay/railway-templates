@@ -1,0 +1,63 @@
+# Opens a PR when ClickHouse publishes a newer LTS release than the fallback in
+# solutions/clickhouse/clickhouse/Dockerfile. ClickHouse LTS releases are the
+# YY.3 and YY.8 tags. Test the PR with the template before merging.
+name: ClickHouse LTS update
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find newest LTS tag
+        id: lts
+        run: |
+          dockerfile=solutions/clickhouse/clickhouse/Dockerfile
+          current=$(sed -nE 's/.*CLICKHOUSE_IMAGE_TAG:-([0-9]+\.[0-9]+)\}.*/\1/p' "$dockerfile")
+          latest=$(curl -fsS "https://hub.docker.com/v2/repositories/clickhouse/clickhouse-server/tags?page_size=100&name=." \
+            | jq -r '.results[].name' | grep -E '^[0-9]+\.(3|8)$' | sort -V | tail -1)
+          echo "current=$current latest=$latest"
+          if [ -z "$current" ] || [ -z "$latest" ]; then
+            echo "::error::Could not read current or latest tag"; exit 1
+          fi
+          newest=$(printf '%s\n%s\n' "$current" "$latest" | sort -V | tail -1)
+          if [ "$newest" != "$current" ]; then
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+
+      - name: Open PR
+        if: steps.lts.outputs.update == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CURRENT: ${{ steps.lts.outputs.current }}
+          LATEST: ${{ steps.lts.outputs.latest }}
+        run: |
+          branch="clickhouse-lts-$LATEST"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            echo "Branch $branch already exists"; exit 0
+          fi
+          git switch -c "$branch"
+          sed -i "s/CLICKHOUSE_IMAGE_TAG:-$CURRENT}/CLICKHOUSE_IMAGE_TAG:-$LATEST}/" solutions/clickhouse/clickhouse/Dockerfile
+          sed -i "s/(currently \`$CURRENT\`)/(currently \`$LATEST\`)/" solutions/clickhouse/README.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "ClickHouse: fall back to LTS $LATEST"
+          git push -u origin "$branch"
+          gh pr create --title "ClickHouse: fall back to LTS $LATEST" --body "ClickHouse $LATEST LTS is on Docker Hub. This changes the fallback used when \`CLICKHOUSE_IMAGE_TAG\` is empty from \`$CURRENT\` to \`$LATEST\`.
+
+          Before merging:
+          - Deploy the template from this branch and check \`/ping\`, a query over the public and private URLs, and that data survives a redeploy.
+          - Update the \`clickhouse\` image tag in railway-ops \`templates.yaml\`, then run \`scripts/check.py\`.
+
+          New deployments with an empty tag get the new version after merge. Existing deployments change only when they are rebuilt."
