@@ -38,12 +38,12 @@ Self-hosted Trigger.dev v4 on Railway (webapp and data services) plus a DigitalO
 | Redis | `redis:8.2` (Railway's Redis) | Queues, cache, pub/sub (private) |
 | ClickHouse | `clickhouse/clickhouse-server` | Analytics for runs and logs (private) |
 | Bucket | Railway Bucket | S3-compatible storage for large payloads |
-| registry | `registry:2` | Docker registry for deployed task images |
+| registry | `registry/Dockerfile` (`registry:2` with basic auth, volume at `/var/lib/registry`) | Docker registry for deployed task images (public, password-protected) |
 | ops-controller | `ghcr.io/nick0lay/trigger-ops-controller` | Provisions the DigitalOcean supervisor, sets up Postgres→ClickHouse replication, then disables itself |
 
 ## Where the code lives
 
-- **This directory**: the Railway packaging for the webapp: a Dockerfile that pins the patched image, docs and template copy.
+- **This directory**: the Railway packaging: a webapp Dockerfile that pins the patched image, the registry image with auth, docs and template copy.
 - **[nick0lay/trigger.dev](https://github.com/nick0lay/trigger.dev)** (fork of `triggerdotdev/trigger.dev`): the patches (dual-stack IPv6 for Redis/Postgres on Railway's private network, ClickHouse fixes), the GitHub Actions that build `ghcr.io/nick0lay/trigger.dev-railway` and `ghcr.io/nick0lay/trigger-ops-controller`, the ops-controller code, and detailed docs under `.railway/docs/`.
 
 To upgrade Trigger.dev, rebuild the patched image from the fork for the new version and change `TRIGGER_IMAGE_TAG`.
@@ -72,6 +72,22 @@ This replaced MinIO in November 2026. MinIO stopped publishing community images 
 ## Redis
 
 The template uses Railway's own Redis service definition (`redis:8.2`, volume at `/data`). The webapp connects with `REDIS_URL=${{Redis.REDIS_URL}}?family=0`, and the patched image enables dual-stack DNS lookups. Without that, connections fail with `getaddrinfo ENOTFOUND redis.railway.internal`, because Railway's private network is IPv6.
+
+## Registry
+
+The CLI on your machine pushes task images to the registry, and the supervisor on DigitalOcean pulls them, both through the registry's **public** domain.
+
+| Where | Variable | Value |
+|---|---|---|
+| registry | `PORT` | `5000`. The registry listens on 5000; without this the public domain returns 502 |
+| registry | `REGISTRY_USERNAME` / `REGISTRY_PASSWORD` | `trigger` / generated. The entrypoint turns them into an htpasswd file (basic auth) |
+| trigger.dev | `V4_DEPLOY_REGISTRY_HOST`, `DEPLOY_REGISTRY_HOST` | `${{registry.RAILWAY_PUBLIC_DOMAIN}}`. A private `*.railway.internal` host can't be reached by the CLI or the supervisor |
+| trigger.dev | `V4_DEPLOY_REGISTRY_USERNAME`/`_PASSWORD` (and `DEPLOY_REGISTRY_*`) | references to the registry service |
+| ops-controller | (read through the Railway API) | passes the domain, user and password to the supervisor as `DOCKER_REGISTRY_URL`/`_USERNAME`/`_PASSWORD` |
+
+Images are stored on a volume at `/var/lib/registry`, so deployed task versions survive registry restarts. Each deploy adds an image. To free space, delete old versions through the registry API, then run `registry garbage-collect /etc/docker/registry/config.yml` in the service.
+
+Before deploying tasks, run `docker login <registry-domain> -u trigger` with the password from the registry service's variables.
 
 ## Required input
 

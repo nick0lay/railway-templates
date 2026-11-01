@@ -35,7 +35,7 @@ Trigger.dev v4 requires a supervisor service to execute tasks in Docker containe
 - **Redis instance** - Queue management, real-time features, and caching (provided by Railway with IPv6 support)
 - **ClickHouse database** - Analytics database for advanced metrics and observability (provided by Railway)
 - **Railway Bucket** - S3-compatible object storage for large payloads (provided by Railway)
-- **Docker registry** - Private registry for task deployment and container management (provided by Railway)
+- **Docker registry** - Password-protected registry for task images, on a persistent volume (provided by Railway)
 - **Node.js/TypeScript runtime** - Core execution environment for webapp and task processing
 - **Environment variables** - Auto-configured via Railway template with secure secret generation
 
@@ -60,7 +60,6 @@ Trigger.dev v4 requires a supervisor service to execute tasks in Docker containe
 - ✅ **DigitalOcean Supervisor**: Automated droplet deployment for task execution
 - ✅ **ops-controller**: Cross-platform automation with health monitoring and auto-scaling
 - ✅ **One-Click Setup**: Deploy with just DigitalOcean API token, everything else auto-configured
-- ✅ Optimized migrations (~1 minute vs 20+ minutes)
 - ✅ IPv6 DNS support for Railway internal networking
 - ✅ Auto-generated secure secrets (SESSION_SECRET, ENCRYPTION_KEY, etc.)
 - ✅ Vertical auto-scaling and health monitoring
@@ -72,6 +71,16 @@ Trigger.dev v4 requires a supervisor service to execute tasks in Docker containe
 - Enhanced retry logic - Configurable backoff strategies and error handling
 - TypeScript-first - Full type safety throughout task definitions
 - Polyglot support - Write tasks in both Node.js/TypeScript and Python
+
+## Deploying Tasks
+
+Log in to the registry once, then deploy. The user and password are in the **registry** service's Variables tab:
+
+```bash
+docker login <registry-domain> -u trigger
+npx trigger.dev@4.0.0 login -a https://<webapp-domain>
+npx trigger.dev@4.0.0 deploy
+```
 
 ## Email Configuration (Optional)
 
