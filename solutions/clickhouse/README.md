@@ -99,4 +99,4 @@ ClickHouse publishes two LTS releases a year (`YY.3` and `YY.8`), each supported
 
 ## History
 
-Until November 2026 this template was built from a fork of the ClickHouse source repository (`nick0lay/ClickHouse`, branch `railway-deployment`) with no volume. Existing deployments still point there. That branch is kept unchanged so they keep working.
+Until November 2026 this template was built from a fork of the ClickHouse source repository (`nick0lay/ClickHouse`, default branch `master`) with no volume. Deployments created before the switch still build from there. The repo was archived on 2026-11-01: it is read-only but still public, so those deployments can still rebuild.
