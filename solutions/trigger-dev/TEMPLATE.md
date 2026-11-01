@@ -2,7 +2,7 @@
 
 Trigger.dev is an open-source platform that lets developers reliably run long-duration background jobs—like AI workflows and data processing—directly in their codebase, without timeouts, manual scaling, or complex setup.
 
-## About This Dual-Platform Deployment
+## About Hosting Trigger.dev
 
 This template deploys Trigger.dev across two platforms: **Railway hosts the webapp** (orchestration, API, dashboard) while **DigitalOcean runs the supervisor** (task execution in Docker containers). This architecture is required because Railway doesn't provide Docker socket access needed for task execution, while DigitalOcean droplets have full Docker capabilities.
 
@@ -159,7 +159,7 @@ When email is not configured, find invitation links in Railway logs:
 3. Copy magic link URLs: `https://your-app.up.railway.app/magic?token=<token>`
 4. Share links with users for registration
 
-## Why This Dual-Platform Approach?
+## Why Deploy Trigger.dev on Railway?
 
 This template combines **Railway's managed infrastructure** with **DigitalOcean's Docker capabilities** to provide the complete Trigger.dev v4 experience without compromise.
 
