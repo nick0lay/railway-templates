@@ -1,0 +1,10 @@
+<clickhouse>
+    <!--
+        Trigger.dev's errors_v1 table (ClickHouse migration 022) keeps
+        error_type, error_message and sample_stack_trace outside the sorting key.
+        ClickHouse 26.10 and later reject that unless this is enabled.
+    -->
+    <merge_tree>
+        <allow_dimensions_outside_sorting_key>1</allow_dimensions_outside_sorting_key>
+    </merge_tree>
+</clickhouse>
