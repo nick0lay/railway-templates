@@ -2,7 +2,7 @@
 
 Deploy QuestDB time-series database with built-in web console on Railway.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/AdmJg1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/questdb?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 
