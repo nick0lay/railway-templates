@@ -88,7 +88,8 @@ To find or change your password:
 | `UI_APPNAME` | `Stirling-PDF` | Application name shown in UI |
 | `UI_APPNAMENAVBAR` | `Stirling-PDF` | Application name in navbar |
 | `SYSTEM_MAXFILESIZE` | `100` | Maximum file upload size in MB |
-| `SECURITY_CUSTOMGLOBALAPIKEY` | - | Optional: Set a custom API key for REST API access |
+| `SECURITY_CUSTOMGLOBALAPIKEY` | `${{secret(32)}}` | API key for the REST API, sent in the `X-API-KEY` header (auto-generated) |
+| `SYSTEM_ENABLEANALYTICS` | `false` | Anonymous usage analytics. `false` also skips the analytics prompt on first login |
 
 ### Auto-Configured (Do Not Change)
 
@@ -97,6 +98,7 @@ To find or change your password:
 | `DOCKER_ENABLE_SECURITY` | `true` | Enables security features. Required for auth. |
 | `SECURITY_ENABLELOGIN` | `true` | Enables login requirement. Required for auth. |
 | `METRICS_ENABLED` | `true` | Enables application metrics endpoint. |
+| `PORT` | `8080` | Port the app listens on; must match the public domain port. |
 
 ## Volume
 
