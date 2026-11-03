@@ -1,2 +1,5 @@
 # Claude Code
 settings.local.json
+# Per-folder CLAUDE.md files written by the claude-mem plugin (only the root one is kept)
+CLAUDE.md
+!/CLAUDE.md

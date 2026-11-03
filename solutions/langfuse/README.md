@@ -41,7 +41,7 @@ Self-hosted [Langfuse](https://github.com/langfuse/langfuse) v4 (open-source LLM
 - **Ready on first open.** `LANGFUSE_INIT_*` creates the admin user, organization `My Organization`, project `My Project` and its API keys at first boot. Log in with `LANGFUSE_INIT_USER_EMAIL` and the generated `LANGFUSE_INIT_USER_PASSWORD`; copy the keys from `LANGFUSE_INIT_PROJECT_PUBLIC_KEY` / `LANGFUSE_INIT_PROJECT_SECRET_KEY` into your SDK.
 - **Sign-up closed.** `AUTH_DISABLE_SIGNUP=true`. Without it anyone who finds the URL can create an account on your instance. Invite teammates from the UI (needs SMTP, see below).
 - **Redis set up for queues.** Langfuse's queues (BullMQ) require `maxmemory-policy noeviction`. With the Redis default, Redis can evict queued jobs under memory pressure and traces are lost. The start command also enables AOF persistence.
-- **Pinned versions.** Web and worker are pinned to the same Langfuse minor version, and ClickHouse to an LTS release. The weekly maintenance routine in `railway-ops` tests newer versions before the template is updated.
+- **Pinned versions.** Web and worker are pinned to the same Langfuse minor version, and ClickHouse to an LTS release. Newer versions are tested before the template is updated.
 - **Lean ClickHouse.** Our ClickHouse component disables the high-volume internal log tables, so it uses less disk and memory. `query_log`, which Langfuse reads, stays on (7-day TTL).
 - **Railway Bucket instead of MinIO.** No extra container to run or update.
 
@@ -120,4 +120,4 @@ The playground and evaluators call your LLM provider. Add a provider key in the 
 
 ## Testing
 
-Tested on 2026-11-01 with `railway-ops/scripts/test_deploy.py --config configs/langfuse-v4.json`, and the published template on 2026-11-02 (all five services healthy): all five services healthy, admin login works, sign-up returns "Sign up is disabled", an OpenTelemetry trace sent with the init keys was readable through `/api/public/v2/observations` about a minute later.
+Tested on 2026-11-01 with a test deploy of the template config, and the published template on 2026-11-02: all five services healthy, admin login works, sign-up returns "Sign up is disabled", an OpenTelemetry trace sent with the init keys was readable through `/api/public/v2/observations` about a minute later.

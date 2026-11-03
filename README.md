@@ -25,54 +25,43 @@ Pre-configured multi-service deployments with authentication and best practices.
 
 ## Structure
 
+Each solution has a `README.md` (setup and variables), a `TEMPLATE.md` (the description shown on Railway) and one folder per service that Railway builds. Solutions that only use upstream images have no service folders.
+
 ```
 railway-templates/
+├── railway/
+│   └── SAMPLE-TEMPLATE.md      # Starting point for a new TEMPLATE.md
 └── solutions/
-    ├── bentopdf-caddy/     # BentoPDF with Caddy authentication
-    │   └── README.md
-    ├── nocodb-minio/       # NocoDB with MinIO storage
-    │   ├── README.md
-    │   └── minio-init/     # Bucket initialization sidecar
-    ├── stirling-pdf/       # Stirling-PDF single service
-    │   ├── README.md
-    │   └── app/            # Custom Dockerfile for single-volume support
-    ├── openclaw/           # OpenClaw AI assistant with S3 backup
-    │   └── README.md
-    ├── clickhouse-chui/    # ClickHouse OLAP database with CH-UI web interface
-    │   ├── README.md
-    │   └── clickhouse/     # Custom Dockerfile for Railway networking
-    ├── evershop/           # EverShop e-commerce platform with PostgreSQL
-    │   ├── README.md
-    │   └── evershop/       # Custom Dockerfile with admin auto-setup
-    ├── questdb/            # QuestDB time-series database
-    │   ├── README.md
-    │   └── questdb/        # Custom Dockerfile for Railway PORT mapping
-    ├── starrocks/          # StarRocks MPP analytical database
-    │   ├── README.md
-    │   └── starrocks/      # Custom Dockerfile + Railway entrypoint wrapper
-    ├── marqo-navigator/    # Marqo vector search with UI behind Caddy auth
-    │   ├── README.md
-    │   ├── DEPLOYMENT.md   # Per-service Railway setup walkthrough
-    │   ├── docker-compose.yml  # Local harness (pids_limit mirrors Railway)
-    │   ├── vespa/          # Vespa image, run as admin and node roles
-    │   ├── vespa-init/     # One-shot cluster bootstrap + app package
-    │   ├── marqo/          # Custom Dockerfile, external vector store mode
-    │   └── navigator/      # Custom Dockerfile pinning Express 4
-    ├── clickhouse/         # Single ClickHouse server with volume
-    │   ├── README.md
-    │   └── clickhouse/     # Dockerfile, network + system-log config
-    ├── trigger-dev/        # Trigger.dev webapp + data services
-    │   ├── README.md
-    │   └── webapp/         # Dockerfile pinning the patched Trigger.dev image
-    ├── langfuse/           # Langfuse v4 LLM observability (uses ../clickhouse/clickhouse)
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── langfuse-litellm/   # Langfuse v4 + LiteLLM gateway with tracing preconfigured
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    └── typebot/            # Typebot builder + viewer, Mailpit sign-in, Railway Bucket
-        ├── README.md
-        └── TEMPLATE.md
+    ├── bentopdf-caddy/         # BentoPDF behind Caddy password auth (img/: screenshots)
+    ├── nocodb-minio/
+    │   └── minio-init/         # One-time bucket setup sidecar
+    ├── stirling-pdf/
+    │   └── app/                # Entrypoint for single-volume storage
+    ├── openclaw/               # Built from nick0lay/openclaw
+    ├── clickhouse-chui/
+    │   └── clickhouse/         # ClickHouse with Railway networking
+    ├── clickhouse/
+    │   └── clickhouse/         # ClickHouse with volume, network and system-log config
+    ├── evershop/
+    │   └── evershop/           # EverShop with admin auto-setup
+    ├── questdb/
+    │   └── questdb/            # QuestDB with Railway PORT mapping
+    ├── starrocks/
+    │   └── starrocks/          # StarRocks all-in-one with a Railway entrypoint
+    ├── marqo-navigator/        # DEPLOYMENT.md: manual setup; docker-compose.yml: local harness
+    │   ├── vespa/              # Vespa, run as admin and node roles
+    │   ├── vespa-init/         # One-shot cluster bootstrap and app package
+    │   ├── marqo/              # Marqo in external vector store mode
+    │   └── navigator/          # Navigator UI
+    ├── trigger-dev/
+    │   ├── webapp/             # Patched Trigger.dev webapp image
+    │   └── registry/           # Docker registry with basic auth
+    ├── trigger-dev-v4.8/
+    │   ├── clickhouse/         # ClickHouse config for Trigger.dev
+    │   └── registry/           # Docker registry with basic auth
+    ├── langfuse/               # Uses ../clickhouse/clickhouse
+    ├── langfuse-litellm/
+    └── typebot/
 ```
 
 ## Contributing

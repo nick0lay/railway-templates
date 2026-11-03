@@ -124,4 +124,4 @@ Change the image tag of **both** `typebot-builder` and `typebot-viewer` to the s
 
 ## Testing
 
-Tested on 2026-11-04 with `railway-ops/scripts/test_deploy.py`, with `--config configs/typebot.json` and then with the template draft: all six services healthy. A sign-in link requested in the UI arrived in Mailpit, and the link signed in `ADMIN_EMAIL`. An image uploaded through the builder's upload API was readable at its public URL on the `files` service. `files` returned 404 for a folder listing and for `private/` paths, and Mailpit returned 401 without its password.
+Tested on 2026-11-04 with test deploys, first of the template config and then of the template draft: all six services healthy. A sign-in link requested in the UI arrived in Mailpit, and the link signed in `ADMIN_EMAIL`. An image uploaded through the builder's upload API was readable at its public URL on the `files` service. `files` returned 404 for a folder listing and for `private/` paths, and Mailpit returned 401 without its password.
