@@ -131,4 +131,4 @@ The Langfuse keys on `litellm` are references to the project created on first bo
 
 ## Testing
 
-Tested on 2026-11-03 with `railway-ops/scripts/test_deploy.py`, first with `--config configs/langfuse-litellm.json` and then with the template draft: all seven services healthy. A chat completion through LiteLLM (a model added with `/model/new` and `mock_response`, so no provider was called) appeared in Langfuse as a `litellm_request` generation with its model and input, over the private network.
+Tested on 2026-11-03 with test deploys, first of the template config and then of the template draft: all seven services healthy. A chat completion through LiteLLM (a model added with `/model/new` and `mock_response`, so no provider was called) appeared in Langfuse as a `litellm_request` generation with its model and input, over the private network.
