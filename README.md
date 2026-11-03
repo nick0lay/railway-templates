@@ -21,6 +21,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Trigger.dev](./solutions/trigger-dev/) | Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4](./solutions/langfuse/) | LLM observability: tracing, prompts and evals, with ClickHouse, Postgres, Redis and a Railway Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4 + LiteLLM](./solutions/langfuse-litellm/) | LiteLLM AI gateway with every LLM call traced in Langfuse v4, no code changes | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-litellm?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Typebot](./solutions/typebot/) | Visual chatbot builder with Mailpit sign-in (no SMTP needed) and a Railway Bucket for uploads | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/typebot-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -66,7 +67,10 @@ railway-templates/
     ├── langfuse/           # Langfuse v4 LLM observability (uses ../clickhouse/clickhouse)
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── langfuse-litellm/   # Langfuse v4 + LiteLLM gateway with tracing preconfigured
+    ├── langfuse-litellm/   # Langfuse v4 + LiteLLM gateway with tracing preconfigured
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── typebot/            # Typebot builder + viewer, Mailpit sign-in, Railway Bucket
         ├── README.md
         └── TEMPLATE.md
 ```
