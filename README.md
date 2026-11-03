@@ -20,6 +20,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [ClickHouse](./solutions/clickhouse/) | Single-node OLAP database with persistent volume and ready-made connection URLs | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickhouse-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Trigger.dev](./solutions/trigger-dev/) | Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4](./solutions/langfuse/) | LLM observability: tracing, prompts and evals, with ClickHouse, Postgres, Redis and a Railway Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Langfuse v4 + LiteLLM](./solutions/langfuse-litellm/) | LiteLLM AI gateway with every LLM call traced in Langfuse v4, no code changes | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-litellm?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -59,9 +60,15 @@ railway-templates/
     ├── clickhouse/         # Single ClickHouse server with volume
     │   ├── README.md
     │   └── clickhouse/     # Dockerfile, network + system-log config
-    └── trigger-dev/        # Trigger.dev webapp + data services
+    ├── trigger-dev/        # Trigger.dev webapp + data services
+    │   ├── README.md
+    │   └── webapp/         # Dockerfile pinning the patched Trigger.dev image
+    ├── langfuse/           # Langfuse v4 LLM observability (uses ../clickhouse/clickhouse)
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── langfuse-litellm/   # Langfuse v4 + LiteLLM gateway with tracing preconfigured
         ├── README.md
-        └── webapp/         # Dockerfile pinning the patched Trigger.dev image
+        └── TEMPLATE.md
 ```
 
 ## Contributing
