@@ -2,7 +2,7 @@
 
 Self-hosted [Langfuse](https://github.com/langfuse/langfuse) v4 (open-source LLM observability: tracing, prompt management, evaluations) on Railway. It starts ready to use: an admin account, an organization, a project and API keys are created on first boot, and public sign-up is closed.
 
-<!-- Deploy button: add after publishing, using railway.com/deploy/<railway_code>?referralCode=... (see railway-ops templates.yaml) -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
@@ -120,4 +120,4 @@ The playground and evaluators call your LLM provider. Add a provider key in the 
 
 ## Testing
 
-Tested on 2026-11-01 with `railway-ops/scripts/test_deploy.py --config configs/langfuse-v4.json`: all five services healthy, admin login works, sign-up returns "Sign up is disabled", an OpenTelemetry trace sent with the init keys was readable through `/api/public/v2/observations` about a minute later.
+Tested on 2026-11-01 with `railway-ops/scripts/test_deploy.py --config configs/langfuse-v4.json`, and the published template on 2026-11-02 (all five services healthy): all five services healthy, admin login works, sign-up returns "Sign up is disabled", an OpenTelemetry trace sent with the init keys was readable through `/api/public/v2/observations` about a minute later.
