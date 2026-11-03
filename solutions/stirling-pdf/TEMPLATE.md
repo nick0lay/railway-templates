@@ -80,7 +80,8 @@ The custom Dockerfile wraps the official image to support Railway's single-volum
 | `SYSTEM_DEFAULTLOCALE` | Default language (default: `en-US`) |
 | `UI_APPNAME` | Application name shown in UI |
 | `SYSTEM_MAXFILESIZE` | Max upload size in MB (default: `100`) |
-| `SECURITY_CUSTOMGLOBALAPIKEY` | Optional API key for REST API access |
+| `SECURITY_CUSTOMGLOBALAPIKEY` | API key for REST API access (auto-generated) |
+| `SYSTEM_ENABLEANALYTICS` | Anonymous usage analytics (default: `false`, also skips the first-login prompt) |
 
 ### Volume
 
