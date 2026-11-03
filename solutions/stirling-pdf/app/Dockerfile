@@ -1,4 +1,4 @@
-FROM stirlingtools/stirling-pdf:latest
+FROM stirlingtools/stirling-pdf:3.2.2
 
 # Copy custom entrypoint that sets up symlinks for single volume
 COPY entrypoint.sh /entrypoint.sh

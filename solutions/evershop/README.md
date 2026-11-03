@@ -79,7 +79,7 @@ Visit `https://your-url.railway.app/admin` and log in with the credentials from 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `ADMIN_EMAIL` | `admin@example.com` | Initial admin user email |
-| `ADMIN_PASSWORD` | `${{secret(32)}}` | Initial admin user password (auto-generated) |
+| `ADMIN_PASSWORD` | `${{secret(32)}}` | Admin user password (auto-generated). Applied on every start: to change it, change this variable, not the admin UI |
 | `ADMIN_NAME` | `Admin` | Initial admin display name |
 | `SEED_DEMO_DATA` | `true` | Seed demo products, categories, and widgets on first deploy |
 | `SENDGRID_API_KEY` | - | SendGrid API key for transactional emails (optional) |
@@ -140,6 +140,7 @@ EverShop uses `shop.homeUrl` config to generate all URLs. If not set, it default
 1. Check `ADMIN_EMAIL` and `ADMIN_PASSWORD` in the EverShop service Variables tab
 2. If this is a fresh deployment, wait a minute — the admin user is created shortly after the server starts
 3. Check the deploy logs for `[create-admin]` messages
+4. If you changed the password in the admin UI, it was reset to `ADMIN_PASSWORD` on the next start; log in with the variable's value
 
 ### 502 Bad Gateway
 

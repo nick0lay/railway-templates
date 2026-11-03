@@ -7,7 +7,7 @@
     "start": "evershop start"
   },
   "dependencies": {
-    "@evershop/evershop": "^2.1.1",
-    "@evershop/sendgrid": "^2.1.1"
+    "@evershop/evershop": "2.3.0",
+    "@evershop/sendgrid": "2.1.1"
   }
 }
