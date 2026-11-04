@@ -82,7 +82,8 @@ railway-templates/
     │   ├── README.md
     │   └── TEMPLATE.md
     ├── flowise/            # Flowise with owner account created at deploy, Postgres, volume
-    └── langflow/           # Langflow with login, Postgres and a volume
+    ├── langflow/           # Langflow with login, Postgres and a volume
+    └── twenty/             # Twenty CRM with worker, owner created at deploy, Postgres, Redis, Bucket
         ├── README.md
         └── TEMPLATE.md
 ```
