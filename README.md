@@ -24,6 +24,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Langfuse v4 + LiteLLM](./solutions/langfuse-litellm/) | LiteLLM AI gateway with every LLM call traced in Langfuse v4, no code changes | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-litellm?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Typebot](./solutions/typebot/) | Visual chatbot builder with Mailpit sign-in (no SMTP needed) and a Railway Bucket for uploads | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/typebot-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langflow](./solutions/langflow/) | Visual AI agent and RAG builder with login, Postgres and a persistent secret key | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langflow-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Flowise](./solutions/flowise/) | Visual AI agent and chatbot builder with the owner account created at deploy, Postgres and a volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/flowise-5?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -80,6 +81,7 @@ railway-templates/
     ├── typebot/            # Typebot builder + viewer, Mailpit sign-in, Railway Bucket
     │   ├── README.md
     │   └── TEMPLATE.md
+    ├── flowise/            # Flowise with owner account created at deploy, Postgres, volume
     └── langflow/           # Langflow with login, Postgres and a volume
         ├── README.md
         └── TEMPLATE.md
