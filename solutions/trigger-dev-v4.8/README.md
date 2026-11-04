@@ -2,7 +2,7 @@
 
 Self-hosted Trigger.dev v4.8.3 on Railway (webapp and data services) plus a DigitalOcean droplet for the supervisor that runs your tasks. The template runs the official upstream images, not a patched fork.
 
-<!-- Deploy button: add once the template is published (railway.com/deploy/<code>). -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev-v48?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 The earlier [`trigger-dev`](../trigger-dev/) template (v4.0.0, patched image) stays published for existing projects.
 
