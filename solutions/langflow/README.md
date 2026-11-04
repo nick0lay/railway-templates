@@ -36,7 +36,7 @@ Self-hosted [Langflow](https://github.com/langflow-ai/langflow) on Railway: a vi
 ## What this template does differently
 
 - **Login required.** `LANGFLOW_AUTO_LOGIN=false` with an `admin` account and a generated password. The most-deployed Langflow template on Railway leaves the editor open to anyone who finds the URL.
-- **Sign-up off.** The admin creates users under Settings → Admin page. Only admins can create or edit custom components, which run Python on the server (`LANGFLOW_CUSTOM_COMPONENT_ADMIN_ONLY=true`).
+- **Sign-up off.** The admin adds users (see [Adding users](#adding-users)). Only admins can create or edit custom components, which run Python on the server (`LANGFLOW_CUSTOM_COMPONENT_ADMIN_ONLY=true`).
 - **Persistent secret key.** `LANGFLOW_SECRET_KEY` is generated once. Without it, Langflow makes a new key on every restart and saved credentials can no longer be decrypted.
 - **Data persists.** Postgres on a volume for flows and credentials, and a volume for uploaded files. Tested: a saved credential and an uploaded file were still there after a redeploy.
 - **Private database connection.** Langflow reaches Postgres over Railway's private network, not a public TCP proxy.
@@ -58,6 +58,23 @@ curl -X POST "https://<langflow-domain>/api/v1/run/<flow-id>" \
 
 Each project is also an MCP server: see the project's **MCP Server** tab for the URL and the config for Claude Code, Cursor and other clients.
 
+## Adding users
+
+Langflow 1.13 has no user management page in its UI, so the admin adds users through the API:
+
+```bash
+LF=https://<langflow-domain>
+TOKEN=$(curl -s -X POST "$LF/api/v1/login" -d username=admin -d "password=$LANGFLOW_SUPERUSER_PASSWORD" | jq -r .access_token)
+
+# Create the user, then activate it (new users start inactive)
+USER_ID=$(curl -s -X POST "$LF/api/v1/users/" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"username": "alice", "password": "a-long-password"}' | jq -r .id)
+curl -s -X PATCH "$LF/api/v1/users/$USER_ID" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"is_active": true}'
+```
+
+Each user sees only their own flows. To make someone an admin, also send `"is_superuser": true` in the `PATCH`.
+
 ## Variables
 
 ### User-configurable
@@ -67,7 +84,7 @@ Each project is also an MCP server: see the project's **MCP Server** tab for the
 | `LANGFLOW_SUPERUSER` | `admin` | Admin username |
 | `LANGFLOW_SUPERUSER_PASSWORD` | generated | Read it after deploy. It's applied when the admin is created on first start |
 | `LANGFLOW_ENABLE_SIGNUP` | `false` | `true` allows public sign-up |
-| `LANGFLOW_NEW_USER_IS_ACTIVE` | `false` | New accounts need the admin's approval |
+| `LANGFLOW_NEW_USER_IS_ACTIVE` | `false` | New accounts stay inactive until the admin activates them |
 | `LANGFLOW_CUSTOM_COMPONENT_ADMIN_ONLY` | `true` | `false` lets every user write custom components (Python on your server) |
 | `LANGFLOW_WORKERS` | `1` | More workers handle more parallel runs, but each uses more memory |
 | `LANGFLOW_LOG_LEVEL` | `info` | `debug` for troubleshooting |
@@ -125,7 +142,7 @@ Change the image tag (for example `langflowai/langflow:1.13.2`). Langflow runs d
 
 | Symptom | Cause / fix |
 |---|---|
-| Login fails with the generated password | The admin is created on the first start only. If you changed `LANGFLOW_SUPERUSER_PASSWORD` later, use the old password, or create a new admin from the Admin page |
+| Login fails with the generated password | The admin is created on the first start only. If you changed `LANGFLOW_SUPERUSER_PASSWORD` later, use the old password |
 | Saved API keys stop working after a change | `LANGFLOW_SECRET_KEY` was changed. Restore the old value |
 | Out of memory, or the service restarts during runs | Langflow needs about 1–2 GB of RAM. Lower `LANGFLOW_WORKERS`, or raise the service's memory limit |
 | A starter project is missing | The default image skips templates whose components it doesn't include (for example ArXiv). Use `langflowai/langflow-all` |
@@ -134,4 +151,4 @@ Change the image tag (for example `langflowai/langflow:1.13.2`). Langflow runs d
 
 ## Testing
 
-Tested on 2026-11-04 with Langflow 1.13.1 in a throwaway Railway project: both services healthy. Without a login, the API returned 403. A wrong password was refused, the generated admin password logged in, and public sign-up was refused. A credential variable and an uploaded file were saved, and both were still there after a redeploy. The scaling setup above (Redis, 2 workers) started, and login and saved data worked across repeated requests.
+Tested on 2026-11-04 with Langflow 1.13.1 in a throwaway Railway project: both services healthy. Without a login, the API returned 403. A wrong password was refused, the generated admin password logged in, and public sign-up was refused. A credential variable and an uploaded file were saved, and both were still there after a redeploy. The scaling setup above (Redis, 2 workers) started, and login and saved data worked across repeated requests. In a second run: logged in through the browser, opened a flow in the editor and got a reply in the Playground; ran the same flow through the API with an API key (refused without one); added and activated a user with the commands above, who saw none of the admin's flows; all data was still there after a redeploy.
