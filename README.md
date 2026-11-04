@@ -18,7 +18,8 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [StarRocks](./solutions/starrocks/) | MPP analytical database with MySQL-protocol access and web UI | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/starrocks-is-an-open-source-mpp-analytic?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Marqo + Navigator](./solutions/marqo-navigator/) | Ecommerce & multimodal vector search with admin UI, both password-protected | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/marqo?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [ClickHouse](./solutions/clickhouse/) | Single-node OLAP database with persistent volume and ready-made connection URLs | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickhouse-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
-| [Trigger.dev](./solutions/trigger-dev/) | Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Trigger.dev v4.8](./solutions/trigger-dev-v4.8/) | Trigger.dev v4.8.3 on the official images: webapp, Postgres, Redis, ClickHouse, a Railway Bucket and a registry, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev-v48?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Trigger.dev v4.0.0](./solutions/trigger-dev/) | Earlier v4.0.0 line, kept for existing projects. Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4](./solutions/langfuse/) | LLM observability: tracing, prompts and evals, with ClickHouse, Postgres, Redis and a Railway Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4 + LiteLLM](./solutions/langfuse-litellm/) | LiteLLM AI gateway with every LLM call traced in Langfuse v4, no code changes | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-litellm?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Typebot](./solutions/typebot/) | Visual chatbot builder with Mailpit sign-in (no SMTP needed) and a Railway Bucket for uploads | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/typebot-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
@@ -65,6 +66,11 @@ railway-templates/
     ├── trigger-dev/        # Trigger.dev webapp + data services
     │   ├── README.md
     │   └── webapp/         # Dockerfile pinning the patched Trigger.dev image
+    ├── trigger-dev-v4.8/   # Trigger.dev v4.8 on the official image
+    │   ├── README.md
+    │   ├── TEMPLATE.md
+    │   ├── clickhouse/     # ClickHouse 26.10 + MergeTree setting for Trigger.dev migrations
+    │   └── registry/       # registry:2 with basic auth, volume
     ├── langfuse/           # Langfuse v4 LLM observability (uses ../clickhouse/clickhouse)
     │   ├── README.md
     │   └── TEMPLATE.md
