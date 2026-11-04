@@ -2,7 +2,7 @@
 
 Self-hosted [Open WebUI](https://github.com/open-webui/open-webui) on Railway: a ChatGPT-style interface for OpenAI, Anthropic (through an OpenAI-compatible gateway), OpenRouter, Groq, Ollama and any other OpenAI-compatible API, with chat history, document chat (RAG), web search, tools and multiple users. The admin account is created for you at deploy and public sign-up is off. Data lives in Postgres and on a volume, and the version is pinned and tested.
 
-<!-- Deploy button: add after publishing, using railway.com/deploy/<railway_code>?referralCode=... (see railway-ops templates.yaml) -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-webui-10?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
