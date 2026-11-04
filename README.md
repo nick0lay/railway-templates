@@ -25,6 +25,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Typebot](./solutions/typebot/) | Visual chatbot builder with Mailpit sign-in (no SMTP needed) and a Railway Bucket for uploads | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/typebot-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langflow](./solutions/langflow/) | Visual AI agent and RAG builder with login, Postgres and a persistent secret key | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langflow-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Flowise](./solutions/flowise/) | Visual AI agent and chatbot builder with the owner account created at deploy, Postgres and a volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/flowise-5?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Twenty](./solutions/twenty/) | Open-source CRM with a worker, the owner created at deploy, Postgres, Redis and a Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/twenty-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 

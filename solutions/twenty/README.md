@@ -2,7 +2,7 @@
 
 Self-hosted [Twenty](https://github.com/twentyhq/twenty) on Railway: an open-source CRM, a modern alternative to Salesforce and HubSpot. The owner account and workspace are created for you at deploy, so nobody else can claim your instance. Data lives in Postgres, files in a Railway Bucket, and the version is pinned and tested.
 
-<!-- Deploy button: add after publishing, using railway.com/deploy/<railway_code>?referralCode=... (see railway-ops templates.yaml) -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/twenty-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
