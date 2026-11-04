@@ -103,10 +103,12 @@ After the deploy, the supervisor usually connects within about 5 minutes; allow 
 
 ## Upgrading
 
-1. Change the webapp image tag (for example `ghcr.io/triggerdotdev/trigger.dev:v4.8.4`) and the ops-controller's `TRIGGER_VERSION` to the same version.
+1. Change the webapp image tag (for example `ghcr.io/triggerdotdev/trigger.dev:v4.8.4`) and the ops-controller's `TRIGGER_VERSION` to the same version. Use an exact version, never `latest`: the supervisor is only replaced when the value changes.
 2. The webapp applies new migrations on boot.
 3. Changing `TRIGGER_VERSION` redeploys the ops-controller. It destroys the supervisor droplet tagged with the old version, waits until it is gone and creates a new one. Runs queue in the meantime.
 4. The ops-controller finds the worker token in older webapp deployments and keeps it as its own `TRIGGER_WORKER_TOKEN` variable, so webapp redeploys don't break supervisor re-creation.
-5. ClickHouse: only raise `CLICKHOUSE_IMAGE_TAG`, and check upstream's release notes for ClickHouse requirements first.
+5. ClickHouse: the version comes from `CLICKHOUSE_IMAGE_TAG` in `clickhouse/Dockerfile` (default `26.10`). To change it, add a `CLICKHOUSE_IMAGE_TAG` variable to the ClickHouse service; Railway passes it to the build. Only raise it, never lower it (an older server can't read a newer data directory), and check upstream's release notes for ClickHouse requirements first.
+
+If you reset or recreate Postgres, the webapp creates a new worker group and prints a new worker token on its next boot. Delete `TRIGGER_WORKER_TOKEN` on the ops-controller and redeploy it, so it picks up the new token. Otherwise the supervisor keeps the old token and runs stay queued.
 
 See the fork's [ops-controller README](https://github.com/nick0lay/trigger.dev/tree/main/.railway/ops-controller) for supervisor setup and troubleshooting.
