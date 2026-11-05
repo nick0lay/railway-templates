@@ -2,6 +2,8 @@
 
 Self-hosted [Teable](https://github.com/teableio/teable) on Railway: an open-source, no-code database with a spreadsheet interface, an alternative to Airtable. The admin account is created for you at deploy and public sign-up is off, so nobody else can claim your instance. Data lives in Postgres, attachments on a volume, every secret is generated, and the version is pinned and tested.
 
+This template uses Teable's official image, which includes the paid features. **Paid features stay locked until you add a license**; everything else works without one. If you only want the open-source build, use [Teable Community](../teable-community/) instead.
+
 <!-- Deploy button: add after publishing, using railway.com/deploy/<railway_code>?referralCode=... (see railway-ops templates.yaml) -->
 
 ## Architecture
@@ -42,6 +44,31 @@ Self-hosted [Teable](https://github.com/teableio/teable) on Railway: an open-sou
 - **Private networking** for Postgres and Redis; the self-hosted telemetry report is off; healthcheck on `/health`.
 
 Teable runs the web app, API and an automation sandbox in one container; in our test it used about 1.7 GB of RAM while idle.
+
+## Teable or Teable Community?
+
+| | Teable (this template) | [Teable Community](../teable-community/) |
+|---|---|---|
+| Image | `ghcr.io/teableio/teable` (official) | `ghcr.io/teableio/teable-community` |
+| License | AGPL-3.0 Community features, plus paid features under Teable's commercial terms | AGPL-3.0 only |
+| Tables, views, forms, links, formulas, collaboration, REST API | Yes | Yes |
+| Paid features (see below) | Locked until you add a license | Not included |
+| Automation script sandbox | Included | Not included |
+| Telemetry | License telemetry report, turned off here (`TELEMETRY_REPORT_DISABLED=true`) | No license telemetry |
+
+Both templates use the same setup: admin created at deploy, sign-up off, generated secrets, Postgres, Redis and a volume.
+
+## Paid features and license
+
+Without a license this instance runs Teable's free feature set. A license unlocks the features of your self-hosted plan; Teable's docs list them per page, for example the admin audit log, instance-wide automation run monitoring, separate customer-managed databases for a space (BYODB), admin announcements and AI features. See the [self-hosted pricing page](https://app.teable.ai/public/pricing?host=self-hosted) for what each plan includes.
+
+Teable licenses are not set through an environment variable. To activate one:
+
+1. Log in as the admin, click the space name in the upper left, open **System Admin → Self-hosted license** and copy the **Instance ID**.
+2. Subscribe on the [pricing page](https://app.teable.ai/public/pricing?host=self-hosted) and enter the Instance ID; you get a **License Key**.
+3. Paste the License Key under **System Admin → Self-hosted license** and activate it. Optionally turn on **Auto-renew**; Teable first checks that the instance can reach its license server.
+
+The Instance ID is stored in Postgres, so it stays the same across redeploys and upgrades. Paid plans count seats per instance (users with Editor role or higher). When a license expires, the instance goes back to the free feature set and keeps all data. See Teable's [license guide](https://help.teable.ai/en/deploy/activate).
 
 ## After deploy
 
@@ -92,8 +119,6 @@ Add the domain to the `teable` service, then set `PUBLIC_ORIGIN=https://your-dom
 ## Upgrading
 
 Teable publishes date-based release tags (`release.<date>.<build>`) and a `latest` channel. Pick a newer tag from [GitHub Packages](https://github.com/teableio/teable/pkgs/container/teable) and change the image tag on `teable`. Teable migrates the database on start and can't go back to an older version after that, so back up Postgres first (see Teable's [upgrade guide](https://help.teable.ai/en/deploy/upgrade)).
-
-The image includes Teable's paid features, locked until you activate a license under System Admin → Self-hosted license. Without a license you get the open-source Community features (AGPL-3.0).
 
 ## Troubleshooting
 

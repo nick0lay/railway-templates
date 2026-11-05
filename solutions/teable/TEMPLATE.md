@@ -8,9 +8,11 @@ Teable is a single Node.js service that stores every table in PostgreSQL and use
 
 This template creates your admin account at deploy, turns off public sign-up, generates every secret, and runs Teable with PostgreSQL and Redis on Railway's private network.
 
+It uses Teable's official image, which includes the paid features. **Paid features stay locked until you add a license**; tables, views, forms, collaboration and the API work without one. For the open-source build only, deploy the Teable Community template instead.
+
 ## Common Use Cases
 
-- Airtable replacement you host yourself, with no record or seat limits
+- Airtable replacement you host yourself, with your data in your own Postgres
 - Project trackers, CRMs, inventories and content calendars for small teams
 - Forms that collect data straight into a table
 - A Postgres-backed database with a spreadsheet UI for non-developers
@@ -45,6 +47,8 @@ This template creates your admin account at deploy, turns off public sign-up, ge
 - Uses Redis for cache, sessions and queues, with an append-only file on a volume and no public port
 - Pins the Teable release, PostgreSQL 18 and Redis 8.10, and turns off the self-hosted telemetry report
 - Checks health on `/health`
+
+**License:** Teable licenses aren't set through a variable. Open System Admin → Self-hosted license, copy the Instance ID, subscribe on Teable's self-hosted pricing page (https://app.teable.ai/public/pricing?host=self-hosted), then paste the License Key there. Without a license the instance runs the free feature set; an expired license falls back to it and keeps your data.
 
 **Notes:** don't change `SECRET_KEY` or the encryption keys after the first deploy. Upgrade by changing the image tag; Teable migrates the database on start. Teable uses about 1.7 GB of RAM while idle.
 
