@@ -27,6 +27,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Flowise](./solutions/flowise/) | Visual AI agent and chatbot builder with the owner account created at deploy, Postgres and a volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/flowise-5?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Open WebUI](./solutions/open-webui/) | Chat UI for any OpenAI-compatible API with the admin created at deploy, Postgres and a volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-webui-10?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Twenty](./solutions/twenty/) | Open-source CRM with a worker, the owner created at deploy, Postgres, Redis and a Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/twenty-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [GitLab CE + Runner](./solutions/gitlab/) | Git hosting, merge requests and CI/CD with the root password generated, sign-up off, SSH through a TCP proxy and a self-registering shell runner | Unpublished |
 
 ## Structure
 
@@ -92,7 +93,10 @@ railway-templates/
     ├── open-webui/         # Open WebUI with admin created at deploy, Postgres, volume
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── twenty/             # Twenty CRM with worker, owner created at deploy, Postgres, Redis, Bucket
+    ├── twenty/             # Twenty CRM with worker, owner created at deploy, Postgres, Redis, Bucket
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── gitlab/             # GitLab CE with sign-up off, secrets on the volume, SSH proxy, shell runner
         ├── README.md
         └── TEMPLATE.md
 ```
