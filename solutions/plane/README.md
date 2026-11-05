@@ -2,6 +2,8 @@
 
 Self-hosted [Plane](https://github.com/makeplane/plane) on Railway: open-source project management, an alternative to Jira and Linear. The instance admin is created for you at deploy and public sign-up is off, so nobody else can claim your instance. Data lives in Postgres, attachments in a Railway Bucket, and the version is pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plane-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```
