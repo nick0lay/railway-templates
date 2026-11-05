@@ -46,7 +46,7 @@ Self-hosted [Open WebUI](https://github.com/open-webui/open-webui) on Railway: a
 ## After deploy
 
 1. Open the `open-webui` URL and log in with `WEBUI_ADMIN_EMAIL` and the `WEBUI_ADMIN_PASSWORD` variable.
-2. Add a model provider: set `OPENAI_API_KEY` (and `OPENAI_API_BASE_URL` for a provider other than OpenAI) on the service, or add connections under **Admin Panel → Settings → Connections**.
+2. Add a model provider under **Admin Panel → Settings → Connections**. `OPENAI_API_KEY` and `OPENAI_API_BASE_URL` only count if they're set before the first deploy: Open WebUI saves its settings in the database on first start and ignores later changes to these variables.
 3. Add users under **Admin Panel → Users** (the **+** button). Public sign-up stays off.
 4. Upload documents in a chat or under **Workspace → Knowledge** to chat with them. Documents are embedded on the server with the built-in `all-MiniLM-L6-v2` model, so no extra API key is needed.
 
@@ -59,7 +59,7 @@ Self-hosted [Open WebUI](https://github.com/open-webui/open-webui) on Railway: a
 | Groq | `https://api.groq.com/openai/v1` |
 | LiteLLM in the same project | `http://${{litellm.RAILWAY_PRIVATE_DOMAIN}}:${{litellm.PORT}}/v1`, with the LiteLLM master key as `OPENAI_API_KEY` |
 
-You can add several connections in Admin Settings; Open WebUI lists the models of all of them.
+Enter these as a connection in Admin Settings (or as variables before the first deploy). You can add several connections; Open WebUI lists the models of all of them.
 
 ## Variables
 
@@ -70,8 +70,8 @@ You can add several connections in Admin Settings; Open WebUI lists the models o
 | `WEBUI_ADMIN_EMAIL` | (required) | Email of the admin account. You log in with it |
 | `WEBUI_ADMIN_PASSWORD` | generated | Read it after deploy. It's applied only when the admin is created on first start |
 | `WEBUI_ADMIN_NAME` | `Admin` | Display name of the admin |
-| `OPENAI_API_BASE_URL` | `https://api.openai.com/v1` | Any OpenAI-compatible API, see the table above |
-| `OPENAI_API_KEY` | empty | Optional. Key for the API above |
+| `OPENAI_API_BASE_URL` | `https://api.openai.com/v1` | Any OpenAI-compatible API, see the table above. Used on the first start only |
+| `OPENAI_API_KEY` | empty | Optional. Key for the API above. Used on the first start only; later, use Admin Settings |
 | `ENABLE_OLLAMA_API` | `false` | Set `true` and `OLLAMA_BASE_URL` if you run Ollama somewhere |
 
 ### Auto-configured (do not change)
@@ -100,7 +100,7 @@ Change the image tag (for example `ghcr.io/open-webui/open-webui:v0.13.1`). Open
 | Symptom | Cause / fix |
 |---|---|
 | Login fails with the generated password | The admin is created on the first start only. If you changed `WEBUI_ADMIN_PASSWORD` or `WEBUI_ADMIN_EMAIL` later, use the old values |
-| No models in the model list | No provider is configured. Set `OPENAI_API_KEY`, or add a connection in Admin Panel → Settings → Connections |
+| No models in the model list | No provider is configured. Add a connection in Admin Panel → Settings → Connections. Setting `OPENAI_API_KEY` after the first deploy has no effect |
 | Everyone is logged out after a redeploy | `WEBUI_SECRET_KEY` was changed or removed. Set it to a fixed value |
 | Out of memory, or restarts while processing documents | Open WebUI with the local embedding model needs about 1–2 GB of RAM. Raise the service's memory limit, or switch embeddings to an API under Admin Panel → Settings → Documents |
 | A user signs up and waits for approval | Sign-up was turned back on in Admin Settings; new users get the `pending` role until the admin approves them |
@@ -111,4 +111,4 @@ Open WebUI uses its own [license](https://github.com/open-webui/open-webui/blob/
 
 ## Testing
 
-Tested on 2026-11-04 with Open WebUI v0.13.0 in throwaway Railway projects, from the config and then from the template draft: both services healthy, and the admin was created at first start. A stranger's sign-up was refused, requests without a login were refused, a wrong password was refused and the admin logged in, through the API and in the browser (the login page offered no sign-up). The admin added a user, who could log in. A document was uploaded and embedded with the built-in model. After two redeploys, the admin login, the user, the document and an existing login token were all still valid. Chatting with a model was not tested, because it needs a provider key.
+Tested on 2026-11-04 with Open WebUI v0.13.0 in throwaway Railway projects, from the config and then from the template draft: both services healthy, and the admin was created at first start. A stranger's sign-up was refused, requests without a login were refused, a wrong password was refused and the admin logged in, through the API and in the browser (the login page offered no sign-up). The admin added a user, who could log in. A document was uploaded and embedded with the built-in model. After two redeploys, the admin login, the user, the document and an existing login token were all still valid. On 2026-11-05 we repeated the tests and added a chat test against a mock model served by LiteLLM in the same project: the connection was added in Admin Settings, the model appeared, and a chat got its reply through the API and in the browser; the connection and the chat history were still there after a redeploy. Setting `OPENAI_API_BASE_URL` on the service after the first start had no effect, as described above.
