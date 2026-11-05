@@ -98,8 +98,12 @@ railway-templates/
     ├── twenty/             # Twenty CRM with worker, owner created at deploy, Postgres, Redis, Bucket
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── elasticsearch-kibana/  # Elasticsearch 9 + Kibana, security on, private Elasticsearch
-    └── gitlab/             # GitLab CE with sign-up off, secrets on the volume, SSH proxy, shell runner
+    ├── elasticsearch-kibana/  # Elasticsearch 9 + Kibana, security on, private Elasticsearch
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── gitlab/             # GitLab CE with sign-up off, secrets on the volume, SSH proxy, shell runner
+    │   ├── README.md
+    │   └── TEMPLATE.md
     └── immich/             # Immich with CPU machine learning, admin created at deploy, Postgres, Valkey
         ├── README.md
         └── TEMPLATE.md
