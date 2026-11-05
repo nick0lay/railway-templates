@@ -75,7 +75,7 @@ The Instance ID is stored in Postgres, so it stays the same across redeploys and
 1. Open the `teable` URL and log in with `ADMIN_EMAIL` and the `ADMIN_PASSWORD` variable.
 2. Open the first space (`SPACE_NAME`), create a base and start a table, or import a CSV or Excel file.
 3. Add your team (see below).
-4. For integrations, create an access token in your account settings (Access token), and use the REST API (`/api/...`).
+4. For integrations, create a token under **Personal access tokens** in the account menu (click your name), and use the REST API (`/api/...`).
 
 ## Adding users
 
@@ -133,4 +133,4 @@ Teable publishes date-based release tags (`release.<date>.<build>`) and a `lates
 
 ## Testing
 
-Tested on 2026-11-05 with Teable `release.2026-11-05T12-40-53Z.3790` (the `latest` stable release that day) in throwaway Railway projects: all three services healthy (Teable at about 1.7 GB of RAM while idle), and the start command created the admin and first space and turned off sign-up (`[owner-setup] public sign-up turned off: ok`), with no security warning about default keys. Requests without a login were refused (401), a stranger's sign-up was refused, a wrong password was refused, and the admin logged in as instance admin. Through the API, a base and a table with text, number and attachment fields were created, records were added, and a file was uploaded to a record and read back. After redeploying Teable, Postgres and Redis, the login, the records and the attachment were still there, and the setup step skipped itself.
+Tested on 2026-11-05 with Teable `release.2026-11-05T12-40-53Z.3790` (the `latest` stable release that day) in throwaway Railway projects: all three services healthy (Teable at about 1.7 GB of RAM while idle), and the start command created the admin and first space and turned off sign-up (`[owner-setup] public sign-up turned off: ok`), with no security warning about default keys. Requests without a login were refused (401), a stranger's sign-up was refused, a wrong password was refused, and the admin logged in as instance admin. Through the API, a base and a table with text, number and attachment fields were created, records were added, and a file was uploaded to a record and read back. After redeploying Teable, Postgres and Redis, the login, the records and the attachment were still there, and the setup step skipped itself. On 2026-11-06 the template draft was deployed and checked in a browser: the admin logged in, and System Admin (Instance settings, Self-hosted license with the Instance ID) and Personal access tokens opened as described.
