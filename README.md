@@ -92,6 +92,9 @@ railway-templates/
     ├── open-webui/         # Open WebUI with admin created at deploy, Postgres, volume
     │   ├── README.md
     │   └── TEMPLATE.md
+    ├── teable/             # Teable with admin created at deploy, Postgres, Redis, volume
+    │   ├── README.md
+    │   └── TEMPLATE.md
     └── twenty/             # Twenty CRM with worker, owner created at deploy, Postgres, Redis, Bucket
         ├── README.md
         └── TEMPLATE.md
