@@ -30,6 +30,9 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Elasticsearch + Kibana](./solutions/elasticsearch-kibana/) | Elasticsearch 9 and Kibana with security on: private Elasticsearch, Kibana login, Kibana connection set up automatically | Unpublished |
 | [GitLab CE + Runner](./solutions/gitlab/) | Git hosting, merge requests and CI/CD with the root password generated, sign-up off, SSH through a TCP proxy and a self-registering shell runner | Unpublished |
 | [Immich](./solutions/immich/) | Photo and video library with CPU machine learning, the admin created at deploy, VectorChord Postgres and Valkey | Unpublished |
+| [Plane](./solutions/plane/) | Project management (Jira/Linear alternative) with the admin created at deploy, Postgres, Redis, RabbitMQ and a Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plane-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Teable](./solutions/teable/) | No-code database (Airtable alternative), official image with paid features behind a license, admin created at deploy, Postgres, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/teable-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Teable Community](./solutions/teable-community/) | No-code database (Airtable alternative), open-source AGPL build, admin created at deploy, Postgres, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/teable-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -104,7 +107,16 @@ railway-templates/
     ├── gitlab/             # GitLab CE with sign-up off, secrets on the volume, SSH proxy, shell runner
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── immich/             # Immich with CPU machine learning, admin created at deploy, Postgres, Valkey
+    ├── immich/             # Immich with CPU machine learning, admin created at deploy, Postgres, Valkey
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── plane/              # Plane all-in-one with admin created at deploy, Postgres, Redis, RabbitMQ, Bucket
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── teable/             # Teable (official image, paid features need a license), admin at deploy, Postgres, Redis
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── teable-community/   # Teable Community (AGPL build), admin at deploy, Postgres, Redis, volume
         ├── README.md
         └── TEMPLATE.md
 ```
