@@ -29,6 +29,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Twenty](./solutions/twenty/) | Open-source CRM with a worker, the owner created at deploy, Postgres, Redis and a Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/twenty-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Elasticsearch + Kibana](./solutions/elasticsearch-kibana/) | Elasticsearch 9 and Kibana with security on: private Elasticsearch, Kibana login, Kibana connection set up automatically | Coming soon |
 | [GitLab CE + Runner](./solutions/gitlab/) | Git hosting, merge requests and CI/CD with the root password generated, sign-up off, SSH through a TCP proxy and a self-registering shell runner | Unpublished |
+| [Immich](./solutions/immich/) | Photo and video library with CPU machine learning, the admin created at deploy, VectorChord Postgres and Valkey | Unpublished |
 
 ## Structure
 
@@ -99,6 +100,7 @@ railway-templates/
     │   └── TEMPLATE.md
     └── elasticsearch-kibana/  # Elasticsearch 9 + Kibana, security on, private Elasticsearch
     └── gitlab/             # GitLab CE with sign-up off, secrets on the volume, SSH proxy, shell runner
+    └── immich/             # Immich with CPU machine learning, admin created at deploy, Postgres, Valkey
         ├── README.md
         └── TEMPLATE.md
 ```
