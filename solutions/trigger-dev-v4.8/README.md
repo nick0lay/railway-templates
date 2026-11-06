@@ -111,4 +111,8 @@ After the deploy, the supervisor usually connects within about 5 minutes; allow 
 
 If you reset or recreate Postgres, the webapp creates a new worker group and prints a new worker token on its next boot. Delete `TRIGGER_WORKER_TOKEN` on the ops-controller and redeploy it, so it picks up the new token. Otherwise the supervisor keeps the old token and runs stay queued.
 
+## Removing the deployment
+
+The supervisor droplet lives in your DigitalOcean account, outside the Railway project. Deleting the Railway project does not delete it, and DigitalOcean keeps billing it. After deleting the project, open https://cloud.digitalocean.com/droplets and destroy the droplet named `trigger-supervisor-...`.
+
 See the fork's [ops-controller README](https://github.com/nick0lay/trigger.dev/tree/main/.railway/ops-controller) for supervisor setup and troubleshooting.

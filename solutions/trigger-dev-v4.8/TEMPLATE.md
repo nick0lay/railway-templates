@@ -89,6 +89,10 @@ The first runs wait until the supervisor droplet boots and connects, usually abo
 
 Set the webapp image tag and the ops-controller's `TRIGGER_VERSION` to the same new version. The webapp migrates on boot, and the ops-controller replaces the supervisor droplet. ClickHouse can only be upgraded, never downgraded.
 
+## Removing the Deployment
+
+The supervisor droplet runs in your DigitalOcean account, so deleting the Railway project does not remove it, and DigitalOcean keeps billing it. After deleting the project, destroy the droplet named `trigger-supervisor-...` at https://cloud.digitalocean.com/droplets.
+
 ## Email Configuration (Optional)
 
 **Default Behavior**: Without email configuration, Trigger.dev logs magic links and invitations to the console instead of sending emails. Check Railway deployment logs to find invitation URLs.
