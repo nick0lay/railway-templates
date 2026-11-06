@@ -129,6 +129,10 @@ Change the image tag of the `Evolution API` service (for example `evoapicloud/ev
 
 WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API is not affiliated with WhatsApp or Meta.
 
+## License
+
+Evolution API uses the Apache License 2.0 with extra [conditions](https://github.com/EvolutionAPI/evolution-api/blob/main/LICENSE): commercial use is allowed, but don't remove or change the logo and copyright in the manager, and a product built on Evolution API must say so where administrators can see it (for example on a settings or docs page). Otherwise the producer may require a commercial license.
+
 ## Testing
 
 Tested on 2026-11-06 with Evolution API 2.3.7 in a throwaway Railway project, from the config: all three services healthy, and the database was migrated on the first start. The welcome page answered without a key. Listing instances, creating an instance and checking credentials were refused without a key and with a wrong key (401), and worked with the generated key. A new instance returned a QR code as a base64 image, and the connect endpoint returned fresh QR codes; the QR code was not scanned, so sending and receiving messages were not tested. The manager UI loaded at `/manager`. After redeploying all services, the instance was loaded back from Postgres, still waiting for its QR scan, and the database migration step found nothing to apply.
