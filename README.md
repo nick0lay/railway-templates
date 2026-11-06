@@ -35,6 +35,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Teable Community](./solutions/teable-community/) | No-code database (Airtable alternative), open-source AGPL build, admin created at deploy, Postgres, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/teable-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Open Notebook + Kokoro](./solutions/open-notebook/) | Self-hosted NotebookLM alternative with a password, SurrealDB and free Kokoro voices for podcasts | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-notebook-kokoro?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Evolution API](./solutions/evolution-api/) | WhatsApp REST API (QR login, no Meta approval) with a generated API key, sessions and messages in Postgres, Redis cache | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/evolution-api-7?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [ERPNext](./solutions/erpnext/) | Open-source ERP (Odoo alternative) on official Frappe v16 images, site and Administrator created at deploy, MariaDB, Redis | Unpublished |
 
 ## Structure
 
@@ -124,7 +125,10 @@ railway-templates/
     ├── open-notebook/      # Open Notebook with password, SurrealDB, private Kokoro text-to-speech
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── evolution-api/      # Evolution API (WhatsApp REST API), generated API key, Postgres, Redis
+    ├── evolution-api/      # Evolution API (WhatsApp REST API), generated API key, Postgres, Redis
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── erpnext/            # ERPNext v16 (official Frappe image), site created at deploy, MariaDB, Redis cache and queue
         ├── README.md
         └── TEMPLATE.md
 ```
