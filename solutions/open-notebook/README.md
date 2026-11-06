@@ -2,7 +2,7 @@
 
 Self-hosted [Open Notebook](https://github.com/lfnovo/open-notebook) on Railway: an open-source alternative to Google NotebookLM. Collect sources into notebooks, chat with them with citations, write notes, and turn a notebook into a podcast. This template adds a private [Kokoro](https://github.com/remsky/Kokoro-FastAPI) text-to-speech service and sets it up as the podcast voice model on first start, so podcast audio is free. The app is password-protected from the start and every version is pinned and tested.
 
-<!-- deploy button added after publish -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-notebook-kokoro?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
