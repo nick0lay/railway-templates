@@ -2,7 +2,7 @@
 
 Self-hosted [Ollama](https://github.com/ollama/ollama) with [Open WebUI](https://github.com/open-webui/open-webui) on Railway: run open models such as Llama, Qwen and Gemma on CPU and chat with them in a ChatGPT-style interface, with no API keys and no data leaving your project. A starter model is downloaded at deploy, the admin account is created for you, public sign-up is off, and Ollama is reachable only over the private network. Versions are pinned and tested.
 
-<!-- Deploy button: add after publishing -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ollama-open-webui-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
