@@ -33,6 +33,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Plane](./solutions/plane/) | Project management (Jira/Linear alternative) with the admin created at deploy, Postgres, Redis, RabbitMQ and a Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plane-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Teable](./solutions/teable/) | No-code database (Airtable alternative), official image with paid features behind a license, admin created at deploy, Postgres, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/teable-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Teable Community](./solutions/teable-community/) | No-code database (Airtable alternative), open-source AGPL build, admin created at deploy, Postgres, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/teable-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Evolution API](./solutions/evolution-api/) | WhatsApp REST API (QR login, no Meta approval) with a generated API key, sessions and messages in Postgres, Redis cache | Unpublished |
 
 ## Structure
 
@@ -116,7 +117,10 @@ railway-templates/
     ├── teable/             # Teable (official image, paid features need a license), admin at deploy, Postgres, Redis
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── teable-community/   # Teable Community (AGPL build), admin at deploy, Postgres, Redis, volume
+    ├── teable-community/   # Teable Community (AGPL build), admin at deploy, Postgres, Redis, volume
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── evolution-api/      # Evolution API (WhatsApp REST API), generated API key, Postgres, Redis
         ├── README.md
         └── TEMPLATE.md
 ```
