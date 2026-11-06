@@ -2,7 +2,7 @@
 
 Self-hosted [ERPNext](https://github.com/frappe/erpnext) v16 on Railway: open-source ERP for accounting, inventory, sales, purchasing, manufacturing, projects and HR, an alternative to Odoo and SAP Business One. This template runs the official Frappe images with MariaDB and two Redis instances. The site is created on first start with a generated Administrator password, background jobs and the scheduler run from the start, and every version is pinned and tested.
 
-<!-- deploy button added after publish -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/erpnext-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
