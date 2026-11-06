@@ -2,7 +2,7 @@
 
 Self-hosted [Elasticsearch](https://github.com/elastic/elasticsearch) 9 and [Kibana](https://github.com/elastic/kibana) on Railway, with security on. Elasticsearch is private and requires a password. Kibana is the only public service, and it asks for a login. The password Kibana uses to reach Elasticsearch is set up automatically when Elasticsearch starts, so there are no manual steps after deploy.
 
-Deploy: coming soon.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/elasticsearch-kibana?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

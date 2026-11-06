@@ -4,6 +4,8 @@ Self-hosted [Immich](https://github.com/immich-app/immich) on Railway: a photo a
 
 > **Pro plan recommended.** Your photos and videos are stored on the `immich-server` volume. On the Hobby plan a volume can hold at most 5 GB, and Immich also stores thumbnails and converted videos there. On Pro the volume starts at 50 GB and you can grow it yourself, without downtime, up to 1 TB (volume settings → Live Resize). Hobby is fine for trying Immich out with a small library.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/immich-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

@@ -2,6 +2,8 @@
 
 Self-hosted [GitLab Community Edition](https://gitlab.com/gitlab-org/gitlab) on Railway: Git hosting, merge requests, issues and CI/CD in one app, plus a GitLab Runner that registers itself. The root password is generated, sign-up is turned off before the instance is reachable, and the version is pinned and tested. Git works over HTTPS and over SSH through a Railway TCP proxy.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/gitlab-ce-runner?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```
