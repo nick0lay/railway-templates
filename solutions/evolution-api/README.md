@@ -2,7 +2,7 @@
 
 Self-hosted [Evolution API](https://github.com/evolution-foundation/evolution-api) on Railway: a REST API for WhatsApp that connects by scanning a QR code, like WhatsApp Web, with no Meta Business approval needed. It runs a pinned stable release with Postgres for instances, messages and contacts and Redis for cache. The global API key is generated, and the WhatsApp sessions are stored in Postgres, so they survive redeploys.
 
-<!-- Deploy button: add after publishing -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/evolution-api-7?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
