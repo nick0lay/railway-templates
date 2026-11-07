@@ -4,7 +4,7 @@ Tracely is open-source, trace-native CI/CD for AI agents. It collects your agent
 
 ## About Hosting Tracely
 
-Tracely needs seven services: the API, a background worker, the web UI, Postgres with pgvector, ClickHouse for trace events, Redis as the job queue and MinIO for raw events. This template wires them together over Railway's private network. Only the web UI and the API are public: the UI asks for a login, and the API needs a login session or an ingest key. The first account you create owns the workspace, and later users join by invite. Database migrations run automatically when the API starts, and the worker waits for them to finish.
+Tracely runs six services and a storage bucket: the API, a background worker, the web UI, Postgres with pgvector, ClickHouse for trace events, Redis as the job queue, and a Railway Bucket for raw events. This template wires them together over Railway's private network. Only the web UI and the API are public: the UI asks for a login, and the API needs a login session or an ingest key. The first account you create owns the workspace, and later users join by invite. Database migrations run automatically when the API starts, and the worker waits for them to finish.
 
 ## Common Use Cases
 
@@ -15,7 +15,7 @@ Tracely needs seven services: the API, a background worker, the web UI, Postgres
 
 ## Dependencies for Tracely Hosting
 
-- Postgres with pgvector, ClickHouse, Redis and MinIO (all included)
+- Postgres with pgvector, ClickHouse, Redis and a Railway Bucket (all included)
 - An OpenRouter API key for LLM-graded evaluators (optional; each workspace adds its own in Settings)
 
 ### Deployment Dependencies
@@ -41,7 +41,7 @@ How this template is set up:
 - **Secure defaults.** Production mode, so the documented demo ingest key is never created. Email and password login, and sign-up closes after the first account.
 - **Background jobs run.** The worker includes the scheduler, so monitors and the cleanup jobs run.
 - **Pinned version.** Tracely publishes no images or releases, so the template builds a tested commit. To upgrade, change `TRACELY_REF` on the backend and redeploy.
-- **Private data services.** Postgres, ClickHouse, Redis and MinIO have no public domain, and each keeps its data on a volume.
+- **Private data services.** Postgres, ClickHouse and Redis have no public domain and keep their data on volumes. Raw events go to a Railway Bucket, so there is no MinIO to run or update.
 
 ## Why Deploy Tracely on Railway?
 

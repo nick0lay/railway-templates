@@ -4,7 +4,7 @@
 
 [Tracely](https://github.com/jwuthri-cloud/tracely-ai) is trace-native CI/CD for AI agents. It collects your agents' production traces, grades them with evaluators, groups failures into clusters, turns failures into replayable regression tests, and can block pull requests that make an agent worse.
 
-This template deploys the full self-hosted stack: API, worker, web UI, Postgres with pgvector, ClickHouse, Redis and MinIO.
+This template deploys the full self-hosted stack: API, worker, web UI, Postgres with pgvector, ClickHouse and Redis, plus a Railway Bucket for raw trace events.
 
 ## Architecture
 
@@ -15,9 +15,11 @@ This template deploys the full self-hosted stack: API, worker, web UI, Postgres 
   SDK / OTLP / CI ─▶│ backend :8000 (public, API key) ◀── worker (private, Celery)    │
   MCP clients       │      │                                  │                       │
                     │      ▼                                  ▼                       │
-                    │  Postgres :5432   ClickHouse :8123   Redis :6379   MinIO :9000  │
-                    │  (pgvector)       (traces, scores)   (queue)       (raw events) │
-                    │                 all private, each with a volume                 │
+                    │  Postgres :5432   ClickHouse :8123   Redis :6379                │
+                    │  (pgvector)       (traces, scores)   (queue)                    │
+                    │         private, each with a volume                             │
+                    │                                                                 │
+                    │  Railway Bucket (S3 API, raw trace events)                      │
                     └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -31,7 +33,7 @@ This template deploys the full self-hosted stack: API, worker, web UI, Postgres 
 | Postgres | `pgvector/pgvector:0.8.7-pg17` | Projects, users, evaluators, regression tests. Private |
 | ClickHouse | `solutions/clickhouse/clickhouse` | Trace events and scores. Private |
 | Redis | `redis:8.10` | Celery broker. Private |
-| MinIO | `pgsty/minio` | Raw trace events, the source of truth before processing. Private |
+| Bucket | Railway Bucket | S3-compatible storage for raw trace events, the source of truth before processing. Private, access by key only |
 
 Tracely publishes no Docker images or release tags, so `backend` and `frontend` build from the upstream source at a pinned commit (`TRACELY_REF`).
 
@@ -44,7 +46,7 @@ Compared with the upstream Railway files in `deploy/railway`:
 - The worker runs the scheduler (`CELERY_BEAT=true`). Without it, monitors, the self-check and the ClickHouse log cleanup never run.
 - The worker waits until the API is healthy before it starts, so the first deploy has no worker crash loop.
 - Upstream code is pinned to a tested commit instead of following the main branch.
-- MinIO uses the community `pgsty/minio` image, because `minio/minio` is no longer published on Docker Hub.
+- Raw events go to a Railway Bucket instead of MinIO. MinIO's open-source repository was archived in 2026 and its Docker Hub images are gone, so a bucket is one less service to run and update.
 
 ## First login
 
@@ -102,7 +104,7 @@ Worker: `CELERY_POOL` (`solo`) and `CELERY_CONCURRENCY` (`1`). Switch to `prefor
 | `DATABASE_URL`, `ALEMBIC_DATABASE_URL` | backend, worker | Postgres, with the async and migration drivers |
 | `CLICKHOUSE_*` | backend, worker | `${{ClickHouse.*}}` references |
 | `REDIS_URL` | backend, worker | `${{Redis.REDIS_URL}}` |
-| `S3_*` | backend, worker | MinIO address and credentials. The bucket is created on first start |
+| `S3_*` | backend, worker | Railway Bucket endpoint, region, name and keys (`${{Bucket.*}}`) |
 | `APP_BASE_URL`, `FRONTEND_ORIGIN` | backend, worker | The frontend's public domain, used in links and for CORS |
 | `INTERNAL_API_URL` | backend, worker | How server-side jobs reach the API |
 | `TRACELY_API` | frontend | The backend on the private network |
@@ -123,3 +125,5 @@ Set `TRACELY_REF` on the backend to a newer commit SHA from [the upstream reposi
 ## Testing
 
 2026-11-07, upstream commit `128a5d8`: clean deploy from the template, all 7 services healthy in about 2 minutes. Checked that all migrations ran and no dev ingest key was created, that the API returns 401 without a login, that a second sign-up is refused, and that the worker starts the scheduler. A trace sent with the owner's ingest key showed up in the UI.
+
+Same day, after the move from MinIO to a Railway Bucket: clean deploy healthy; a trace was stored in the bucket and returned by the trace list, and listing and bulk delete (used when a workspace is wiped) worked against the bucket.
