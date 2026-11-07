@@ -22,6 +22,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Trigger.dev v4.0.0](./solutions/trigger-dev/) | Earlier v4.0.0 line, kept for existing projects. Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4](./solutions/langfuse/) | LLM observability: tracing, prompts and evals, with ClickHouse, Postgres, Redis and a Railway Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4 + LiteLLM](./solutions/langfuse-litellm/) | LiteLLM AI gateway with every LLM call traced in Langfuse v4, no code changes | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-litellm?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Tracely](./solutions/tracely/) | Trace-native CI/CD for AI agents: grade traces, cluster failures, block PRs that regress | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/tracely?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Typebot](./solutions/typebot/) | Visual chatbot builder with Mailpit sign-in (no SMTP needed) and a Railway Bucket for uploads | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/typebot-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langflow](./solutions/langflow/) | Visual AI agent and RAG builder with login, Postgres and a persistent secret key | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langflow-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Flowise](./solutions/flowise/) | Visual AI agent and chatbot builder with the owner account created at deploy, Postgres and a volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/flowise-5?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
@@ -88,6 +89,7 @@ railway-templates/
     │   ├── README.md
     │   └── TEMPLATE.md
     ├── langfuse-litellm/   # Langfuse v4 + LiteLLM gateway with tracing preconfigured
+    ├── tracely/            # Tracely trace-native CI/CD for AI agents, with ClickHouse
     │   ├── README.md
     │   └── TEMPLATE.md
     ├── typebot/            # Typebot builder + viewer, Mailpit sign-in, Railway Bucket
