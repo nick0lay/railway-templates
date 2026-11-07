@@ -1,5 +1,7 @@
 # Tracely
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/tracely?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 [Tracely](https://github.com/jwuthri-cloud/tracely-ai) is trace-native CI/CD for AI agents. It collects your agents' production traces, grades them with evaluators, groups failures into clusters, turns failures into replayable regression tests, and can block pull requests that make an agent worse.
 
 This template deploys the full self-hosted stack: API, worker, web UI, Postgres with pgvector, ClickHouse, Redis and MinIO.
