@@ -30,7 +30,7 @@ This template runs Ollama privately with a starter model downloaded at deploy, O
 
 ### Implementation Details
 
-**What you set:** `WEBUI_ADMIN_EMAIL`, the email you log in with. Optionally `OLLAMA_DEFAULT_MODEL` (default `llama3.2:3b`, 2 GB).
+**What you set:** `WEBUI_ADMIN_EMAIL`, the email you log in with (default `admin@example.com`; change it to your own). Optionally `OLLAMA_DEFAULT_MODEL` (default `llama3.2:3b`, 2 GB).
 
 **After deploy:**
 

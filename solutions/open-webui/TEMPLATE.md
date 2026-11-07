@@ -29,7 +29,7 @@ This template creates the admin account at deploy with your email and a generate
 
 ### Implementation Details
 
-**What you set:** `WEBUI_ADMIN_EMAIL`, the email you log in with. Optionally `OPENAI_API_KEY` (and `OPENAI_API_BASE_URL` for another provider); you can also add providers later in Admin Settings.
+**What you set:** `WEBUI_ADMIN_EMAIL`, the email you log in with (default `admin@example.com`; change it to your own). Optionally `OPENAI_API_KEY` (and `OPENAI_API_BASE_URL` for another provider); you can also add providers later in Admin Settings.
 
 **After deploy:**
 

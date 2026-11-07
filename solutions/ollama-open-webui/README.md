@@ -68,7 +68,7 @@ Usage is billed by Railway for what the services use. Ollama uses CPU only while
 
 | Service | Variable | Default | Notes |
 |---|---|---|---|
-| Open WebUI | `WEBUI_ADMIN_EMAIL` | (required) | Email of the admin account. You log in with it |
+| Open WebUI | `WEBUI_ADMIN_EMAIL` | `admin@example.com` | Email of the admin account. You log in with it. Change it to your own before deploying |
 | Open WebUI | `WEBUI_ADMIN_PASSWORD` | generated | Read it after deploy. Applied only when the admin is created on first start |
 | Open WebUI | `WEBUI_ADMIN_NAME` | `Admin` | Display name of the admin |
 | Ollama | `OLLAMA_DEFAULT_MODEL` | `llama3.2:3b` | Downloaded on start if missing. Set it to another tag and redeploy Ollama to download that model too |

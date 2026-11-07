@@ -67,7 +67,7 @@ Enter these as a connection in Admin Settings (or as variables before the first 
 
 | Variable | Default | Notes |
 |---|---|---|
-| `WEBUI_ADMIN_EMAIL` | (required) | Email of the admin account. You log in with it |
+| `WEBUI_ADMIN_EMAIL` | `admin@example.com` | Email of the admin account. You log in with it. Change it to your own before deploying |
 | `WEBUI_ADMIN_PASSWORD` | generated | Read it after deploy. It's applied only when the admin is created on first start |
 | `WEBUI_ADMIN_NAME` | `Admin` | Display name of the admin |
 | `OPENAI_API_BASE_URL` | `https://api.openai.com/v1` | Any OpenAI-compatible API, see the table above. Used on the first start only |
