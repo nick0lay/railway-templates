@@ -20,9 +20,6 @@ The included **ops-controller automates the entire deployment process**—requir
 
 ## Architecture: Railway + DigitalOcean
 
-**Why Two Platforms?**
-Trigger.dev v4 requires a supervisor service to execute tasks in Docker containers. Railway's platform restrictions prevent Docker socket access (`/var/run/docker.sock`), making task execution impossible. DigitalOcean droplets provide the full Docker capabilities needed for the supervisor.
-
 **How It Works:**
 1. **Railway Services**: Webapp, PostgreSQL, Redis, ClickHouse, Railway Bucket (object storage), Docker registry
 2. **DigitalOcean Service**: Supervisor droplet for task execution
