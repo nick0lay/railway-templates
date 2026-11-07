@@ -38,6 +38,10 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Evolution API](./solutions/evolution-api/) | WhatsApp REST API (QR login, no Meta approval) with a generated API key, sessions and messages in Postgres, Redis cache | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/evolution-api-7?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [ERPNext](./solutions/erpnext/) | Open-source ERP (Odoo alternative) on official Frappe v16 images, site and Administrator created at deploy, MariaDB, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/erpnext-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Ollama + Open WebUI](./solutions/ollama-open-webui/) | Open models on CPU (Llama, Qwen, Gemma) with a ChatGPT-style UI, starter model and admin set at deploy, Ollama private | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ollama-open-webui-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Medusa](./solutions/medusa/) | Shopify alternative: Medusa v2 with admin, separate worker and Next.js storefront, admin and API key set at deploy, Postgres, Redis, Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/medusa-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Supabase](./solutions/supabase/) | Self-hosted Supabase: Postgres, Auth, REST, Realtime, Storage and Studio behind a login, API keys generated at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/supabase-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Chatwoot](./solutions/chatwoot/) | Customer support inbox (Intercom alternative) for live chat, email and social, admin created at deploy, sign-up off, private Postgres and Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/chatwoot-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Postiz](./solutions/postiz/) | Social media scheduler (Buffer alternative) for 30+ networks with Temporal on Postgres, the admin created at deploy and sign-up off | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/postiz-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -134,7 +138,19 @@ railway-templates/
     ├── erpnext/            # ERPNext v16 (official Frappe image), site created at deploy, MariaDB, Redis cache and queue
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── ollama-open-webui/  # Ollama (private, starter model, CPU threads set) + Open WebUI with admin at deploy, Postgres
+    ├── ollama-open-webui/  # Ollama (private, starter model, CPU threads set) + Open WebUI with admin at deploy, Postgres
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── medusa/             # Medusa v2 server, worker and Next.js storefront, admin at deploy, Postgres, Redis, Bucket
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── supabase/           # Supabase (Auth, REST, Realtime, Storage, Studio) behind a Caddy gateway, keys generated
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── chatwoot/           # Chatwoot CE, admin at deploy, sign-up off, pgvector Postgres, Redis
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── postiz/             # Postiz with Temporal on Postgres, admin at deploy, sign-up off, Redis
         ├── README.md
         └── TEMPLATE.md
 ```

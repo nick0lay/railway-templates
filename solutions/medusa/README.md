@@ -2,6 +2,8 @@
 
 Self-hosted [Medusa](https://github.com/medusajs/medusa) v2 on Railway: the open-source commerce platform (a self-hosted Shopify alternative) with its admin dashboard, a separate background worker, and the official [Next.js Starter Storefront](https://github.com/medusajs/nextjs-starter-medusa). The admin user and the storefront's publishable API key are created on first start, and a demo store is loaded, so the shop works as soon as the deploy finishes. PostgreSQL, Redis and the worker stay private; product images go to a Railway Bucket. Versions are pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/medusa-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

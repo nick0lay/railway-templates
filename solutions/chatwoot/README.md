@@ -2,6 +2,8 @@
 
 Self-hosted [Chatwoot](https://github.com/chatwoot/chatwoot) on Railway: an open-source customer support inbox for website live chat, email, WhatsApp, Instagram, Facebook, Telegram and API channels. The admin account is created at deploy, the public first-run setup page is closed, sign-up is off, and PostgreSQL and Redis are reachable only over the private network. Versions are pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/chatwoot-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

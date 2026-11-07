@@ -2,6 +2,8 @@
 
 Self-hosted [Postiz](https://github.com/gitroomhq/postiz-app) on Railway: an open-source social media scheduler (Buffer and Hootsuite alternative) for X, LinkedIn, Bluesky, Mastodon, Instagram, Facebook, TikTok, YouTube, Reddit, Threads and 20+ more channels. The admin account is created at deploy, public sign-up is off, and Temporal, which runs scheduled posts, comes with its own database. Only Postiz is public. Versions are pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/postiz-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

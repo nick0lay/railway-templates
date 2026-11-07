@@ -2,6 +2,8 @@
 
 Self-hosted [Supabase](https://github.com/supabase/supabase) on Railway: Postgres with an instant REST and GraphQL API, Auth, Storage, Realtime and the Studio dashboard. This template runs the official Supabase images behind one gateway. Every secret is generated at deploy time and the API keys are derived automatically, so there is nothing to generate by hand. You get one URL, a publishable key and a secret key, ready for `supabase-js`.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/supabase-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```
