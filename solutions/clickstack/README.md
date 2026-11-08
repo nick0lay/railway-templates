@@ -2,6 +2,8 @@
 
 Self-hosted [ClickStack](https://clickhouse.com/use-cases/observability) on Railway: ClickHouse's open-source observability stack, with the [HyperDX](https://github.com/hyperdxio/hyperdx) UI for logs, traces, metrics and session replays, an OpenTelemetry collector, ClickHouse and MongoDB. The admin account is created at deploy and nobody else can sign up, the OTLP endpoint only accepts data that carries your team's API key, and ClickHouse and MongoDB are reachable only over the private network. Versions are pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickstack-243?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

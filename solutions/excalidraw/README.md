@@ -2,6 +2,8 @@
 
 Self-hosted [Excalidraw](https://github.com/excalidraw/excalidraw) on Railway, with live collaboration and share links that run on your own servers. Most Excalidraw templates deploy only the drawing app, so "Live collaboration" and "Export to link" either fail or still send your drawings to excalidraw.com. This template adds the collaboration server, a storage service for share links, collaboration rooms and images, and PostgreSQL. A login protects the whole site, and every version is pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/excalidraw-v0181?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

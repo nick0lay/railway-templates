@@ -2,6 +2,8 @@
 
 Self-hosted [OpenPanel](https://openpanel.dev) on Railway: open-source product and web analytics, an alternative to Mixpanel and Google Analytics, with events, funnels, retention, user profiles and real-time dashboards. This template runs OpenPanel's official images (API, dashboard, worker) with ClickHouse, PostgreSQL and Redis behind one Caddy proxy. The admin account is created at deploy, so nobody can claim your instance, all databases are private, and every version is pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openpanel-23?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

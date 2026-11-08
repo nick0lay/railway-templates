@@ -45,6 +45,9 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Plausible](./solutions/plausible/) | Privacy-friendly Google Analytics alternative: Plausible CE on ClickHouse and Postgres, owner created at deploy, invite-only sign-up | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plausible-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [SigNoz](./solutions/signoz/) | Datadog alternative for traces, metrics and logs: SigNoz with OpenTelemetry collector (token-protected OTLP) on ClickHouse, admin at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/signoz-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [PostHog](./solutions/posthog/) | Self-hosted PostHog product analytics, feature flags and session replay: 23 services on official images, admin created at deploy, sign-up off | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/posthog?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [ClickStack](./solutions/clickstack/) | Open-source observability (Datadog alternative): HyperDX UI, OpenTelemetry collector with API-key ingestion, ClickHouse and MongoDB kept private, admin at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickstack-243?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Excalidraw](./solutions/excalidraw/) | Whiteboard with self-hosted live collaboration and share links (no excalidraw.com or Firebase), password-protected, rooms and files in Postgres | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/excalidraw-v0181?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [OpenPanel](./solutions/openpanel/) | Product analytics (Mixpanel alternative): OpenPanel API, dashboard and worker on ClickHouse, Postgres and Redis, admin at deploy, sign-up closed | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openpanel-23?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -162,7 +165,16 @@ railway-templates/
     ├── signoz/             # SigNoz, OTel collector with OTLP token, ClickHouse with embedded Keeper
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── posthog/            # PostHog (23 services) behind a Caddy proxy, admin at deploy, sign-up off
+    ├── posthog/            # PostHog (23 services) behind a Caddy proxy, admin at deploy, sign-up off
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── clickstack/         # HyperDX, OTel collector, ClickHouse, MongoDB, admin at deploy
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── excalidraw/         # Excalidraw frontend, collab room, storage backend, Postgres behind Caddy auth
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── openpanel/          # OpenPanel API, dashboard, worker, ClickHouse, Postgres, Redis behind Caddy
         ├── README.md
         └── TEMPLATE.md
 ```
