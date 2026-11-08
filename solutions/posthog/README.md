@@ -70,6 +70,8 @@ Self-hosted [PostHog](https://github.com/PostHog/posthog) on Railway: open-sourc
   - Kafka topics that PostHog's consumers expect are created before anything writes to them.
   - The plugin server's job queue database (`cyclotron_node`) is created and migrated by Web on start. PostHog's Docker setup skips this step, and the plugin server doesn't start without it.
   - The Node.js services download the GeoIP database they need on start, and wait for the job queue database.
+  - Web restores a database default that PostHog's squashed migrations drop on a fresh install (`posthog_eventdefinition.enforcement_mode`). Without it, Property Defs can't record event definitions and the events list in Data management stays empty.
+  - Session replay is turned on for the first project when the admin is created, so recordings from posthog-js are stored right away. Turn it off in **Settings → Session replay** if you don't want it.
 - Kafka, storage, Temporal and the Rust services listen on IPv6 as well as IPv4, because Railway's private DNS can answer with IPv6 addresses only.
 - Every service restarts automatically when it exits, so the pipeline recovers after a dependency restarts.
 
@@ -148,8 +150,9 @@ PostHog is a large system. At idle the services use about 15 GB of RAM together 
 | Events are accepted but don't show up | Check the Ingestion and ClickHouse logs. Events go Capture → Kafka → Ingestion → Kafka → ClickHouse |
 | ClickHouse fails on its first start with a download error | It fetches config files from GitHub on the first start. Redeploy when GitHub is reachable |
 | A Node.js service fails with `geoip: download failed` | It downloads the GeoIP database from PostHog's CDN on start. Redeploy it |
-| Login page or `/_preflight` hangs after Redis was redeployed | The Plugins service doesn't always reconnect to a restarted Redis, and Web waits on its health endpoint. Redeploy Plugins, then Web |
-| Events stop arriving after Kafka was redeployed | Redeploy Capture and Ingestion (they restart on their own when they exit, but can stall) |
+| Login page or `/_preflight` hangs after Redis was redeployed on its own | The Plugins service doesn't always reconnect to a restarted Redis, and Web waits on its health endpoint. Redeploy Plugins, then Web |
+| Events stop arriving after Kafka was redeployed on its own | Redeploy Capture and Ingestion (they restart on their own when they exit, but can stall) |
+| No recordings appear | Check that session replay is on in **Settings → Session replay** for the project, and that your site's domain is allowed there |
 
 ## License
 
@@ -157,6 +160,6 @@ PostHog is [MIT](https://github.com/PostHog/posthog/blob/master/LICENSE) except 
 
 ## Testing
 
-Tested on 2026-11-07 with PostHog at commit `1a3b1f8` in a throwaway Railway project, deployed from the template. All 23 services were healthy; Web's first start (migrations) took about 30 minutes. The admin account was created on the first start. Requests without a login, a wrong password, a wrong personal API key and a stranger's sign-up were refused; the admin logged in as staff. Events sent to `/e/` and `/batch/` and an `$identify` went through Capture, Kafka and Ingestion into ClickHouse and were returned by a SQL query, with person properties stored and a property definition recorded. A feature flag created through the API evaluated as enabled on `/flags`, remote config answered on `/array/<token>/config`, and a CSV export was produced by the worker, stored and downloaded. After redeploying the data and app services, the admin, events and flag were still there and new events were ingested. At idle the services used about 15 GB of RAM together (Worker 4.1, Web 2.9, ClickHouse 2.9, Temporal Worker 1.6, the rest under 0.5 each).
+Tested on 2026-11-07 and 2026-11-08 with PostHog at commit `1a3b1f8` in throwaway Railway projects, deployed from the template. All 23 services were healthy without manual steps; Web's first start (migrations) took about 30 minutes. The admin account was created on the first start. Requests without a login, a wrong password, a wrong personal API key and a stranger's sign-up were refused; the admin logged in as staff. Events sent to `/e/` and `/batch/` and an `$identify` went through Capture, Kafka and Ingestion into ClickHouse and were returned by a SQL query, with person properties, property definitions and event definitions recorded. A feature flag created through the API evaluated as enabled on `/flags`, remote config answered on `/array/<token>/config`, and a CSV export was produced by the worker, stored and downloaded. Session replay: a browser session recorded by posthog-js (loaded from the instance's `/static/array.js`) was stored, listed with its clicks, and its snapshots were served from storage. After redeploying all 23 services at once, every service came back on its own within about 6 minutes; the admin, events, flag and recording were still there, and new events were ingested within seconds. At idle the services used about 15 GB of RAM together (Worker 4.1, Web 2.9, ClickHouse 2.9, Temporal Worker 1.6, the rest under 0.5 each).
 
-Not verified: session replay end to end. A synthetic recording was accepted by Replay Capture and read by Replay Ingestion but not stored, so recordings should be checked with a real site using posthog-js. Also not tested: email, batch exports to external destinations, and the browser UI beyond the login page.
+Not tested: email, batch exports to external destinations, and the browser UI beyond the login page.
