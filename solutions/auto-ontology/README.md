@@ -4,6 +4,8 @@ Self-hosted [NVIDIA Auto Ontology](https://github.com/NVIDIA/auto-ontology) on R
 
 This template runs NVIDIA's official 1.2.0 images: the web app, the API, the ingestion service and the MCP server, with PostgreSQL. A Chinook sample database is loaded on first start, so you can try it right away. The admin account is created at deploy, sign-up is off, and only the web app and the MCP server are public. Both need a login.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/nvidia-auto-ontology-12?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

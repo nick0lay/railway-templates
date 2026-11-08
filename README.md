@@ -48,6 +48,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [ClickStack](./solutions/clickstack/) | Open-source observability (Datadog alternative): HyperDX UI, OpenTelemetry collector with API-key ingestion, ClickHouse and MongoDB kept private, admin at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickstack-243?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Excalidraw](./solutions/excalidraw/) | Whiteboard with self-hosted live collaboration and share links (no excalidraw.com or Firebase), password-protected, rooms and files in Postgres | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/excalidraw-v0181?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [OpenPanel](./solutions/openpanel/) | Product analytics (Mixpanel alternative): OpenPanel API, dashboard and worker on ClickHouse, Postgres and Redis, admin at deploy, sign-up closed | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openpanel-23?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [NVIDIA Auto Ontology](./solutions/auto-ontology/) | Semantic layer over your databases (ask in plain English, get SQL): web app, API, ingestion and an OAuth-protected MCP server on NVIDIA's official images, sample database included | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/nvidia-auto-ontology-12?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -174,7 +175,10 @@ railway-templates/
     ├── excalidraw/         # Excalidraw frontend, collab room, storage backend, Postgres behind Caddy auth
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── openpanel/          # OpenPanel API, dashboard, worker, ClickHouse, Postgres, Redis behind Caddy
+    ├── openpanel/          # OpenPanel API, dashboard, worker, ClickHouse, Postgres, Redis behind Caddy
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── auto-ontology/      # Auto Ontology web, API, ingestion, MCP on Postgres; pinned NGC images
         ├── README.md
         └── TEMPLATE.md
 ```
