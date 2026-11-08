@@ -1,105 +1,44 @@
-# NocoDB Complete Stack Railway Template
+# Deploy and Host NocoDB on Railway
 
-## Template Overview
+NocoDB is an open-source Airtable alternative: it turns a database into a collaborative spreadsheet with grid, kanban, gallery and form views, automations and a REST API. This template runs the official NocoDB image (2026.10.1) with PostgreSQL and a Railway Bucket for file attachments.
 
-# Deploy and Host NocoDB Complete Stack on Railway
+## About Hosting NocoDB
 
-NocoDB is a powerful open-source Airtable alternative that turns any database into a smart spreadsheet. This complete stack template includes PostgreSQL for data storage, Redis for caching, and MinIO for persistent file attachments—everything you need for a production-ready deployment.
-
-## About Hosting NocoDB Complete Stack
-
-This template deploys six services: NocoDB as the core application, PostgreSQL for metadata and data storage, Redis for caching and session management, MinIO for S3-compatible file storage, MinIO Console for storage administration, and a MinIO Init sidecar that automatically creates required storage buckets. Unlike basic NocoDB deployments where file attachments can be lost on redeployment, this stack ensures all uploaded files persist permanently in MinIO. NocoDB's built-in authentication handles user management, so no additional auth layer is required.
-
-## Getting Started After Deployment
-
-### Accessing NocoDB
-
-After deployment, click on the **NocoDB** service to find your URL:
-
-1. **Deployments Tab**: The URL is displayed directly under the service name
-2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
-
-### Creating Your Admin Account
-
-On first visit, you'll be prompted to create a super admin account using the pre-configured credentials:
-
-1. Navigate to your NocoDB URL
-2. Use `NC_ADMIN_EMAIL` and `NC_ADMIN_PASSWORD` from the NocoDB service Variables tab
-3. A secure 32-character password is auto-generated on deploy—you can change it to your own (minimum 8 characters)
-
-### Accessing MinIO Console
-
-The MinIO Console provides a web UI to manage buckets, view uploaded files, and monitor storage usage:
-
-1. Click on the **Console** service in your Railway project
-2. Find the URL in **Deployments Tab** or **Settings > Networking**
-3. Login with `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` from the MinIO service Variables tab
-
-**Note**: The Console is for administration only. NocoDB connects to MinIO automatically via the private network.
-
-### Inviting Team Members
-
-NocoDB uses invite-only signup by default:
-
-1. Go to **Workspace Settings** → **Members**
-2. Click **Invite** and enter email addresses
-3. Users receive invitation links to create their accounts
+The template deploys NocoDB, a private PostgreSQL database and a Railway Bucket. NocoDB is the only public service and requires a login. The super admin is created at deploy from `NC_ADMIN_EMAIL` and a generated `NC_ADMIN_PASSWORD`, and sign-up is switched to invite-only right after, so nobody else can claim the instance. Uploads go through NocoDB into the private bucket, and browsers get signed links that expire, so attachments survive redeploys without a volume. Postgres has no public domain or TCP proxy. The NocoDB version is pinned and the stack was tested end to end: logins, refused strangers, tables, attachments and redeploys.
 
 ## Common Use Cases
 
-- Team collaboration on structured data without complex database tools
-- Project management with custom views (Grid, Kanban, Gallery, Form)
-- CRM and customer tracking with relational data
-- Inventory management with file attachments and images
-- Survey and form collection with automated workflows
-- API backend for mobile and web applications
-- Replacing Airtable with a self-hosted, privacy-first alternative
+- Replace Airtable with a self-hosted spreadsheet database
+- Project tracking, CRM and inventory with kanban, gallery and form views
+- Collect data with shareable forms
+- A REST API on top of your tables for apps and automations
+- A spreadsheet UI for an existing Postgres or MySQL database
 
-## Dependencies for NocoDB Complete Stack Hosting
+## Dependencies for NocoDB Hosting
 
-- Docker (NocoDB, MinIO, MinIO Init run as container images)
-- PostgreSQL (Railway plugin for data storage)
-- Redis (Railway plugin for caching)
+- PostgreSQL (included, private)
+- Railway Bucket (included, private) for attachments
 
 ### Deployment Dependencies
 
-- [NocoDB GitHub Repository](https://github.com/nocodb/nocodb)
-- [NocoDB Docker Image](https://hub.docker.com/r/nocodb/nocodb)
-- [MinIO Docker Image](https://hub.docker.com/r/minio/minio)
+- [NocoDB on GitHub](https://github.com/nocodb/nocodb)
+- [NocoDB Docker image](https://hub.docker.com/r/nocodb/nocodb)
+- [NocoDB environment variables](https://nocodb.com/docs/self-hosting/environment-variables)
 
-### Environment Variables
+### Implementation Details
 
-| Variable | Description |
-|----------|-------------|
-| `NC_ADMIN_EMAIL` | Super admin email for first login |
-| `NC_ADMIN_PASSWORD` | Super admin password (auto-generated 32 chars, changeable) |
-| `NC_DB` | PostgreSQL connection string (auto-configured) |
-| `NC_REDIS_URL` | Redis connection for caching (auto-configured) |
-| `NC_S3_BUCKET_NAME` | MinIO bucket for file attachments |
-| `NC_S3_ENDPOINT` | MinIO internal endpoint (auto-configured) |
-| `NC_S3_ACCESS_KEY` | MinIO access credentials (auto-configured) |
-| `NC_S3_ACCESS_SECRET` | MinIO secret credentials (auto-configured) |
-| `NC_S3_FORCE_PATH_STYLE` | Set to `true` for MinIO path-style URLs |
-| `NC_AUTH_JWT_SECRET` | JWT secret for authentication (auto-generated) |
-| `MINIO_ROOT_USER` | MinIO Console login username (auto-generated) |
-| `MINIO_ROOT_PASSWORD` | MinIO Console login password (auto-generated) |
+After the deploy finishes:
 
-## Why This Template?
+1. Open the NocoDB service's domain.
+2. Sign in with `NC_ADMIN_EMAIL` and `NC_ADMIN_PASSWORD` from the NocoDB service's Variables tab. Set `NC_ADMIN_EMAIL` to your own address before deploying; changing it later has no effect.
+3. Invite your team from Team & Settings. Without an email server, copy the invite link and send it yourself, or add `NC_SMTP_*` variables.
 
-### Persistent File Storage
+Attachment links are signed and expire after `NC_ATTACHMENT_EXPIRE_SECONDS` (2 hours by default). To upgrade, change the image tag to a newer NocoDB release and redeploy; back up Postgres first.
 
-Basic NocoDB deployments store files locally, which means attachments can be lost when containers redeploy. This template includes MinIO with automatic bucket initialization—the MinIO Init sidecar creates required storage buckets on first deployment and then auto-disables to save resources.
+This template no longer includes MinIO (its open-source repository was archived in 2026) or Redis (NocoDB's job queue can't reach Redis over Railway's IPv6 private network, and NocoDB runs fine without it on one instance).
 
-### Production-Ready Caching
-
-Redis caching improves performance for teams with concurrent users, faster page loads, and better API response times.
-
-### Complete Data Stack
-
-PostgreSQL provides a robust, production-grade database for your NocoDB metadata and connected data sources.
-
-## Why Deploy NocoDB Complete Stack on Railway?
+## Why Deploy NocoDB on Railway?
 
 Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
 
-By deploying NocoDB Complete Stack on Railway, you get a fully managed Airtable alternative with persistent storage, caching, and database—all configured and connected automatically. Host your servers, databases, AI agents, and more on Railway.
+By deploying NocoDB on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.

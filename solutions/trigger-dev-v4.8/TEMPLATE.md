@@ -20,9 +20,6 @@ The included **ops-controller automates the entire deployment process**—requir
 
 ## Architecture: Railway + DigitalOcean
 
-**Why Two Platforms?**
-Trigger.dev v4 requires a supervisor service to execute tasks in Docker containers. Railway's platform restrictions prevent Docker socket access (`/var/run/docker.sock`), making task execution impossible. DigitalOcean droplets provide the full Docker capabilities needed for the supervisor.
-
 **How It Works:**
 1. **Railway Services**: Webapp, PostgreSQL, Redis, ClickHouse, Railway Bucket (object storage), Docker registry
 2. **DigitalOcean Service**: Supervisor droplet for task execution
@@ -88,6 +85,10 @@ The first runs wait until the supervisor droplet boots and connects, usually abo
 ## Upgrading
 
 Set the webapp image tag and the ops-controller's `TRIGGER_VERSION` to the same new version. The webapp migrates on boot, and the ops-controller replaces the supervisor droplet. ClickHouse can only be upgraded, never downgraded.
+
+## Removing the Deployment
+
+The supervisor droplet runs in your DigitalOcean account, so deleting the Railway project does not remove it, and DigitalOcean keeps billing it. After deleting the project, destroy the droplet named `trigger-supervisor-...` at https://cloud.digitalocean.com/droplets.
 
 ## Email Configuration (Optional)
 

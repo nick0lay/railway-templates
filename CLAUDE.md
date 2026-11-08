@@ -50,7 +50,7 @@ One-time initialization services that auto-disable after setup:
 Each solution requires:
 1. `README.md`: Include ASCII architecture diagram, services table, env vars (split user-configurable vs auto-configured), troubleshooting section
 2. `TEMPLATE.md`: Marketing copy for Railway's template marketplace
-3. **Update main `README.md`**: Always add new solutions to the Solutions table and Structure section in the repository root README.md
+3. **Update main `README.md`**: Always add new solutions to the Solutions table in the repository root README.md (the Structure section is generic, no per-solution entries)
 
 ## Documentation Conventions
 

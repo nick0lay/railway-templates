@@ -18,51 +18,53 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [StarRocks](./solutions/starrocks/) | MPP analytical database with MySQL-protocol access and web UI | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/starrocks-is-an-open-source-mpp-analytic?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Marqo + Navigator](./solutions/marqo-navigator/) | Ecommerce & multimodal vector search with admin UI, both password-protected | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/marqo?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [ClickHouse](./solutions/clickhouse/) | Single-node OLAP database with persistent volume and ready-made connection URLs | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickhouse-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
-| [Trigger.dev](./solutions/trigger-dev/) | Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Trigger.dev v4.8](./solutions/trigger-dev-v4.8/) | Trigger.dev v4.8.3 on the official images: webapp, Postgres, Redis, ClickHouse, a Railway Bucket and a registry, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev-v48?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Trigger.dev v4.0.0](./solutions/trigger-dev/) | Earlier v4.0.0 line, kept for existing projects. Background jobs platform: webapp, Postgres, Redis, ClickHouse and a Railway Bucket, with a DigitalOcean supervisor | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4](./solutions/langfuse/) | LLM observability: tracing, prompts and evals, with ClickHouse, Postgres, Redis and a Railway Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Langfuse v4 + LiteLLM](./solutions/langfuse-litellm/) | LiteLLM AI gateway with every LLM call traced in Langfuse v4, no code changes | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langfuse-v4-litellm?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Tracely](./solutions/tracely/) | Trace-native CI/CD for AI agents: grade traces, cluster failures, block PRs that regress | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/tracely?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Typebot](./solutions/typebot/) | Visual chatbot builder with Mailpit sign-in (no SMTP needed) and a Railway Bucket for uploads | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/typebot-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Langflow](./solutions/langflow/) | Visual AI agent and RAG builder with login, Postgres and a persistent secret key | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/langflow-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Flowise](./solutions/flowise/) | Visual AI agent and chatbot builder with the owner account created at deploy, Postgres and a volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/flowise-5?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Open WebUI](./solutions/open-webui/) | Chat UI for any OpenAI-compatible API with the admin created at deploy, Postgres and a volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-webui-10?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Twenty](./solutions/twenty/) | Open-source CRM with a worker, the owner created at deploy, Postgres, Redis and a Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/twenty-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Elasticsearch + Kibana](./solutions/elasticsearch-kibana/) | Elasticsearch 9 and Kibana with security on: private Elasticsearch, Kibana login, Kibana connection set up automatically | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/elasticsearch-kibana?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [GitLab CE + Runner](./solutions/gitlab/) | Git hosting, merge requests and CI/CD with the root password generated, sign-up off, SSH through a TCP proxy and a self-registering shell runner | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/gitlab-ce-runner?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Immich](./solutions/immich/) | Photo and video library with CPU machine learning, the admin created at deploy, VectorChord Postgres and Valkey | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/immich-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Plane](./solutions/plane/) | Project management (Jira/Linear alternative) with the admin created at deploy, Postgres, Redis, RabbitMQ and a Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plane-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Teable](./solutions/teable/) | No-code database (Airtable alternative), official image with paid features behind a license, admin created at deploy, Postgres, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/teable-3?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Teable Community](./solutions/teable-community/) | No-code database (Airtable alternative), open-source AGPL build, admin created at deploy, Postgres, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/teable-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Open Notebook + Kokoro](./solutions/open-notebook/) | Self-hosted NotebookLM alternative with a password, SurrealDB and free Kokoro voices for podcasts | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/open-notebook-kokoro?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Evolution API](./solutions/evolution-api/) | WhatsApp REST API (QR login, no Meta approval) with a generated API key, sessions and messages in Postgres, Redis cache | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/evolution-api-7?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [ERPNext](./solutions/erpnext/) | Open-source ERP (Odoo alternative) on official Frappe v16 images, site and Administrator created at deploy, MariaDB, Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/erpnext-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Ollama + Open WebUI](./solutions/ollama-open-webui/) | Open models on CPU (Llama, Qwen, Gemma) with a ChatGPT-style UI, starter model and admin set at deploy, Ollama private | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ollama-open-webui-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Medusa](./solutions/medusa/) | Shopify alternative: Medusa v2 with admin, separate worker and Next.js storefront, admin and API key set at deploy, Postgres, Redis, Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/medusa-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Supabase](./solutions/supabase/) | Self-hosted Supabase: Postgres, Auth, REST, Realtime, Storage and Studio behind a login, API keys generated at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/supabase-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Chatwoot](./solutions/chatwoot/) | Customer support inbox (Intercom alternative) for live chat, email and social, admin created at deploy, sign-up off, private Postgres and Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/chatwoot-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Postiz](./solutions/postiz/) | Social media scheduler (Buffer alternative) for 30+ networks with Temporal on Postgres, the admin created at deploy and sign-up off | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/postiz-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Plausible](./solutions/plausible/) | Privacy-friendly Google Analytics alternative: Plausible CE on ClickHouse and Postgres, owner created at deploy, invite-only sign-up | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plausible-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [SigNoz](./solutions/signoz/) | Datadog alternative for traces, metrics and logs: SigNoz with OpenTelemetry collector (token-protected OTLP) on ClickHouse, admin at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/signoz-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [PostHog](./solutions/posthog/) | Self-hosted PostHog product analytics, feature flags and session replay: 23 services on official images, admin created at deploy, sign-up off | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/posthog?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [ClickStack](./solutions/clickstack/) | Open-source observability (Datadog alternative): HyperDX UI, OpenTelemetry collector with API-key ingestion, ClickHouse and MongoDB kept private, admin at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/clickstack-243?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Excalidraw](./solutions/excalidraw/) | Whiteboard with self-hosted live collaboration and share links (no excalidraw.com or Firebase), password-protected, rooms and files in Postgres | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/excalidraw-v0181?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [OpenPanel](./solutions/openpanel/) | Product analytics (Mixpanel alternative): OpenPanel API, dashboard and worker on ClickHouse, Postgres and Redis, admin at deploy, sign-up closed | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openpanel-23?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [NVIDIA Auto Ontology](./solutions/auto-ontology/) | Semantic layer over your databases (ask in plain English, get SQL): web app, API, ingestion and an OAuth-protected MCP server on NVIDIA's official images, sample database included | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/nvidia-auto-ontology-12?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
-
-Each solution has a `README.md` (setup and variables), a `TEMPLATE.md` (the description shown on Railway) and one folder per service that Railway builds. Solutions that only use upstream images have no service folders.
 
 ```
 railway-templates/
 ├── railway/
-│   └── SAMPLE-TEMPLATE.md      # Starting point for a new TEMPLATE.md
+│   └── SAMPLE-TEMPLATE.md   # Starting point for a new TEMPLATE.md
 └── solutions/
-    ├── bentopdf-caddy/         # BentoPDF behind Caddy password auth (img/: screenshots)
-    ├── nocodb-minio/
-    │   └── minio-init/         # One-time bucket setup sidecar
-    ├── stirling-pdf/
-    │   └── app/                # Entrypoint for single-volume storage
-    ├── openclaw/               # Built from nick0lay/openclaw
-    ├── clickhouse-chui/
-    │   └── clickhouse/         # ClickHouse with Railway networking
-    ├── clickhouse/
-    │   └── clickhouse/         # ClickHouse with volume, network and system-log config
-    ├── evershop/
-    │   └── evershop/           # EverShop with admin auto-setup
-    ├── questdb/
-    │   └── questdb/            # QuestDB with Railway PORT mapping
-    ├── starrocks/
-    │   └── starrocks/          # StarRocks all-in-one with a Railway entrypoint
-    ├── marqo-navigator/        # DEPLOYMENT.md: manual setup; docker-compose.yml: local harness
-    │   ├── vespa/              # Vespa, run as admin and node roles
-    │   ├── vespa-init/         # One-shot cluster bootstrap and app package
-    │   ├── marqo/              # Marqo in external vector store mode
-    │   └── navigator/          # Navigator UI
-    ├── trigger-dev/
-    │   ├── webapp/             # Patched Trigger.dev webapp image
-    │   └── registry/           # Docker registry with basic auth
-    ├── trigger-dev-v4.8/
-    │   ├── clickhouse/         # ClickHouse config for Trigger.dev
-    │   └── registry/           # Docker registry with basic auth
-    ├── langfuse/               # Uses ../clickhouse/clickhouse
-    ├── langfuse-litellm/
-    └── typebot/
+    └── <solution>/
+        ├── README.md        # Setup, variables, troubleshooting
+        ├── TEMPLATE.md      # Description shown on the Railway marketplace
+        └── <service>/       # Only for services Railway builds from this repo
+                             # (Dockerfile, railway.json, config files)
 ```
+
+Every solution in the table above has its own folder. Solutions that run upstream images only have no service folders.
 
 ## Contributing
 
