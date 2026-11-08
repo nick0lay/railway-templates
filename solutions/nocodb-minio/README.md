@@ -1,235 +1,97 @@
-# NocoDB Complete Stack
+# NocoDB
 
-A production-ready NocoDB deployment with PostgreSQL, Redis caching, and MinIO for persistent file storage.
+Self-hosted [NocoDB](https://github.com/nocodb/nocodb) on Railway: an open-source Airtable alternative that turns a database into a collaborative spreadsheet with grid, kanban, gallery and form views, plus a REST API. This template runs the official NocoDB image with PostgreSQL for its data and a Railway Bucket for file attachments. The admin account is created at deploy, sign-up is invite-only, and the version is pinned and tested.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/nocodb-minio-console-and-storage?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
-
-## Overview
-
-This solution combines:
-- **NocoDB**: Open-source Airtable alternative with spreadsheet UI for databases
-- **PostgreSQL**: Primary database for metadata and application data
-- **Redis**: Caching layer for improved performance
-- **MinIO**: S3-compatible object storage for file attachments
-
-Unlike basic NocoDB deployments, this template includes MinIO to ensure file attachments persist across redeployments.
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                          Internet                                │
-└───────────────────────────────┬─────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      NocoDB (Public)                             │
-│                      Port 8080                                   │
-│                      Built-in Authentication                     │
-└───────────┬───────────────────┬───────────────────┬─────────────┘
-            │                   │                   │
-            ▼                   ▼                   ▼
-┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐
-│    PostgreSQL     │ │      Redis        │ │      MinIO        │
-│    (Private)      │ │    (Private)      │ │    (Private)      │
-│    Port 5432      │ │    Port 6379      │ │    Port 9000      │
-│                   │ │                   │ │                   │
-│  Metadata & Data  │ │  Session Cache    │ │  File Attachments │
-└───────────────────┘ └───────────────────┘ └─────────┬─────────┘
-                                                      │
-                                            ┌─────────▼─────────┐
-                                            │   MinIO Init      │
-                                            │   (Sidecar)       │
-                                            │  Auto-disables    │
-                                            └───────────────────┘
+                 You and your team (browser, API)
+                              │ HTTPS
+                              ▼
+┌───────────────────────────────────────────────────────────────┐
+│ Railway project                                               │
+│                                                               │
+│  NocoDB :8080 (public, login required)                        │
+│      │                                  │ S3 API              │
+│      ▼                                  ▼                     │
+│  Postgres :5432 (private)          Bucket (Railway Bucket)    │
+│    bases, tables, users,             attachments, private;    │
+│    settings; volume                  browsers get signed links│
+└───────────────────────────────────────────────────────────────┘
 ```
 
-## Quick Start
-
-1. Click the **Deploy on Railway** button above
-2. Wait for all services to deploy
-3. Access NocoDB via the generated Railway domain
-4. Create your super admin account on first visit
-
-## Accessing Services After Deployment
-
-### Accessing NocoDB
-
-After deployment, click on the **NocoDB** service to find your URL:
-
-1. **Deployments Tab**: The URL is displayed directly under the service name
-2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
-
-On first visit, you'll be prompted to create a super admin account using `NC_ADMIN_EMAIL` and `NC_ADMIN_PASSWORD`.
-
-### Accessing MinIO Console
-
-The MinIO Console allows you to manage buckets, view files, and monitor storage. Click on the **Console** service:
-
-1. **Deployments Tab**: The URL is displayed directly under the service name
-2. **Settings > Networking**: Go to Settings tab → scroll to Networking → find Public Networking
-
-**Login credentials:**
-- **Username**: Find `MINIO_ROOT_USER` in the MinIO service Variables tab
-- **Password**: Find `MINIO_ROOT_PASSWORD` in the MinIO service Variables tab
-
-**Note**: The Console service is separate from the MinIO API service. NocoDB connects to MinIO internally via the private network, while the Console provides a web UI for administration.
-
-## Environment Variables
-
-### NocoDB Service
-
-#### User-Configurable Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `NC_ADMIN_EMAIL` | - | Super admin email (set on first run) |
-| `NC_ADMIN_PASSWORD` | Auto-generated (32 chars) | Super admin password. A secure random password is generated on deploy. You can change it to your own (minimum 8 characters). |
-| `NC_PUBLIC_URL` | Auto-detected | Public URL of your NocoDB instance |
-
-#### Auto-Configured (Do Not Change)
-
-| Variable | Description |
-|----------|-------------|
-| `NC_DB` | PostgreSQL connection string. Routes to PostgreSQL via Railway's private network. |
-| `NC_REDIS_URL` | Redis connection string for caching. |
-| `NC_S3_BUCKET_NAME` | MinIO bucket name for attachments. |
-| `NC_S3_REGION` | S3 region (set to `us-east-1` for MinIO compatibility). |
-| `NC_S3_ENDPOINT` | MinIO internal endpoint URL. |
-| `NC_S3_ACCESS_KEY` | MinIO access key for authentication. |
-| `NC_S3_ACCESS_SECRET` | MinIO secret key for authentication. |
-| `NC_S3_FORCE_PATH_STYLE` | Must be `true` for MinIO compatibility. Uses path-style URLs instead of virtual-hosted. |
-| `NC_AUTH_JWT_SECRET` | Secret for JWT token generation. Auto-generated. |
-
-### PostgreSQL Service
-
-| Variable | Description |
-|----------|-------------|
-| `POSTGRES_USER` | Database username |
-| `POSTGRES_PASSWORD` | Database password (auto-generated) |
-| `POSTGRES_DB` | Database name |
-
-### Redis Service
-
-No configuration required. Uses Railway's Redis plugin defaults.
-
-### MinIO Service
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `MINIO_ROOT_USER` | Auto-generated | MinIO admin username |
-| `MINIO_ROOT_PASSWORD` | Auto-generated | MinIO admin password |
-
-### MinIO Init Service (Sidecar)
-
-This service automatically creates required MinIO buckets on deployment and then auto-disables to save resources.
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `MINIO_ENDPOINT` | - | MinIO API endpoint (e.g., `minio.railway.internal:9000`) |
-| `MINIO_ACCESS_KEY` | - | MinIO access key (`${{MinIO.MINIO_ROOT_USER}}`) |
-| `MINIO_SECRET_KEY` | - | MinIO secret key (`${{MinIO.MINIO_ROOT_PASSWORD}}`) |
-| `MINIO_BUCKET` | - | Bucket name to create (e.g., `nocodb`) |
-| `IS_ACTIVE` | `true` | Enable/disable the controller |
-| `AUTO_DISABLE` | `true` | Auto-disable after successful initialization |
-| `CHECK_INTERVAL` | `1` | Minutes between initialization checks |
-| `HEALTHY_CYCLES_THRESHOLD` | `3` | Successful cycles before auto-disable |
-
-## Services Included
+## Services
 
 | Service | Source | Role |
 |---------|--------|------|
-| NocoDB | `nocodb/nocodb:latest` | Spreadsheet database UI (public) |
-| PostgreSQL | Railway Plugin | Primary database (private) |
-| Redis | Railway Plugin | Caching layer (private) |
-| MinIO | `minio/minio:latest` | S3-compatible file storage (private) |
-| MinIO Init | `minio-init/Dockerfile` | Bucket initialization sidecar (auto-disables) |
+| NocoDB | `nocodb/nocodb:2026.10.1` | Spreadsheet UI and API (public, login required) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | NocoDB's metadata and your tables (private) |
+| Bucket | Railway Bucket | File attachments (private) |
 
-## User Management
+## What this template does
 
-NocoDB includes built-in user management:
+- **Admin at deploy.** NocoDB creates the super admin from `NC_ADMIN_EMAIL` and the generated `NC_ADMIN_PASSWORD` on first start, so nobody else can claim the instance.
+- **Invite-only sign-up.** A small start-up script logs in as the admin and turns on NocoDB's "invite only" sign-up setting. Strangers get "Not allowed to signup"; people you invite can join. You can change this later in Account settings.
+- **Attachments in a Railway Bucket.** Uploads go through NocoDB into the bucket. The bucket is private; NocoDB gives browsers signed links that expire (`NC_ATTACHMENT_EXPIRE_SECONDS`, 2 hours). Files survive redeploys and don't fill a volume.
+- **Private database.** Postgres has no public domain or TCP proxy.
+- **Pinned version** instead of `latest`, with a healthcheck on `/api/v1/health`.
 
-- **Super Admin**: First user to access the instance becomes super admin
-- **User Signup**: Disabled by default (invite-only)
-- **Invitations**: Super admin can invite users via email
-- **Workspaces**: Create multiple workspaces with different team members
-- **Roles**: Owner, Creator, Editor, Commenter, Viewer
+### Changes from the earlier version of this template
 
-No additional authentication layer (like Caddy) is required.
+Earlier versions used MinIO, a MinIO Console and a bucket-init sidecar, plus Redis. MinIO's open-source repository was archived in 2026, so storage moved to a Railway Bucket. Redis was dropped: NocoDB's job queue (Bull) ignores the `family` option in the Redis URL and looks up IPv4 addresses only, while Railway's private network uses IPv6, so current NocoDB versions crash-loop with `Connection is closed`. Without Redis, NocoDB uses its built-in cache and queue, which is fine for a single instance. Existing deployments keep their services; this change only affects new deploys.
 
-## File Storage
+## After deploying
 
-This template uses MinIO for S3-compatible file storage:
+1. Open the **NocoDB** service and click its domain.
+2. Sign in with `NC_ADMIN_EMAIL` and `NC_ADMIN_PASSWORD` from the NocoDB service's **Variables** tab.
+3. Change the password in **Account settings** if you like. Changing the variable later has no effect.
+4. Invite your team from **Team & Settings → Users**. Without an email server, copy the invite link NocoDB shows and send it yourself, or add SMTP variables (`NC_SMTP_HOST`, `NC_SMTP_PORT`, `NC_SMTP_FROM`, `NC_SMTP_USERNAME`, `NC_SMTP_PASSWORD`).
 
-- **Attachments**: Images, documents, and files uploaded to NocoDB tables
-- **Persistence**: Files survive container redeployments
-- **Private Access**: MinIO is not exposed to the internet; NocoDB manages all file operations
+## Environment variables (NocoDB)
 
-### Why MinIO Instead of Local Storage?
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NC_ADMIN_EMAIL` | `admin@example.com` | Super admin email, used on first start. Set your own before deploying |
+| `NC_ADMIN_PASSWORD` | generated, 32 chars | Super admin password |
+| `NC_PUBLIC_URL` | `https://${{RAILWAY_PUBLIC_DOMAIN}}` | Public URL used in links and emails. Update it if you add a custom domain |
+| `NC_AUTH_JWT_SECRET` | generated | Signs login tokens |
+| `NC_DB` | private Postgres | Metadata database |
+| `NC_S3_*` | Railway Bucket references | Attachment storage (bucket, endpoint, region, keys, path-style) |
+| `NC_ATTACHMENT_EXPIRE_SECONDS` | `7200` | Lifetime of signed attachment links |
+| `NC_DISABLE_TELE` | `true` | Turns off NocoDB's telemetry |
+| `NC_SETUP_JS` | start-up script | Switches sign-up to invite-only once the admin exists. Leave as is |
 
-| Local Storage | MinIO Storage |
-|---------------|---------------|
-| Files lost on redeploy | Files persist permanently |
-| Limited by container disk | Scalable object storage |
-| No redundancy | Production-grade durability |
+## Upgrading
 
-## Connecting External Databases
+Change the NocoDB image tag in the service settings to a newer release from [NocoDB's releases](https://github.com/nocodb/nocodb/releases) and redeploy. NocoDB migrates its metadata on start. Back up Postgres first.
 
-NocoDB can connect to external databases in addition to its internal PostgreSQL:
+## Backups
 
-1. Go to **Integrations** in NocoDB
-2. Add a new database connection
-3. Supported: MySQL, PostgreSQL, SQL Server, SQLite, MariaDB
+- **Postgres** holds everything except attachments: use Railway's volume backups or `pg_dump`.
+- **Bucket** holds attachments: copy it with any S3 tool (`rclone`, `aws s3 sync`) using the bucket's credentials.
 
-The internal PostgreSQL is used for NocoDB metadata. External databases appear as bases you can manage through the spreadsheet UI.
+## Testing
 
-## Security
+Tested on 2026-11-08 with a clean deploy of this config:
 
-- PostgreSQL, Redis, and MinIO are not exposed to the internet
-- All internal traffic uses Railway's private networking
-- NocoDB handles authentication with email/password
-- JWT tokens secure API access
-- File uploads go through NocoDB (not directly to MinIO)
-
-## Backup Considerations
-
-- **PostgreSQL**: Use `pg_dump` or Railway's backup features
-- **MinIO**: Data stored in Railway volume; consider S3 replication for critical data
-- **NocoDB metadata**: Stored in PostgreSQL, backed up with database
+- Health check 200. The API without a login, a wrong password and an unknown user were refused, and so was a stranger's sign-up ("Not allowed to signup").
+- The admin signed in as super admin, and the invite-only setting was on.
+- A base, a table with an attachment column and 3 rows were created through the API. An uploaded file was stored in the Railway Bucket and downloaded through its signed link without logging in; a tampered signature and the unsigned object URL were refused.
+- After redeploying NocoDB and Postgres, the admin, the rows and the attachment were still there.
 
 ## Troubleshooting
 
-### Files not persisting after redeploy
-
-Verify MinIO environment variables are correctly set:
-- `NC_S3_ENDPOINT` should point to MinIO's internal Railway URL
-- `NC_S3_ACCESS_KEY` and `NC_S3_ACCESS_SECRET` must match MinIO credentials
-
-### Cannot connect to database
-
-Check that `NC_DB` connection string uses Railway's internal hostname for PostgreSQL.
-
-### Redis connection errors
-
-Verify `NC_REDIS_URL` points to the correct Redis internal URL.
-
-### MinIO Init not creating buckets
-
-1. Check MinIO Init logs for connection errors
-2. Verify `MINIO_ENDPOINT` uses the correct private network hostname
-3. Ensure `MINIO_ACCESS_KEY` and `MINIO_SECRET_KEY` match MinIO credentials
-4. The service auto-disables after 3 successful cycles; redeploy to re-run
-
-### MinIO Init keeps running
-
-If you want to manually disable the sidecar:
-
-1. Set `IS_ACTIVE=false` in the service variables
-2. Or set `AUTO_DISABLE=true` (default) to let it stop automatically
+| Problem | Fix |
+|---------|-----|
+| `Not allowed to signup` | Expected: sign-up is invite-only. Invite the person from Team & Settings, or turn invite-only off in Account settings |
+| Attachments don't load | Signed links expire after `NC_ATTACHMENT_EXPIRE_SECONDS`; reload the page for fresh links. Check the `NC_S3_*` variables still reference the Bucket |
+| `nocodb-setup: admin sign-in failed` in logs | You changed the admin password. The sign-up setting was saved on first start, so this is harmless |
+| Crash loop with `Connection is closed` | A Redis URL was added. Remove `NC_REDIS_URL` (see "Changes" above) |
 
 ## Resources
 
-- [NocoDB Documentation](https://docs.nocodb.com/)
-- [NocoDB GitHub](https://github.com/nocodb/nocodb)
-- [NocoDB Environment Variables](https://nocodb.com/docs/self-hosting/environment-variables)
-- [MinIO Documentation](https://min.io/docs/minio/container/index.html)
+- [NocoDB documentation](https://nocodb.com/docs)
+- [NocoDB environment variables](https://nocodb.com/docs/self-hosting/environment-variables)
+- [Railway Buckets](https://docs.railway.com/guides/storage-buckets)
