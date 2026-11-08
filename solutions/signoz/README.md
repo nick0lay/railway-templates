@@ -2,6 +2,8 @@
 
 Self-hosted [SigNoz](https://github.com/SigNoz/signoz) on Railway: open-source observability (an alternative to Datadog and New Relic) with traces, metrics, logs, dashboards and alerts in one app, built on OpenTelemetry and ClickHouse. The admin account is created at deploy and sign-up is off, the OTLP endpoint only accepts data that carries the generated token, and ClickHouse is reachable only over the private network. Versions are pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/signoz-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

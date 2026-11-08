@@ -2,6 +2,8 @@
 
 Self-hosted [Plausible Community Edition](https://github.com/plausible/community-edition) on Railway: lightweight, cookieless, privacy-friendly web analytics, an open-source alternative to Google Analytics. This template runs the official Plausible image with PostgreSQL and ClickHouse. The owner account is created at deploy, so nobody can claim your instance, both databases are reachable only over the private network, and every version is pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plausible-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

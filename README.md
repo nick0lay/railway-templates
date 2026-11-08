@@ -42,6 +42,9 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Supabase](./solutions/supabase/) | Self-hosted Supabase: Postgres, Auth, REST, Realtime, Storage and Studio behind a login, API keys generated at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/supabase-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Chatwoot](./solutions/chatwoot/) | Customer support inbox (Intercom alternative) for live chat, email and social, admin created at deploy, sign-up off, private Postgres and Redis | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/chatwoot-4?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [Postiz](./solutions/postiz/) | Social media scheduler (Buffer alternative) for 30+ networks with Temporal on Postgres, the admin created at deploy and sign-up off | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/postiz-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Plausible](./solutions/plausible/) | Privacy-friendly Google Analytics alternative: Plausible CE on ClickHouse and Postgres, owner created at deploy, invite-only sign-up | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/plausible-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [SigNoz](./solutions/signoz/) | Datadog alternative for traces, metrics and logs: SigNoz with OpenTelemetry collector (token-protected OTLP) on ClickHouse, admin at deploy | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/signoz-2?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [PostHog](./solutions/posthog/) | Self-hosted PostHog product analytics, feature flags and session replay: 23 services on official images, admin created at deploy, sign-up off | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/posthog?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -150,7 +153,16 @@ railway-templates/
     ├── chatwoot/           # Chatwoot CE, admin at deploy, sign-up off, pgvector Postgres, Redis
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── postiz/             # Postiz with Temporal on Postgres, admin at deploy, sign-up off, Redis
+    ├── postiz/             # Postiz with Temporal on Postgres, admin at deploy, sign-up off, Redis
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── plausible/          # Plausible CE, ClickHouse, Postgres, owner at deploy, invite-only
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    ├── signoz/             # SigNoz, OTel collector with OTLP token, ClickHouse with embedded Keeper
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── posthog/            # PostHog (23 services) behind a Caddy proxy, admin at deploy, sign-up off
         ├── README.md
         └── TEMPLATE.md
 ```

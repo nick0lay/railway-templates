@@ -2,6 +2,8 @@
 
 Self-hosted [PostHog](https://github.com/PostHog/posthog) on Railway: open-source product analytics with session replay, feature flags, experiments, surveys and a SQL editor over your events. This template runs PostHog's official images as 23 Railway services: the web app and its workers, the event capture and ingestion pipeline, ClickHouse, Kafka (Redpanda), Postgres, Redis and S3 storage. The admin account is created at deploy, so nobody else can claim the instance, and only one service is public.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/posthog?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```
