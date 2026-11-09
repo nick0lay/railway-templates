@@ -57,6 +57,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Neo4j 2026.10 Community](./solutions/neo4j/) | Neo4j graph database with APOC, Browser over HTTPS behind the generated password, private Bolt for your services and a TLS-encrypted Bolt TCP proxy for drivers, volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/neo4j-202610-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [LightRAG 1.5.7](./solutions/lightrag/) | GraphRAG server: LLM-built knowledge graph plus vector search, web UI with login and API key, all data in Postgres with pgvector | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [LightRAG 1.5.7 + Neo4j](./solutions/lightrag-neo4j/) | LightRAG GraphRAG with the knowledge graph in Neo4j (Browser and Cypher), documents and vectors in Postgres with pgvector, login and API key | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157-neo4j?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [RAGFlow 1.0.0](./solutions/ragflow/) | RAG engine with deep document parsing and knowledge-graph compilation (GraphRAG): Elasticsearch, MySQL, Kvrocks, NATS and a Railway Bucket, sign-up closed | Not yet published |
 
 ## Structure
 
