@@ -88,18 +88,18 @@ The image tag uses Java 25, which Minecraft 26.x needs. Minecraft 1.20.5 to 1.21
 The world is in the volume at `/data`. There is no backup sidecar: Railway volumes attach to one service only, so a separate backup container (such as `itzg/mc-backup`) cannot read the world.
 
 - Railway volume backups: on the Minecraft service, open the **Backups** tab and create a backup or set a daily, weekly or monthly schedule, if your plan includes volume backups. Restore from the same tab.
-- Manual copy: open a shell with `railway ssh` and run:
+- Manual copy: open a shell with `railway ssh` (it needs an SSH key registered with `railway ssh keys add`) and run:
   ```sh
   rcon-cli save-off
   rcon-cli save-all flush
   cd /data && tar czf /tmp/world-backup.tgz world*
   rcon-cli save-on
   ```
-  Then copy `/tmp/world-backup.tgz` out of the container (for example `railway ssh -- cat /tmp/world-backup.tgz > world-backup.tgz` from your computer). The archive is in `/tmp`, so it does not use volume space and disappears on the next restart.
+  Then copy `/tmp/world-backup.tgz` out of the container with any method you prefer (we have not tested a specific one). The archive is in `/tmp`, so it does not use volume space and disappears on the next restart.
 
 ## Cost and plan
 
-In our tests the server used about 1.5 GB of RAM when idle and up to about 2.7 GB with `MAX_MEMORY=2G`. Railway bills by usage, so a server running all day costs roughly $15-30 a month, more than the usage included in the Hobby plan. CPU is low when nobody plays and rises with players and loaded chunks. To save money, lower `MAX_MEMORY` for 1-3 players, or stop the service when nobody plays (your world stays on the volume). Modpacks and many players need more memory.
+In our tests the server used about 1.5 GB of RAM when idle and about 2.7 GB with the full 2G heap in use. Railway bills by usage, so a server running all day costs roughly $15-30 a month, more than the usage included in the Hobby plan. CPU is low when nobody plays and rises with players and loaded chunks. To save money, lower `MAX_MEMORY` for 1-3 players, or stop the service when nobody plays (your world stays on the volume). Modpacks and many players need more memory.
 
 ## Troubleshooting
 
@@ -112,4 +112,4 @@ In our tests the server used about 1.5 GB of RAM when idle and up to about 2.7 G
 
 ## Tested
 
-Tested on 2026-11-09: clean deploys from the template, Paper 26.3 build 245 reached `Done` in about 8 seconds, a Minecraft status ping through the TCP proxy returned `Paper 26.3`, the world was reused after a redeploy, and `WHITELIST`/`OPS` turned on the whitelist. Idle memory was about 1.5 GB.
+Tested on 2026-11-09: clean deploys from the template, Paper 26.3 build 245 reached `Done` in about 8 seconds, a Minecraft status ping through the TCP proxy returned `Paper 26.3`, the world was reused after a redeploy, and setting `WHITELIST` turned the whitelist on (per the server log; the list contents and `OPS` were not inspected). Idle memory was about 1.5 GB.

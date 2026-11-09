@@ -46,7 +46,7 @@ Main variables:
 | `ONLINE_MODE` | `TRUE` | Only real Minecraft accounts can join |
 | `RCON_PASSWORD` | generated | Admin console password (private network only) |
 
-Cost: in our tests the server used about 1.5 GB of RAM when idle and up to about 2.7 GB with `MAX_MEMORY=2G`. Railway bills by usage, so expect roughly $15-30 a month when it runs all day, more than the usage included in the Hobby plan. Raise `MAX_MEMORY` for modpacks or many players.
+Cost: in our tests the server used about 1.5 GB of RAM when idle and about 2.7 GB with the full 2G heap in use. Railway bills by usage, so expect roughly $15-30 a month when it runs all day, more than the usage included in the Hobby plan. Raise `MAX_MEMORY` for modpacks or many players.
 
 Backups: Railway volumes can be backed up from the service's **Backups** tab (manual or on a daily, weekly or monthly schedule, where your plan supports it). You can also copy the world out yourself; see the template's GitHub README.
 
