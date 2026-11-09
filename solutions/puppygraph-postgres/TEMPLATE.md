@@ -70,7 +70,7 @@ PUPPYGRAPH_GREMLIN=${{PuppyGraph.GREMLIN_URL}}
 - Preloads demo tables and a schema so the first query works without setup
 - Keeps your schema and data source connections on a volume, restored on every redeploy (extra users and roles made in the UI are not kept)
 
-**Resources:** PuppyGraph's vendor minimum is 8 GB RAM for dev and test. Measured on Railway: PuppyGraph idles at 2.9 to 3.4 GB and Postgres at about 0.1 GB, within the 8 GB a Railway service gets on Hobby.
+**Resources:** PuppyGraph's vendor minimum is 8 GB RAM for dev and test. Measured on Railway: PuppyGraph idles at 2.9 to 3.4 GB and Postgres at about 0.1 GB, which fits in an 8 GB service.
 
 ## Why Deploy PuppyGraph 1.18 + Postgres on Railway?
 
