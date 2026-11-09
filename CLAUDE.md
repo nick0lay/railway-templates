@@ -18,6 +18,10 @@ railway-templates/
         └── <service>/      # Custom service code (Dockerfiles, scripts)
 ```
 
+## What belongs here
+
+This repository is public. Keep only what users and Railway builds need: service folders, `README.md` and `TEMPLATE.md` per solution, and `railway/SAMPLE-TEMPLATE.md`. Design notes, plans, test configs and handoffs live in the private ops repository. Test notes in a README give the date and the result, without private paths, scripts or config names.
+
 ## Template Architecture Patterns
 
 ### Pattern 1: External Auth Gateway
@@ -46,7 +50,7 @@ One-time initialization services that auto-disable after setup:
 Each solution requires:
 1. `README.md`: Include ASCII architecture diagram, services table, env vars (split user-configurable vs auto-configured), troubleshooting section
 2. `TEMPLATE.md`: Marketing copy for Railway's template marketplace
-3. **Update main `README.md`**: Always add new solutions to the Solutions table and Structure section in the repository root README.md
+3. **Update main `README.md`**: Always add new solutions to the Solutions table in the repository root README.md (the Structure section is generic, no per-solution entries)
 
 ## Documentation Conventions
 

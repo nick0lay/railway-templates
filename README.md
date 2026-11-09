@@ -54,134 +54,17 @@ Pre-configured multi-service deployments with authentication and best practices.
 
 ```
 railway-templates/
+├── railway/
+│   └── SAMPLE-TEMPLATE.md   # Starting point for a new TEMPLATE.md
 └── solutions/
-    ├── bentopdf-caddy/     # BentoPDF with Caddy authentication
-    │   └── README.md
-    ├── nocodb-minio/       # NocoDB with MinIO storage
-    │   ├── README.md
-    │   └── minio-init/     # Bucket initialization sidecar
-    ├── stirling-pdf/       # Stirling-PDF single service
-    │   ├── README.md
-    │   └── app/            # Custom Dockerfile for single-volume support
-    ├── openclaw/           # OpenClaw AI assistant with S3 backup
-    │   └── README.md
-    ├── clickhouse-chui/    # ClickHouse OLAP database with CH-UI web interface
-    │   ├── README.md
-    │   └── clickhouse/     # Custom Dockerfile for Railway networking
-    ├── evershop/           # EverShop e-commerce platform with PostgreSQL
-    │   ├── README.md
-    │   └── evershop/       # Custom Dockerfile with admin auto-setup
-    ├── questdb/            # QuestDB time-series database
-    │   ├── README.md
-    │   └── questdb/        # Custom Dockerfile for Railway PORT mapping
-    ├── starrocks/          # StarRocks MPP analytical database
-    │   ├── README.md
-    │   └── starrocks/      # Custom Dockerfile + Railway entrypoint wrapper
-    ├── marqo-navigator/    # Marqo vector search with UI behind Caddy auth
-    │   ├── README.md
-    │   ├── DEPLOYMENT.md   # Per-service Railway setup walkthrough
-    │   ├── docker-compose.yml  # Local harness (pids_limit mirrors Railway)
-    │   ├── vespa/          # Vespa image, run as admin and node roles
-    │   ├── vespa-init/     # One-shot cluster bootstrap + app package
-    │   ├── marqo/          # Custom Dockerfile, external vector store mode
-    │   └── navigator/      # Custom Dockerfile pinning Express 4
-    ├── clickhouse/         # Single ClickHouse server with volume
-    │   ├── README.md
-    │   └── clickhouse/     # Dockerfile, network + system-log config
-    ├── trigger-dev/        # Trigger.dev webapp + data services
-    │   ├── README.md
-    │   └── webapp/         # Dockerfile pinning the patched Trigger.dev image
-    ├── trigger-dev-v4.8/   # Trigger.dev v4.8 on the official image
-    │   ├── README.md
-    │   ├── TEMPLATE.md
-    │   ├── clickhouse/     # ClickHouse 26.10 + MergeTree setting for Trigger.dev migrations
-    │   └── registry/       # registry:2 with basic auth, volume
-    ├── langfuse/           # Langfuse v4 LLM observability (uses ../clickhouse/clickhouse)
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── langfuse-litellm/   # Langfuse v4 + LiteLLM gateway with tracing preconfigured
-    ├── tracely/            # Tracely trace-native CI/CD for AI agents, with ClickHouse
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── typebot/            # Typebot builder + viewer, Mailpit sign-in, Railway Bucket
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── flowise/            # Flowise with owner account created at deploy, Postgres, volume
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── langflow/           # Langflow with login, Postgres and a volume
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── open-webui/         # Open WebUI with admin created at deploy, Postgres, volume
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── twenty/             # Twenty CRM with worker, owner created at deploy, Postgres, Redis, Bucket
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── elasticsearch-kibana/  # Elasticsearch 9 + Kibana, security on, private Elasticsearch
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── gitlab/             # GitLab CE with sign-up off, secrets on the volume, SSH proxy, shell runner
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── immich/             # Immich with CPU machine learning, admin created at deploy, Postgres, Valkey
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── plane/              # Plane all-in-one with admin created at deploy, Postgres, Redis, RabbitMQ, Bucket
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── teable/             # Teable (official image, paid features need a license), admin at deploy, Postgres, Redis
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── teable-community/   # Teable Community (AGPL build), admin at deploy, Postgres, Redis, volume
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── open-notebook/      # Open Notebook with password, SurrealDB, private Kokoro text-to-speech
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── evolution-api/      # Evolution API (WhatsApp REST API), generated API key, Postgres, Redis
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── erpnext/            # ERPNext v16 (official Frappe image), site created at deploy, MariaDB, Redis cache and queue
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── ollama-open-webui/  # Ollama (private, starter model, CPU threads set) + Open WebUI with admin at deploy, Postgres
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── medusa/             # Medusa v2 server, worker and Next.js storefront, admin at deploy, Postgres, Redis, Bucket
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── supabase/           # Supabase (Auth, REST, Realtime, Storage, Studio) behind a Caddy gateway, keys generated
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── chatwoot/           # Chatwoot CE, admin at deploy, sign-up off, pgvector Postgres, Redis
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── postiz/             # Postiz with Temporal on Postgres, admin at deploy, sign-up off, Redis
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── plausible/          # Plausible CE, ClickHouse, Postgres, owner at deploy, invite-only
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── signoz/             # SigNoz, OTel collector with OTLP token, ClickHouse with embedded Keeper
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── posthog/            # PostHog (23 services) behind a Caddy proxy, admin at deploy, sign-up off
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── clickstack/         # HyperDX, OTel collector, ClickHouse, MongoDB, admin at deploy
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── excalidraw/         # Excalidraw frontend, collab room, storage backend, Postgres behind Caddy auth
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    ├── openpanel/          # OpenPanel API, dashboard, worker, ClickHouse, Postgres, Redis behind Caddy
-    │   ├── README.md
-    │   └── TEMPLATE.md
-    └── auto-ontology/      # Auto Ontology web, API, ingestion, MCP on Postgres; pinned NGC images
-        ├── README.md
-        └── TEMPLATE.md
+    └── <solution>/
+        ├── README.md        # Setup, variables, troubleshooting
+        ├── TEMPLATE.md      # Description shown on the Railway marketplace
+        └── <service>/       # Only for services Railway builds from this repo
+                             # (Dockerfile, railway.json, config files)
 ```
+
+Every solution in the table above has its own folder. Solutions that run upstream images only have no service folders.
 
 ## Contributing
 
