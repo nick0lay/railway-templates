@@ -63,7 +63,7 @@ VS Code (`.vscode/mcp.json`) takes the same `url` and `headers` under `"servers"
 
 ### Claude Desktop
 
-Claude Desktop's "Add custom connector" dialog takes a URL and optional OAuth client details, but no custom headers, so it can't send the token directly. Use the `mcp-remote` bridge (needs Node.js) in `claude_desktop_config.json`:
+Claude Desktop's "Add custom connector" dialog has fields for a URL and optional OAuth client details but none for custom headers (as of Nov 2026), so it can't send the token directly. Use the `mcp-remote` bridge (needs Node.js) in `claude_desktop_config.json`:
 
 ```json
 {
@@ -150,7 +150,7 @@ Measured on Railway at idle: Neo4j 1.0–1.25 GB, Graphiti about 0.25 GB, proxy 
 
 ## Troubleshooting
 
-- **401 from the proxy**: the header must be exactly `Authorization: Bearer <PROXY_TOKEN>` (one space). Check that the client really sends headers (Claude Desktop's connector dialog doesn't; use `mcp-remote`).
+- **401 from the proxy**: the header must be exactly `Authorization: Bearer <PROXY_TOKEN>` (one space). Check that the client really sends headers (Claude Desktop's connector dialog has no header field; use `mcp-remote`).
 - **Graphiti restarts at first deploy**: it exits if Neo4j isn't accepting connections yet and the restart policy retries; it connects once Neo4j is up.
 - **Memories are added but searches return nothing**: extraction failed. Check the Graphiti logs for `401` (wrong API key), `429` (lower `SEMAPHORE_LIMIT`) or a model without structured output support.
 - **`EquivalentSchemaRuleAlreadyExists` errors in the Graphiti log at start**: harmless. Graphiti creates its indexes in parallel and Neo4j reports the duplicates.

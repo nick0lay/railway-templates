@@ -48,7 +48,7 @@ Cursor (`~/.cursor/mcp.json`):
 }
 ```
 
-Claude Desktop's custom connector dialog can't send headers, so use the `mcp-remote` bridge in `claude_desktop_config.json`:
+Claude Desktop's custom connector dialog has no field for custom headers, so use the `mcp-remote` bridge in `claude_desktop_config.json`:
 
 ```json
 {

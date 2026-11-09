@@ -54,7 +54,6 @@ You can't switch an existing deploy between them; memories would have to be adde
 
 - Deploy: both services healthy. The log shows `FalkorDB ready (append-only file on the volume)` and `Database: falkordb`.
 - Proxy: same checks as the Neo4j variant. Without the token every request gets 401. With it, an MCP client initialized, listed the tools and got `get_status` "connected to falkordb database".
-- After a redeploy of the Graphiti service, FalkorDB started from the existing append-only file and all checks passed again.
-- Locally (Docker): a graph written to FalkorDB survived a container restart with this start command.
+- After a redeploy of the Graphiti service (append-only files already on the volume), FalkorDB started again and all checks passed. The graph was empty on Railway, so data surviving a restart was checked locally only: in Docker, a graph written to FalkorDB survived a container restart with this start command.
 - Not tested on Railway: memory extraction (no LLM run on this variant). It runs the same Graphiti code path as the Neo4j variant, which was tested with OpenAI.
 - Memory at idle with an empty graph: Graphiti plus FalkorDB 0.26 GB, proxy 0.02 GB.
