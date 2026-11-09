@@ -215,6 +215,7 @@ Tested on 2026-11-09 with LightRAG v1.5.7, in throwaway Railway projects for bot
 - **Storage:** the logs showed Postgres connected over the private network without SSL, the tables and `HNSW_HALFVEC` indexes created, and `PGTableGraphStorage initialized`. In the Neo4j template, LightRAG logged `Connected to neo4j at bolt://neo4j.railway.internal:7687`, and a Cypher query over Neo4j's HTTPS API returned the extracted nodes and relationships.
 - **Persistence:** after redeploying all services, the documents, graph and query results were unchanged in both templates.
 - **Neo4j restarts:** a Neo4j-only redeploy needed no LightRAG restart. When all three services were redeployed together, LightRAG's first start timed out on Neo4j and the automatic restart connected (see Troubleshooting).
+- **Default settings:** the Neo4j template was also deployed with its default model settings and a deliberately invalid OpenAI key. Login and key checks passed, LightRAG connected to Neo4j, and the test document failed with OpenAI's `401 Incorrect API key provided`, so the default configuration reaches the provider as expected.
 - **Memory at idle:** LightRAG 0.35 to 0.7 GB, Postgres about 0.05 GB, Neo4j 1.2 to 1.7 GB.
 
 Not tested: a real LLM provider, file uploads (PDF, DOCX), rerankers, other LLM bindings, and custom domains.
