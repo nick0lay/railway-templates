@@ -65,7 +65,7 @@ For a knowledge graph:
 
 API keys for the REST, OpenAI-compatible and MCP APIs are created in the RAGFlow UI.
 
-**Resources.** In our test on 2026-11-09 the idle stack used about 3 GB of RAM: Elasticsearch 1.75 GB, RAGFlow 0.7–0.9 GB, MySQL 0.5 GB, Kvrocks 0.1 GB, NATS 0.01 GB. That is beyond Railway's Trial plan, so use Hobby or Pro. Parsing large PDFs uses more CPU and memory while it runs. Your LLM provider bills parsing, embeddings and chat separately.
+**Resources.** In our test on 2026-11-09 the idle stack used about 2.8 GB of RAM: Elasticsearch 1.7 GB, RAGFlow 0.7–0.9 GB, MySQL 0.3 GB, Kvrocks 0.1 GB, NATS 0.01 GB. That is beyond Railway's Trial plan, so use Hobby or Pro. Parsing large PDFs uses more CPU and memory while it runs. Your LLM provider bills parsing, embeddings and chat separately.
 
 ## Why Deploy RAGFlow 1.0.0 on Railway?
 

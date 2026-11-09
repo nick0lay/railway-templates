@@ -113,7 +113,7 @@ NATS has no password: RAGFlow 1.0's NATS client has no auth setting. It is reach
 
 ## Resources and plan
 
-Measured idle on 2026-11-09 after a test ingest: Elasticsearch 1.75 GB, RAGFlow 0.7–0.9 GB, MySQL 0.5 GB, Kvrocks 0.1 GB, NATS 0.01 GB, about **3 GB** in total. Use Hobby or Pro: it does not fit the Trial plan. Parsing large PDFs (layout analysis and OCR run on the CPU in the RAGFlow service) uses more CPU and memory while it runs.
+Measured idle on 2026-11-09 after a test ingest and a redeploy: Elasticsearch 1.7 GB, RAGFlow 0.7–0.9 GB, MySQL 0.3 GB, Kvrocks 0.1 GB, NATS 0.01 GB, about **2.8 GB** in total. Use Hobby or Pro: it does not fit the Trial plan. Parsing large PDFs (layout analysis and OCR run on the CPU in the RAGFlow service) uses more CPU and memory while it runs.
 
 ## Tested
 
@@ -133,6 +133,6 @@ Measured idle on 2026-11-09 after a test ingest: Elasticsearch 1.75 GB, RAGFlow 
 
 ## Links
 
-- RAGFlow: https://github.com/infiniflow/ragflow (Apache-2.0)
+- RAGFlow: https://github.com/infiniflow/ragflow (Apache-2.0). Elasticsearch 8.11.3 is under the Elastic License 2.0 / SSPL, which allows running it for your own use
 - Docs: https://ragflow.io/docs/
 - Upstream Docker setup: https://github.com/infiniflow/ragflow/tree/v1.0.0/docker
