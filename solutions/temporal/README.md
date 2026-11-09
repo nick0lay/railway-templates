@@ -86,7 +86,7 @@ The frontend is private by default. To reach it from outside Railway, add a TCP 
 | Temporal | `DYNAMIC_CONFIG_YAML` | `limit.maxIDLength: 255` | Temporal [dynamic config](https://docs.temporal.io/references/dynamic-config) as YAML. Edit and redeploy Temporal |
 | Admin Tools | `DEFAULT_NAMESPACE` | `default` | Namespace created on first start |
 | Admin Tools | `DEFAULT_NAMESPACE_RETENTION` | `72h` | Retention of closed workflows in that namespace; applies when it is created. Change later with `temporal operator namespace update -n default --retention 168h` |
-| UI | `TEMPORAL_CORS_ORIGINS` | `https://` + Gateway domain | Must be the URL you open the UI on. Set it to your custom domain when you add one |
+| UI | `TEMPORAL_CORS_ORIGINS` | `https://` + Gateway domain | Set to the URL you open the UI on; update it when you add a custom domain |
 | UI | `TEMPORAL_DEFAULT_NAMESPACE` | `default` | Namespace the UI opens first |
 
 ### Auto-configured (do not change)
@@ -116,7 +116,7 @@ Temporal server, admin tools and UI are released together often. To upgrade:
 
 1. Back up Postgres (see below).
 2. Set the same new tag on **Admin Tools** and **Temporal** (for example `1.32.3`), and optionally a new UI tag. Read the [release notes](https://github.com/temporalio/temporal/releases) first; Temporal supports upgrading one minor version at a time (1.32 → 1.33, not 1.32 → 1.34).
-3. Deploy. Admin Tools upgrades the schema, then the new server starts.
+3. Deploy Admin Tools first and wait for `setup: done` in its logs (the schema is then upgraded), then deploy Temporal and the UI.
 
 Admin Tools must stay deployed: the server waits for it every time it starts. It uses almost no memory while idle.
 
@@ -137,7 +137,7 @@ At idle the five services use about 0.2 GB of RAM together (Temporal and Postgre
 | A few `Not enough hosts to serve the request` errors right after start | Normal while the server's internal services join each other; they stop within seconds |
 | `Not using any authorizer` warning | Expected: this template has no gRPC authorizer. Keep the frontend private |
 | Workers can't connect | Use `${{Temporal.RAILWAY_PRIVATE_DOMAIN}}:7233` from a service in the same project and environment, plain gRPC (no TLS) |
-| Terminate, Cancel or Signal in the UI fails after adding a custom domain | Set `TEMPORAL_CORS_ORIGINS` on the UI to the new URL and redeploy the UI |
+| UI actions (Terminate, Cancel, Signal) fail after adding a custom domain | Set `TEMPORAL_CORS_ORIGINS` on the UI to the new URL and redeploy the UI |
 | `Namespace default is not found` in a worker | Admin Tools creates it after the server is healthy; wait a minute, or create it with the CLI |
 | 502 from the Gateway right after deploy | The UI is still starting. Wait a moment |
 
@@ -147,4 +147,4 @@ Temporal server, admin tools and UI are MIT. Caddy is Apache 2.0. PostgreSQL use
 
 ## Testing
 
-Tested on 2026-11-09 in throwaway Railway projects deployed from the template: all five services were up about 30 seconds after deploy. Admin Tools created both schemas (history to 1.19, visibility to 1.14) and the `default` namespace, and `temporal operator namespace list` against the private frontend listed it. Through the Gateway: 401 without a login and with a wrong password; with the login the UI pages loaded, the API listed the `default` namespace, and a workflow was started and terminated through the UI's API (both write calls passed the UI's CORS check). After redeploying all five services at once, the schema was found current, the namespace still existed, and everything was up again. Not tested: real SDK workers, a TCP proxy from outside Railway, mTLS, custom domains and upgrades between Temporal versions.
+Tested on 2026-11-09 in throwaway Railway projects deployed from the template: all five services were up about 30 seconds after deploy. Admin Tools created both schemas (history to 1.19, visibility to 1.14) and the `default` namespace, and `temporal operator namespace list` against the private frontend listed it. Through the Gateway: 401 without a login and with a wrong password; with the login the UI pages loaded, the API listed the `default` namespace, and a workflow was started and terminated through the UI's API (both write calls succeeded). After redeploying all five services at once, the schema was found current, the namespace still existed, and everything was up again. Not tested: real SDK workers, a TCP proxy from outside Railway, mTLS, custom domains and upgrades between Temporal versions.
