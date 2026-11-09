@@ -12,13 +12,13 @@ This is the Neo4j variant of the [LightRAG 1.5.7](../lightrag/) template. Both a
 |---------|--------|------|
 | LightRAG | `ghcr.io/hkuds/lightrag:v1.5.7` | Web UI, REST API and document pipeline (public, login and API key, volume) |
 | Postgres | `pgvector/pgvector:0.8.7-pg18` | Documents, chunks, LLM cache, document status and vectors (private, volume) |
-| Neo4j | `neo4j:2026.10.1-community` | Knowledge graph with APOC. Browser on the public HTTPS domain and a Bolt TCP proxy, both behind the generated password (volume) |
+| Neo4j | `neo4j:2026.10.1-community` | Knowledge graph with APOC. Browser on the public HTTPS domain and a Bolt TCP proxy (TLS, `bolt+ssc://`), both behind the generated password (volume) |
 
 ## What differs from the Postgres-only template
 
 | | LightRAG 1.5.7 | LightRAG 1.5.7 + Neo4j |
 |---|---|---|
-| Graph store | `PGTableGraphStorage` (Postgres tables) | `Neo4JStorage` (`NEO4J_URI=${{Neo4j.BOLT_URL}}`) |
+| Graph store | `PGTableGraphStorage` (Postgres tables) | `Neo4JStorage` (`NEO4J_URI=${{Neo4j.BOLT_URL}}`, `bolt+ssc://` over the private network) |
 | Look at the graph | LightRAG web UI | LightRAG web UI, Neo4j Browser, Cypher, any Neo4j driver |
 | Idle RAM (our test) | about 0.4 to 0.75 GB | about 1.6 to 2.5 GB (Neo4j adds 1.2 to 1.7 GB) |
 

@@ -6,7 +6,7 @@ Neo4j is the most widely used graph database. You store data as nodes and relati
 
 A Neo4j server needs a persistent volume, a password, and memory limits. Without explicit limits, the JVM sizes its heap and page cache from the container limit, not from your data. Drivers need a Bolt port they can reach, and Neo4j Browser needs a connection that works over HTTPS. Many Neo4j templates still run with `NEO4J_AUTH=none`, use the `latest` tag, or expose Browser with no working connection.
 
-This template runs the official `neo4j:2026.10.1-community` image with a volume at `/data`, a generated password, the APOC core plugin, and a heap and page cache sized for the Hobby plan. Neo4j Browser and the HTTP Query API are on the public HTTPS domain, and both ask for the password. Drivers connect over Railway's private network, or from outside through a password-protected TCP proxy.
+This template runs the official `neo4j:2026.10.1-community` image with a volume at `/data`, a generated password, the APOC core plugin, and a heap and page cache sized for the Hobby plan. Neo4j Browser and the HTTP Query API are on the public HTTPS domain, and both ask for the password. Drivers connect over Railway's private network, or from outside through a password-protected TCP proxy. Railway's TCP proxy forwards raw TCP without encryption, so the template creates a self-signed certificate on the first start and requires TLS on Bolt.
 
 ## Common Use Cases
 
@@ -42,11 +42,11 @@ NEO4J_USERNAME=${{Neo4j.DB_USER}}
 NEO4J_PASSWORD=${{Neo4j.DB_PASSWORD}}
 ```
 
-3. From outside Railway, use `BOLT_PUBLIC_URL` (for example `bolt://<proxy-domain>:<port>`) with user `neo4j` and `DB_PASSWORD`:
+3. From outside Railway, use `BOLT_PUBLIC_URL` (for example `bolt+ssc://<proxy-domain>:<port>`) with user `neo4j` and `DB_PASSWORD`. Use `bolt+ssc://` or `neo4j+ssc://` (TLS with a self-signed certificate); plain `bolt://` is refused:
 
 ```python
 from neo4j import GraphDatabase
-driver = GraphDatabase.driver("bolt://<proxy-domain>:<port>", auth=("neo4j", "<DB_PASSWORD>"))
+driver = GraphDatabase.driver("bolt+ssc://<proxy-domain>:<port>", auth=("neo4j", "<DB_PASSWORD>"))
 ```
 
 **This template:**
@@ -57,10 +57,11 @@ driver = GraphDatabase.driver("bolt://<proxy-domain>:<port>", auth=("neo4j", "<D
 - Loads APOC from the image itself, with no download at start
 - Sets heap (512 MB) and page cache (256 MB) explicitly, adjustable with variables
 - Serves Neo4j Browser over HTTPS, connected through the HTTP Query API, so no extra port is needed
+- Encrypts Bolt with TLS, on the private network and through the TCP proxy. The self-signed certificate is created on the first start and kept on the volume
 - Listens on IPv6, so services on Railway's private network reach Bolt
 - Offers ready-made variables (`BOLT_URL`, `DB_USER`, `DB_PASSWORD`, `HTTP_URL`) for your apps
 
-**Notes:** the password is set on the first start. To change it later, run `ALTER CURRENT USER SET PASSWORD FROM '<old>' TO '<new>'` in Browser, then update `DB_PASSWORD`. The TCP proxy checks the password but is not TLS-encrypted, so prefer the private network for sensitive data, or remove the TCP proxy. Neo4j idles at about 1.3 to 1.7 GB of RAM with these settings. Community Edition is a single server (no clustering, no role-based access control).
+**Notes:** the password is set on the first start. To change it later, run `ALTER CURRENT USER SET PASSWORD FROM '<old>' TO '<new>'` in Browser, then update `DB_PASSWORD`. Set `NEO4J_server_bolt_tls__level=OPTIONAL` if a client can't use TLS. Remove the TCP proxy if you don't need outside access. Neo4j idles at about 1.3 to 1.7 GB of RAM with these settings. Community Edition is a single server (no clustering, no role-based access control).
 
 ## Why Deploy Neo4j 2026.10 Community on Railway?
 

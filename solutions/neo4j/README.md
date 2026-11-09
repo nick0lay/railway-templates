@@ -1,6 +1,6 @@
 # Neo4j 2026.10 Community
 
-Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated password, the APOC plugin, Neo4j Browser over HTTPS, private Bolt for your Railway services and a password-protected TCP proxy for outside drivers.
+Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated password, the APOC plugin, Neo4j Browser over HTTPS, Bolt with TLS for your Railway services, and a password-protected, TLS-encrypted TCP proxy for outside drivers.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/neo4j-202610-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
@@ -12,6 +12,7 @@ Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated 
 - **Explicit memory**: 512 MB heap and 256 MB page cache, so the JVM doesn't size itself from the container limit
 - **Neo4j Browser and HTTP Query API** on the public HTTPS domain, both behind the database password
 - **Bolt** on the private network for services in the project, and on a TCP proxy for drivers outside Railway
+- **Bolt TLS** with a self-signed certificate created on the first start and kept on the volume. Railway's TCP proxy forwards raw TCP, so Neo4j encrypts Bolt itself, the way Railway's Postgres SSL template does. Plaintext Bolt is refused
 
 ## Architecture
 
@@ -20,7 +21,7 @@ Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated 
 │                            Internet                              │
 └───────────────┬───────────────────────────────────┬──────────────┘
                 │ HTTPS (public domain)             │ TCP proxy
-                │ Browser + Query API, password     │ Bolt, password, no TLS
+                │ Browser + Query API, password     │ Bolt, TLS, password   
                 ▼                                   ▼
 ┌──────────────────────────────────────────────────────────────────┐
 │ Neo4j 2026.10.1 Community (+ APOC)                               │
@@ -33,7 +34,7 @@ Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated 
 │        └──────────────────────────────────────┘                  │
 └──────────────────────────────────────────────────────────────────┘
                 ▲
-                │ bolt://neo4j.railway.internal:7687
+                │ bolt+ssc://neo4j.railway.internal:7687
 ┌───────────────┴───────────────┐
 │ Your services (same project)  │
 └───────────────────────────────┘
@@ -43,7 +44,7 @@ Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated 
 
 | Service | Source | Role |
 |---------|--------|------|
-| Neo4j | `neo4j:2026.10.1-community` | Graph database. Public HTTPS domain for Browser (password), private Bolt, Bolt TCP proxy |
+| Neo4j | `neo4j:2026.10.1-community` | Graph database. Public HTTPS domain for Browser (password), Bolt with TLS on the private network and a TCP proxy |
 
 ## Environment Variables
 
@@ -55,6 +56,7 @@ Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated 
 | `NEO4J_server_memory_heap_initial__size` | `512m` | JVM heap at start. Keep it equal to the max size |
 | `NEO4J_server_memory_heap_max__size` | `512m` | JVM heap limit. Raise it for big transactions or many concurrent queries |
 | `NEO4J_server_memory_pagecache_size` | `256m` | Page cache for graph data and indexes. Ideally about the size of your store on disk |
+| `NEO4J_server_bolt_tls__level` | `REQUIRED` | `REQUIRED` refuses plaintext Bolt. `OPTIONAL` also accepts plain `bolt://` (needed only for clients without TLS support) |
 | `NEO4J_PLUGINS` | `["apoc"]` | Plugins loaded at start. APOC core ships in the image. Other plugins (for example `"graph-data-science"`) are downloaded at every start |
 
 Any other Neo4j setting can be added as a variable: prefix it with `NEO4J_`, replace `.` with `_` and `_` with `__`. For example `db.transaction.timeout` becomes `NEO4J_db_transaction_timeout`.
@@ -65,13 +67,16 @@ Any other Neo4j setting can be added as a variable: prefix it with `NEO4J_`, rep
 |----------|-------|-----|
 | `NEO4J_AUTH` | `neo4j/${{DB_PASSWORD}}` | Initial credentials, read by the image on the first start |
 | `DB_USER` | `neo4j` | The admin user of Community Edition. Reference it as `${{Neo4j.DB_USER}}` |
-| `BOLT_URL` | `bolt://${{RAILWAY_PRIVATE_DOMAIN}}:7687` | Driver URI for services in this project: `${{Neo4j.BOLT_URL}}` |
-| `BOLT_PUBLIC_URL` | `bolt://${{RAILWAY_TCP_PROXY_DOMAIN}}:${{RAILWAY_TCP_PROXY_PORT}}` | Driver URI for clients outside Railway |
+| `BOLT_URL` | `bolt+ssc://${{RAILWAY_PRIVATE_DOMAIN}}:7687` | Driver URI for services in this project: `${{Neo4j.BOLT_URL}}` |
+| `BOLT_PUBLIC_URL` | `bolt+ssc://${{RAILWAY_TCP_PROXY_DOMAIN}}:${{RAILWAY_TCP_PROXY_PORT}}` | Driver URI for clients outside Railway |
+| `NEO4J_dbms_ssl_policy_bolt_enabled`, `..._base__directory`, `..._client__auth` | `true`, `/data/certificates/bolt`, `NONE` | Bolt TLS with the certificate on the volume. Clients log in with the password, not a client certificate |
 | `HTTP_URL` | `http://${{RAILWAY_PRIVATE_DOMAIN}}:7474` | HTTP Query API on the private network |
 | `BROWSER_URL` | `https://<domain>/browser/?dbms=https://neo4j@<domain>:443` | Neo4j Browser link with the connection form filled in |
 | `NEO4J_server_default__listen__address` | `::` | Listens on IPv6 and IPv4. Railway's private network is IPv6 |
 | `PORT` | `7474` | Port of the public domain and the healthcheck |
 | `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` | `60` | Time to close the store cleanly on redeploy |
+
+The service also has a start command. On the first start it creates a self-signed certificate (`openssl`, RSA 2048, valid 10 years, named after the TCP proxy domain) in `/data/certificates/bolt`, then starts Neo4j as usual. It keeps the certificate on later starts, so redeploys don't change it.
 
 The variables your apps reference (`DB_*`, `BOLT_*`, `HTTP_URL`) don't start with `NEO4J_` on purpose: the image turns every `NEO4J_*` variable into a Neo4j setting, and Neo4j refuses to start on settings it doesn't know.
 
@@ -91,7 +96,7 @@ NEO4J_USERNAME=${{Neo4j.DB_USER}}
 NEO4J_PASSWORD=${{Neo4j.DB_PASSWORD}}
 ```
 
-Use the names your app expects. For example, LightRAG and Graphiti read `NEO4J_URI`, `NEO4J_USERNAME` / `NEO4J_USER` and `NEO4J_PASSWORD`. Traffic stays on the private network (no TLS, no egress cost). `neo4j://` works as well as `bolt://`.
+Use the names your app expects. For example, LightRAG and Graphiti read `NEO4J_URI`, `NEO4J_USERNAME` / `NEO4J_USER` and `NEO4J_PASSWORD`. Traffic stays on the private network (no egress cost) and is TLS-encrypted. `BOLT_URL` uses `bolt+ssc://`: TLS with a self-signed certificate, which the driver does not try to verify. `neo4j+ssc://` works as well. If your app's driver can't use TLS, set `NEO4J_server_bolt_tls__level=OPTIONAL` and connect with `bolt://`.
 
 ### From outside Railway (drivers, Cypher Shell)
 
@@ -100,17 +105,25 @@ Read `BOLT_PUBLIC_URL` and `DB_PASSWORD` from the Neo4j service's Variables.
 ```python
 from neo4j import GraphDatabase
 
-with GraphDatabase.driver("bolt://<proxy-domain>:<port>", auth=("neo4j", "<DB_PASSWORD>")) as driver:
+with GraphDatabase.driver("bolt+ssc://<proxy-domain>:<port>", auth=("neo4j", "<DB_PASSWORD>")) as driver:
     driver.verify_connectivity()
     records, _, _ = driver.execute_query("RETURN apoc.version() AS apoc")
     print(records[0]["apoc"])
 ```
 
 ```bash
-cypher-shell -a bolt://<proxy-domain>:<port> -u neo4j -p '<DB_PASSWORD>'
+cypher-shell -a bolt+ssc://<proxy-domain>:<port> -u neo4j -p '<DB_PASSWORD>'
 ```
 
-`neo4j://<proxy-domain>:<port>` works too: no advertised address is set, so Neo4j routes clients back to the address they used. The TCP proxy checks the password but does not encrypt traffic. Prefer the private network for sensitive data, or delete the TCP proxy in the service's Networking settings if you don't need it.
+`neo4j+ssc://<proxy-domain>:<port>` works too: no advertised address is set, so Neo4j routes clients back to the address they used.
+
+Railway's TCP proxy forwards raw TCP and adds no encryption, so Neo4j does the TLS itself:
+
+- Use `bolt+ssc://` or `neo4j+ssc://`. Plain `bolt://` and `neo4j://` are refused.
+- `bolt+s://` and `neo4j+s://` fail, because they check the certificate against public authorities and this one is self-signed.
+- To be sure you talk to your own server, compare the fingerprint in the Neo4j deploy log (`Bolt TLS: certificate sha256 Fingerprint=...`) with `openssl s_client -connect <proxy-domain>:<port> </dev/null | openssl x509 -noout -fingerprint -sha256`.
+- To use your own certificate, replace `private.key` and `public.crt` in `/data/certificates/bolt` and redeploy.
+- Delete the TCP proxy in the service's Networking settings if you don't need outside access.
 
 ### HTTP Query API
 
@@ -120,9 +133,9 @@ curl -u neo4j:<DB_PASSWORD> -H 'Content-Type: application/json' \
   https://<domain>/db/neo4j/query/v2
 ```
 
-### Encrypted Bolt over WebSocket (optional)
+### Bolt over WebSocket (optional)
 
-Tools that speak Bolt over WebSocket (the hosted Browser at browser.neo4j.io, the JavaScript driver) can connect with TLS through Railway's HTTPS edge. In the Neo4j service's Settings → Networking, add a second public domain with target port **7687**, then connect with `neo4j+s://<that-domain>:443`. Python and Java drivers don't support WebSocket; they use the TCP proxy.
+Tools that speak Bolt over WebSocket (the hosted Browser at browser.neo4j.io, the JavaScript driver) can connect through Railway's HTTPS edge. Railway ends TLS at the edge and sends plain WebSocket to Neo4j, which the default `REQUIRED` TLS level refuses. To use it, set `NEO4J_server_bolt_tls__level=OPTIONAL` (this also allows plain `bolt://` through the TCP proxy), add a second public domain with target port **7687** in the Neo4j service's Settings → Networking, then connect with `neo4j+s://<that-domain>:443`. Python and Java drivers don't support WebSocket; they use the TCP proxy.
 
 ## Changing the password
 
@@ -146,10 +159,15 @@ Neo4j idles at about 1.3 to 1.7 GB of RAM with the default settings (measured on
 - **Browser says it can't connect to `neo4j://...:7687`**: choose protocol `https://` and port `443`, or open `BROWSER_URL`.
 - **`The client is unauthorized due to authentication failure`**: the password in your app doesn't match the database. If you changed `DB_PASSWORD` after the first start, see [Changing the password](#changing-the-password).
 - **`Unrecognized setting. No declared setting with name: ...`**: a variable starting with `NEO4J_` isn't a valid Neo4j setting (for example `NEO4J_URI` on the Neo4j service). Rename or remove it.
-- **Connection refused from another service**: use `${{Neo4j.BOLT_URL}}` (private domain, port 7687). Check that `NEO4J_server_default__listen__address` is still `::`.
+- **Connection refused from another service**: use `${{Neo4j.BOLT_URL}}` (private domain, port 7687, `bolt+ssc://`). Check that `NEO4J_server_default__listen__address` is still `::`.
+- **`incomplete handshake` or `Unable to retrieve routing information`**: the client uses plain `bolt://` or `neo4j://`. Switch to `bolt+ssc://` or `neo4j+ssc://`.
+- **`SSLCertVerificationError`**: the client uses `+s`. Use `+ssc` for the self-signed certificate.
+- **`ConfigurationError` about encryption settings**: the app passes its own `encrypted` / `trust` options together with a `+ssc` URI. Remove those options, or keep them and use `bolt://` with `NEO4J_server_bolt_tls__level=OPTIONAL`.
 - **Out of memory or slow queries**: raise the heap and page cache variables, and the service memory with them.
 - **A plugin fails to download at start**: plugins other than APOC are fetched from the internet on every start. Remove them from `NEO4J_PLUGINS` to check.
 
 ## Testing
 
-Tested on 2026-11-09: clean deploy from the template; a node written and read through the TCP proxy with the Python driver (`bolt://` and `neo4j://`) and from a service on the private network; `apoc.version()` returned 2026.10.1; wrong passwords rejected on Bolt and HTTP; Neo4j Browser loaded over HTTPS and ran queries with the `https://` protocol; Bolt over WebSocket on a second domain worked with `neo4j+s://`; data still there after redeploys.
+Tested on 2026-11-09: clean deploy from the template; a node written and read through the TCP proxy with the Python driver (`bolt://` and `neo4j://`) and from a service on the private network; `apoc.version()` returned 2026.10.1; wrong passwords rejected on Bolt and HTTP; Neo4j Browser loaded over HTTPS and ran queries with the `https://` protocol; Bolt over WebSocket on a second domain worked with `neo4j+s://` (before Bolt TLS was turned on); data still there after redeploys.
+
+Tested again on 2026-11-09 after turning on Bolt TLS, both from a test configuration and from the published template: the certificate was created on the first start; `bolt+ssc://` and `neo4j+ssc://` through the TCP proxy wrote and read a node; plain `bolt://` and `neo4j://` were refused; `bolt+s://` failed certificate checks; a wrong password was rejected; the fingerprint seen through the proxy matched the log; Neo4j Browser connected over HTTPS; after a redeploy the certificate fingerprint and the data were unchanged. LightRAG connected over the private network with `bolt+ssc://`.

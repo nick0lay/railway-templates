@@ -4,7 +4,7 @@ LightRAG is an open-source GraphRAG server from HKU. It reads your documents, us
 
 ## About Hosting LightRAG 1.5.7 + Neo4j
 
-This template runs three official images: LightRAG v1.5.7 (`ghcr.io/hkuds/lightrag`), Neo4j 2026.10 Community with APOC, and PostgreSQL 18 with pgvector 0.8.7. The knowledge graph goes to Neo4j (`Neo4JStorage`) over the private network. Documents, chunks, the LLM cache, document status and the vectors (HNSW index) go to Postgres. Every service has a volume, so nothing is lost on redeploy. LightRAG's web UI asks for a login with a generated admin password, and the API and Ollama-compatible routes need a generated API key. Neo4j Browser runs over HTTPS and a Bolt TCP proxy is open for drivers, both behind a generated Neo4j password. Postgres is private. Neo4j's memory is capped (512 MB heap, 256 MB page cache). You only enter your OpenAI (or OpenAI-compatible) API key at deploy.
+This template runs three official images: LightRAG v1.5.7 (`ghcr.io/hkuds/lightrag`), Neo4j 2026.10 Community with APOC, and PostgreSQL 18 with pgvector 0.8.7. The knowledge graph goes to Neo4j (`Neo4JStorage`) over the private network, with Bolt encrypted by TLS. Documents, chunks, the LLM cache, document status and the vectors (HNSW index) go to Postgres. Every service has a volume, so nothing is lost on redeploy. LightRAG's web UI asks for a login with a generated admin password, and the API and Ollama-compatible routes need a generated API key. Neo4j Browser runs over HTTPS and a Bolt TCP proxy is open for drivers (TLS with a self-signed certificate created on the first start, so connect with `bolt+ssc://`), both behind a generated Neo4j password. Postgres is private. Neo4j's memory is capped (512 MB heap, 256 MB page cache). You only enter your OpenAI (or OpenAI-compatible) API key at deploy.
 
 ## Common Use Cases
 
@@ -16,7 +16,7 @@ This template runs three official images: LightRAG v1.5.7 (`ghcr.io/hkuds/lightr
 ## Dependencies for LightRAG 1.5.7 + Neo4j Hosting
 
 - LightRAG v1.5.7 (`ghcr.io/hkuds/lightrag:v1.5.7`), public, login and API key required, volume
-- Neo4j 2026.10.1 Community with APOC (`neo4j:2026.10.1-community`), Browser and TCP proxy behind its password, volume
+- Neo4j 2026.10.1 Community with APOC (`neo4j:2026.10.1-community`), Browser and TCP proxy behind its password, Bolt TLS, volume
 - PostgreSQL 18 with pgvector 0.8.7 (`pgvector/pgvector:0.8.7-pg18`), private, volume
 - An API key for OpenAI or any OpenAI-compatible provider (OpenRouter, Groq, DeepSeek, a LiteLLM gateway, vLLM)
 

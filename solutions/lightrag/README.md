@@ -52,11 +52,11 @@ In both templates the web UI needs a login, the API needs an API key, and the da
 │                                                              │
 │  LightRAG :9621 (public, login + API key), volume /data      │
 │        │                          │                          │
-│        ▼                          ▼  bolt:// (private)       │
+│        ▼                          ▼  bolt+ssc:// (TLS)       │
 │  Postgres :5432 (private)    Neo4j 2026.10 Community         │
 │    documents, chunks,          knowledge graph               │
 │    vectors, status             Browser on HTTPS (password)   │
-│                                Bolt TCP proxy (password)     │
+│                                Bolt TCP proxy (TLS, password)│
 │                                volume /data                  │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -67,7 +67,7 @@ In both templates the web UI needs a login, the API needs an API key, and the da
 |---------|--------|------|
 | LightRAG | `ghcr.io/hkuds/lightrag:v1.5.7` | Web UI, REST API and document pipeline (public, login and API key, volume) |
 | Postgres | `pgvector/pgvector:0.8.7-pg18` | PostgreSQL 18 with pgvector 0.8.7: key-value data, vectors, document status and (in the first template) the graph (private, volume) |
-| Neo4j (+ Neo4j template only) | `neo4j:2026.10.1-community` | Knowledge graph, with APOC. Browser on the public HTTPS domain and a Bolt TCP proxy, both behind the generated password (volume) |
+| Neo4j (+ Neo4j template only) | `neo4j:2026.10.1-community` | Knowledge graph, with APOC. Browser on the public HTTPS domain and a Bolt TCP proxy (TLS), both behind the generated password (volume) |
 
 ## What these templates do
 
@@ -151,7 +151,7 @@ Any other LightRAG setting from [env.example](https://github.com/HKUDS/LightRAG/
 | LightRAG | `LIGHTRAG_GRAPH_STORAGE` | `PGTableGraphStorage` or `Neo4JStorage` | Where the knowledge graph lives. Switching it later starts an empty graph |
 | LightRAG | `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DATABASE` | From the Postgres service | Private network connection, no TLS (Railway's private network is encrypted) |
 | LightRAG | `POSTGRES_VECTOR_INDEX_TYPE` | `HNSW_HALFVEC` | Vector index for up to 4,000 dimensions. Set before the first start |
-| LightRAG | `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE` (+ Neo4j only) | `${{Neo4j.BOLT_URL}}`, `${{Neo4j.DB_USER}}`, `${{Neo4j.DB_PASSWORD}}`, `neo4j` | Bolt over the private network |
+| LightRAG | `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE` (+ Neo4j only) | `${{Neo4j.BOLT_URL}}`, `${{Neo4j.DB_USER}}`, `${{Neo4j.DB_PASSWORD}}`, `neo4j` | Bolt over the private network with TLS (`bolt+ssc://neo4j.railway.internal:7687`: Neo4j's self-signed certificate, not verified) |
 | LightRAG | `WHITELIST_PATHS` | `/health` | Only the healthcheck is open without a login or key |
 | LightRAG | `WORKING_DIR`, `INPUT_DIR`, `PROMPT_DIR` | `/data/rag_storage`, `/data/inputs`, `/data/prompts` | Paths on the volume |
 | LightRAG | `HOST`, `PORT` | `0.0.0.0`, `9621` | Railway routes the public domain to 9621 |
@@ -164,7 +164,7 @@ Any other LightRAG setting from [env.example](https://github.com/HKUDS/LightRAG/
 ## Neo4j template: looking at the graph
 
 - **Neo4j Browser:** open `BROWSER_URL` from the Neo4j service's Variables. It connects over `https://` on port 443; log in with `neo4j` and `DB_PASSWORD`. LightRAG's entities are nodes with the label `base` (plus their entity type), so `MATCH (n:base)-[r]-(m) RETURN n, r, m LIMIT 100` shows the graph.
-- **Drivers outside Railway:** `BOLT_PUBLIC_URL` is a TCP proxy (plain Bolt, password-protected, not encrypted). Remove the TCP proxy from the Neo4j service if you don't need it.
+- **Drivers outside Railway:** `BOLT_PUBLIC_URL` is a TCP proxy, password-protected and TLS-encrypted by Neo4j with a self-signed certificate. Connect with `bolt+ssc://` or `neo4j+ssc://`; plain `bolt://` is refused. Remove the TCP proxy from the Neo4j service if you don't need it.
 - More about the Neo4j service in the [Neo4j template's README](../neo4j/README.md).
 
 ## Backups
@@ -212,10 +212,11 @@ Tested on 2026-11-09 with LightRAG v1.5.7, in throwaway Railway projects for bot
 
 - **Login and keys:** `/` redirects to the web UI login page, and the generated admin logged in (browser and `POST /login`). A wrong password got 401. The documents API returned 401 without a key or with a wrong key, and 200 with the API key or the login token. The Ollama-compatible `/api/tags` returned 401 without a key. Anonymous `/health` showed only liveness; with the key it listed the configured storages.
 - **Ingest and query (both templates):** a text document was accepted, processed, and produced three entities and two relationships. `/graph/label/list` and the graph view returned them, `hybrid`, `naive` and `mix` queries returned an answer with a reference to the document, and `/query/data` returned the entities and the chunk.
-- **Storage:** the logs showed Postgres connected over the private network without SSL, the tables and `HNSW_HALFVEC` indexes created, and `PGTableGraphStorage initialized`. In the Neo4j template, LightRAG logged `Connected to neo4j at bolt://neo4j.railway.internal:7687`, and a Cypher query over Neo4j's HTTPS API returned the extracted nodes and relationships.
+- **Storage:** the logs showed Postgres connected over the private network without SSL, the tables and `HNSW_HALFVEC` indexes created, and `PGTableGraphStorage initialized`. In the Neo4j template, LightRAG logged `Connected to neo4j at bolt://neo4j.railway.internal:7687` (after Bolt TLS was turned on later that day: `bolt+ssc://neo4j.railway.internal:7687`), and a Cypher query over Neo4j's HTTPS API returned the extracted nodes and relationships.
 - **Persistence:** after redeploying all services, the documents, graph and query results were unchanged in both templates.
 - **Neo4j restarts:** a Neo4j-only redeploy needed no LightRAG restart. When all three services were redeployed together, LightRAG's first start timed out on Neo4j and the automatic restart connected (see Troubleshooting).
 - **Default settings:** both templates were also deployed with its default model settings and a deliberately invalid OpenAI key. Login and key checks passed, LightRAG connected to its storages (and to Neo4j), and the test document failed with OpenAI's `401 Incorrect API key provided`, so the default configuration reaches the provider as expected.
+- **Neo4j with Bolt TLS (later on 2026-11-09):** the whole ingest and query run passed again with LightRAG connecting over `bolt+ssc://`, and the graph was in Neo4j. The published template, deployed with an OpenAI key that had no credit left, connected to Neo4j over TLS and the document failed with OpenAI's `429 insufficient_quota`, so the defaults reach OpenAI. A run with a real model is still to do.
 - **Memory at idle:** LightRAG 0.35 to 0.7 GB, Postgres about 0.05 GB, Neo4j 1.2 to 1.7 GB.
 
 Not tested: a real LLM provider, file uploads (PDF, DOCX), rerankers, other LLM bindings, and custom domains.
