@@ -49,6 +49,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Excalidraw](./solutions/excalidraw/) | Whiteboard with self-hosted live collaboration and share links (no excalidraw.com or Firebase), password-protected, rooms and files in Postgres | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/excalidraw-v0181?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [OpenPanel](./solutions/openpanel/) | Product analytics (Mixpanel alternative): OpenPanel API, dashboard and worker on ClickHouse, Postgres and Redis, admin at deploy, sign-up closed | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openpanel-23?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [NVIDIA Auto Ontology](./solutions/auto-ontology/) | Semantic layer over your databases (ask in plain English, get SQL): web app, API, ingestion and an OAuth-protected MCP server on NVIDIA's official images, sample database included | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/nvidia-auto-ontology-12?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Microsoft SQL Server 2022](./solutions/mssql/) | SQL Server 2022 (MSSQL) Express on Microsoft's official image: generated sa password, TCP proxy for SSMS, volume, daily .bak backups to a Railway Bucket | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/microsoft-sql-server-2022-cu27?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -178,7 +179,10 @@ railway-templates/
     ├── openpanel/          # OpenPanel API, dashboard, worker, ClickHouse, Postgres, Redis behind Caddy
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── auto-ontology/      # Auto Ontology web, API, ingestion, MCP on Postgres; pinned NGC images
+    ├── auto-ontology/      # Auto Ontology web, API, ingestion, MCP on Postgres; pinned NGC images
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── mssql/              # SQL Server 2022 Express, TCP proxy, daily backups to a Railway Bucket
         ├── README.md
         └── TEMPLATE.md
 ```
