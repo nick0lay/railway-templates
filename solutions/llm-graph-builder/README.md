@@ -76,7 +76,7 @@ MATCH (d:Document)<-[:PART_OF]-(c:Chunk)-[:HAS_ENTITY]->(e) RETURN d, c, e LIMIT
 
 | Service | Variable | Value | Why |
 |---------|----------|-------|-----|
-| Graph Builder | `BACKEND_HOST` / `BACKEND_PORT` | `${{Backend.RAILWAY_PRIVATE_DOMAIN}}` / `${{Backend.PORT}}` | Where nginx forwards `/api/`. nginx re-resolves the name every 10 s, so backend redeploys (new private IP) don't break it |
+| Graph Builder | `BACKEND_HOST` / `BACKEND_PORT` | `${{Backend.RAILWAY_PRIVATE_DOMAIN}}` / `${{Backend.PORT}}` | Where nginx forwards `/api/`. nginx looks the name up again every 10 s, because a redeploy gives the backend a new private IP |
 | Graph Builder | `VITE_BLOOM_URL` | `${{Neo4j.BROWSER_URL}}` | Target of the graph-explore button (upstream opens Neo4j Bloom, which can't reach a private database) |
 | Backend | `NEO4J_URI` / `NEO4J_USERNAME` / `NEO4J_PASSWORD` | `${{Neo4j.BOLT_URL}}` / `${{Neo4j.DB_USER}}` / `${{Neo4j.DB_PASSWORD}}` | Server-side connection, `bolt+ssc://` over the private network |
 | Backend | `AUTHENTICATION_REQUIRED` | `False` | Upstream's Auth0 check. The Graph Builder login protects the site instead |
@@ -85,7 +85,7 @@ MATCH (d:Document)<-[:PART_OF]-(c:Chunk)-[:HAS_ENTITY]->(e) RETURN d, c, e LIMIT
 ## Notes and limits
 
 - **Login.** Upstream's only login is Auth0. This template turns it off (`VITE_SKIP_AUTH=true`, `AUTHENTICATION_REQUIRED=False`) and puts HTTP basic auth in front of everything, including the API. Everyone who logs in shares one Neo4j database and one chat history.
-- **No community summaries.** "Global search" and community detection need the Graph Data Science plugin, which Neo4j Community doesn't include. The backend reports GDS as unavailable, and the app then hides the global chat mode and the community options. All other chat modes work: vector, graph, graph+vector, fulltext, graph+vector+fulltext, entity search+vector.
+- **No community summaries.** "Global search" and community detection need the Graph Data Science plugin, which Neo4j Community doesn't include. The backend reports GDS as unavailable, and the app then hides the global chat mode and the community options. The other chat modes stay available: vector, graph, graph+vector, fulltext, graph+vector+fulltext, entity search+vector (our test used the default mode).
 - **Live status.** Upstream reports processing progress over server-sent events tied to an Auth0 user, so without Auth0 that call gets a 401 (visible in the browser console). It doesn't stop anything: small files show **Completed** when extraction returns, and files above 5 MB (uploaded in chunks and processed in the background) show their final status after a page refresh.
 - **One worker.** Uploaded chunks, chat sessions and caches live in the backend process, and each extra worker loads its own copy of the Python libraries. For more throughput, give the service more CPU rather than more workers.
 - **Uploads aren't kept.** Uploaded files are deleted after processing; the graph and chunks stay in Neo4j. Click **Reprocess** only for files you upload again.
@@ -127,7 +127,7 @@ Tested on 2026-11-09 with this configuration in a Railway project (Graph Builder
 - Without credentials or with a wrong password the site and `/api/` return 401; `/healthz` answers without login.
 - The UI loads through the login, shows the Neo4j connection `bolt+ssc://neo4j.railway.internal:7687` and a green backend status, with no connect dialog.
 - A three-sentence text file was uploaded and processed with `openai_gpt_5.4_mini`: status **Completed**, 7 nodes and 13 relationships, about 1,800 tokens. In Neo4j the entities came out typed (Company, Person, Location, Product) with relationships such as `FOUNDER`, `BUILDS`, `DEPLOYS`; chunk embeddings and vector indexes are 1536-dimensional.
-- The chat answered a question that needed two facts from the document correctly.
+- The chat (default mode) answered a question that needed two facts from the document correctly.
 - The backend reports no GDS (`gds_status: false`), and the global search mode is hidden.
 
 Idle memory (Railway metrics): Graph Builder about 0.005 GB, Backend about 0.8 GB, Neo4j 1.2 to 1.3 GB, about 2.1 GB together. The backend image is large (PyTorch CPU, LibreOffice, Tesseract); a full build took about 8 minutes.

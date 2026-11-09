@@ -45,7 +45,7 @@ MATCH (d:Document)<-[:PART_OF]-(c:Chunk)-[:HAS_ENTITY]->(e) RETURN d, c, e LIMIT
 | `EMBEDDING_PROVIDER` / `EMBEDDING_MODEL` (Backend) | `openai` / `text-embedding-3-small` | Or `sentence-transformer` / `all-MiniLM-L6-v2` to embed locally without a key. Choose before the first upload |
 | `LGB_VERSION` (both) | `v0.8.7` | Upstream release that is built |
 
-Neo4j Community has no Graph Data Science plugin, so community summaries and the "global search" chat mode are turned off; the other six chat modes work. Everyone with the login shares one graph. In our test the services used about 2.1 GB of RAM at idle (backend 0.8 GB, Neo4j 1.2 to 1.3 GB, web UI under 0.01 GB). Your LLM provider bills extraction and chat separately.
+Neo4j Community has no Graph Data Science plugin, so community summaries and the "global search" chat mode are hidden; vector, graph and hybrid chat modes remain. Everyone with the login shares one graph. In our test the services used about 2.1 GB of RAM at idle (backend 0.8 GB, Neo4j 1.2 to 1.3 GB, web UI under 0.01 GB). Your LLM provider bills extraction and chat separately.
 
 ## Why Deploy Neo4j LLM Graph Builder 0.8.7 on Railway?
 
