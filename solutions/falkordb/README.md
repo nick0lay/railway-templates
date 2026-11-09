@@ -104,7 +104,7 @@ FALKORDB_USERNAME=${{FalkorDB.DB_USER}}
 FALKORDB_PASSWORD=${{FalkorDB.DB_PASSWORD}}
 ```
 
-The private port is plaintext, like Railway's own Redis, and only reachable from inside the project. TLS is also available privately on port 6380 if a client wants it.
+The private port is plaintext, like Railway's own Redis, and only reachable from inside the project. Port 6380 (TLS) also listens on the private network; that path is untested.
 
 ### Outside Railway (TCP proxy)
 
@@ -132,7 +132,7 @@ AOF is on (`appendonly yes`, fsync every second) next to Redis's default RDB sna
 
 ## Resource usage
 
-Measured on Railway on 2026-11-09: about 0.07 to 0.18 GB of RAM idle (Redis with FalkorDB and the Browser together) and close to zero CPU.
+Measured on Railway on 2026-11-09: about 0.07 to 0.19 GB of RAM idle (Redis with FalkorDB and the Browser together) and close to zero CPU.
 
 ## Testing
 
@@ -153,7 +153,7 @@ Tested on Railway on 2026-11-09:
 | `NOAUTH Authentication required` | Pass `DB_PASSWORD` (user `default`) |
 | Browser login fails with the right password | Keep host `localhost` and port `6379` in the form (TLS unticked); the Browser runs in the same container |
 | Browser shows "No active connection. Please sign in again" after a redeploy | Expected: the Browser keeps its database connection in memory. Log in again |
-| Log says `WARNING Memory overcommit must be enabled` | Railway doesn't allow changing `vm.overcommit_memory`. AOF rewrites and snapshots still work at normal sizes |
+| Log says `WARNING Memory overcommit must be enabled` | The warning is harmless at normal sizes; AOF rewrites and loading after a redeploy worked in testing |
 | Redis can't read the TLS files after you replaced them | The start command hands them to the `falkordb` user on the next start. Redeploy |
 
 ## Licence
