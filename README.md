@@ -49,6 +49,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Excalidraw](./solutions/excalidraw/) | Whiteboard with self-hosted live collaboration and share links (no excalidraw.com or Firebase), password-protected, rooms and files in Postgres | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/excalidraw-v0181?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [OpenPanel](./solutions/openpanel/) | Product analytics (Mixpanel alternative): OpenPanel API, dashboard and worker on ClickHouse, Postgres and Redis, admin at deploy, sign-up closed | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/openpanel-23?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [NVIDIA Auto Ontology](./solutions/auto-ontology/) | Semantic layer over your databases (ask in plain English, get SQL): web app, API, ingestion and an OAuth-protected MCP server on NVIDIA's official images, sample database included | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/nvidia-auto-ontology-12?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Temporal](./solutions/temporal/) | Temporal 1.32 durable workflow engine on official images and Postgres (no Elasticsearch): automatic schema setup and upgrades, default namespace, Web UI behind a login, private gRPC | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/temporal-132?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 
 ## Structure
 
@@ -178,7 +179,10 @@ railway-templates/
     ├── openpanel/          # OpenPanel API, dashboard, worker, ClickHouse, Postgres, Redis behind Caddy
     │   ├── README.md
     │   └── TEMPLATE.md
-    └── auto-ontology/      # Auto Ontology web, API, ingestion, MCP on Postgres; pinned NGC images
+    ├── auto-ontology/      # Auto Ontology web, API, ingestion, MCP on Postgres; pinned NGC images
+    │   ├── README.md
+    │   └── TEMPLATE.md
+    └── temporal/           # Temporal server, admin tools (schema setup), UI behind Caddy auth, Postgres
         ├── README.md
         └── TEMPLATE.md
 ```
