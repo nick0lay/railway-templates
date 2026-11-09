@@ -2,7 +2,7 @@
 
 Deploy Neo4j 2026.10 Community on Railway with a persistent volume, a generated password, the APOC plugin, Neo4j Browser over HTTPS, private Bolt for your Railway services and a password-protected TCP proxy for outside drivers.
 
-Deploy button: coming soon (the template is not published yet).
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/neo4j-202610-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 

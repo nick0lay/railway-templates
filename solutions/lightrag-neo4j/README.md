@@ -2,7 +2,7 @@
 
 [LightRAG](https://github.com/HKUDS/LightRAG) GraphRAG server with its knowledge graph in Neo4j 2026.10 Community, and documents, chunks and vectors in PostgreSQL 18 with pgvector. Web UI with login, REST API with an API key, Neo4j Browser over HTTPS behind the Neo4j password.
 
-Deploy button: coming soon (the template is not published yet).
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157-neo4j?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 This is the Neo4j variant of the [LightRAG 1.5.7](../lightrag/) template. Both are built from the same services and share one README: architecture, variables, models, API examples, backups, upgrades and troubleshooting are in **[../lightrag/README.md](../lightrag/README.md)**. The Neo4j service is the same as in the [Neo4j 2026.10 Community](../neo4j/) template.
 

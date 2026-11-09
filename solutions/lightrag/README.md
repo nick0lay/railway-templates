@@ -6,8 +6,8 @@ There are two templates, built from the same tested parts:
 
 | Template | Services | Graph store | Deploy |
 |---|---|---|---|
-| [LightRAG 1.5.7](./) | LightRAG + Postgres (pgvector) | Postgres tables | Not yet published |
-| [LightRAG 1.5.7 + Neo4j](../lightrag-neo4j/) | LightRAG + Postgres (pgvector) + Neo4j | Neo4j | Not yet published |
+| [LightRAG 1.5.7](./) | LightRAG + Postgres (pgvector) | Postgres tables | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [LightRAG 1.5.7 + Neo4j](../lightrag-neo4j/) | LightRAG + Postgres (pgvector) + Neo4j | Neo4j | Deploy button in [lightrag-neo4j](../lightrag-neo4j/) |
 
 This README covers both. The Neo4j variant's folder has its own marketplace description and a short README with the Neo4j-specific parts.
 
