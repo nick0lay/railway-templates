@@ -125,7 +125,7 @@ Without the header the proxy answers `401`. `/mcp`, `/mcp/` and `/db/neo4j/mcp` 
 | `MCP_URL` / `PUBLIC_URL` | Token Proxy | `https://${{RAILWAY_PUBLIC_DOMAIN}}/mcp` | For copying into clients |
 | Neo4j variables | Neo4j | memory limits, Bolt TLS, generated password | See the [Neo4j template](../neo4j/) |
 
-If you change the Neo4j password (`ALTER USER` in Cypher), update `DB_PASSWORD` on the Neo4j service too; the proxy reads it from there.
+If you change the Neo4j password (`ALTER USER` in Cypher), update `DB_PASSWORD` on the Neo4j service too, then redeploy the Token Proxy; it reads the password from there at start.
 
 ## Bring your own data
 
@@ -160,4 +160,5 @@ Measured on Railway at idle: Neo4j about 1.24 GB, Neo4j MCP 0.007 GB, proxy 0.01
 - `write-cypher` created a node, `read-cypher` read it back, and `read-cypher` refused a `CREATE`. The node was found through Neo4j's HTTPS Query API, outside MCP.
 - The client also sent `X-Neo4j-MCP-URI: bolt://attacker.example.com:7687`; the MCP server's log shows every request went to `bolt+ssc://neo4j.railway.internal:7687` (the proxy overwrites the header). The Neo4j password does not appear in the MCP server's or the proxy's logs.
 - Memory at idle: Neo4j 1.23–1.24 GB, Neo4j MCP 0.007 GB, Token Proxy 0.016 GB.
-- Not tested: `NEO4J_MCP_READ_ONLY=true`, and the Claude Desktop `mcp-remote` bridge.
+- Locally (Docker): with `NEO4J_MCP_READ_ONLY=true` the server lists only `get-schema` and `read-cypher`, and a client sending `X-Neo4j-MCP-ReadOnly: false` still gets `unknown tool "write-cypher"` (request headers can only narrow the tools, not widen them).
+- Not tested: the Claude Desktop `mcp-remote` bridge.
