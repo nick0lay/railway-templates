@@ -121,7 +121,7 @@ The Backup service uses SQL Server 2022's own [backup to S3-compatible storage](
 2. runs `BACKUP DATABASE ... TO URL = 's3://<endpoint>/<bucket>/mssql-backups/<db>/<db>_<weekday>.bak' WITH FORMAT, INIT, CHECKSUM` for each database (with `COMPRESSION` on editions that support it; Express doesn't),
 3. exits with an error if any database failed, so a failed run shows up in the Railway dashboard.
 
-There is one file per database per weekday (`mydb_Mon.bak` ... `mydb_Sun.bak`), and each is overwritten a week later, so the bucket holds the last 7 daily backups. To keep a backup longer, download it or copy it to another name. To take a backup right away, use **Run now** on the Backup service's cron job, or set the cron schedule a few minutes ahead and set it back afterwards. Redeploying the Backup service does not run it.
+There is one file per database per weekday (`mydb_Mon.bak` ... `mydb_Sun.bak`), and each is overwritten a week later, so the bucket holds the last 7 daily backups. To keep a backup longer, download it or copy it to another name. To take a backup right away, set the Backup service's cron schedule a few minutes ahead, wait for the run, then set it back. Redeploying the Backup service does not run it.
 
 Express has no SQL Server Agent, which is why the schedule lives in a Railway cron service.
 
