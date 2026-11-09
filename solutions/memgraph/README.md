@@ -102,7 +102,7 @@ Memgraph Lab service:
 2. Choose **Memgraph instance**. Host (`memgraph.railway.internal`), port `7687` and **Encrypted** are already filled in.
 3. Under Authentication choose **Username/password**, enter `memgraph` and `MEMGRAPH_PASSWORD` from the Memgraph service's Variables, and click **Connect**.
 
-Lab's server opens the Bolt connection, not your browser, so Memgraph doesn't need a public HTTP port. Lab keeps its session in your browser; without a login its API answers 401.
+Lab's server opens the Bolt connection, not your browser, so Memgraph doesn't need a public HTTP port. Lab keeps its session in your browser; without a login its API answers 401. The connection form accepts any host, so anyone who reaches the Lab domain can make Lab's server try a Bolt connection, but Lab shows nothing without valid credentials. Delete Lab's public domain (or the service) if you don't use it.
 
 ### From a service in the same Railway project
 
@@ -147,7 +147,7 @@ with GraphDatabase.driver("bolt+ssc://<proxy-domain>:<port>", auth=("memgraph", 
 
 - **Railway volume backups**: enable them on the Memgraph volume for scheduled snapshots.
 - **Snapshots**: Memgraph writes a snapshot every 5 minutes and on shutdown, and keeps the last 3. `CREATE SNAPSHOT;` writes one now.
-- **Export**: Lab's Export page downloads the graph from your browser.
+- **Export**: Memgraph Lab has an Export page.
 
 ## Cost and plan
 
