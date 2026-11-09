@@ -74,7 +74,13 @@ The interactive API docs are at `https://<your-domain>/docs` (the page loads wit
 
 ## MCP
 
-`mcp: true` in `CONFIG` adds an MCP server at `https://<your-domain>/mcp` (SSE transport). Every API route becomes a tool: `search`, `batchsearch`, `add`, `upsert`, `index`, `delete`, `count`, `rag` and more. Configure your MCP client with the URL and the header `Authorization: Bearer <API_TOKEN>`. To hide write tools from agents, add `mcpargs` to the `mcp` section (for example `include_operations: [search_search_get, rag_rag_get]`).
+`mcp: true` in `CONFIG` adds an MCP server at `https://<your-domain>/mcp` (SSE transport). Every API route becomes a tool: `search`, `batchsearch`, `add`, `upsert`, `index`, `delete`, `count`, `rag` and more. Configure your MCP client with the URL and the header `Authorization: Bearer <API_TOKEN>`; the client must support SSE servers with a custom header (Claude Code and Cursor do). In Claude Code:
+
+```bash
+claude mcp add --transport sse txtai https://<your-domain>/mcp --header "Authorization: Bearer <API_TOKEN>"
+```
+
+Only the SSE transport is served (no Streamable HTTP). To hide write tools from agents, add `mcpargs` to the `mcp` section (for example `include_operations: [search_search_get, rag_rag_get]`).
 
 ## Variables
 
@@ -127,7 +133,7 @@ In our test on 2026-11-09 the service used about 1 GB of RAM after start with th
 
 ## Tested
 
-2026-11-09 on Railway, from the template: unauthenticated requests to every API route and to the MCP endpoints return 401; a wrong token returns 401. With the token: documents added and indexed, semantic search, graph search and a graph path query return the expected documents, the MCP client lists the tools and runs a search, and a RAG answer from OpenAI `gpt-5.4-mini` is correct. The index survived a redeploy. Startup without an LLM key works; `/rag` then returns an error until a key is set.
+2026-11-09 on Railway, from the template: unauthenticated requests to every API route and to the MCP endpoints return 401; a wrong token returns 401. With the token: documents added and indexed, semantic search, graph search and a graph path query return the expected documents, the MCP client lists the tools and runs a search, and a RAG answer from OpenAI `gpt-5.4-mini` is correct. The index survived a redeploy. A second deploy with the default variables (no LLM key) started and passed the same search and auth checks; `/rag` returned an error until a key is set, and the service stayed up.
 
 ## Troubleshooting
 

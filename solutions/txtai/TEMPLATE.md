@@ -10,7 +10,7 @@ This template runs the official `neuml/txtai-cpu` image, pinned to 9.14.0, as a 
 
 - Semantic search API for your app, docs or support tickets, without a separate vector database or an embeddings bill
 - RAG backend: answers from your own documents with any LLM (OpenAI, Anthropic, OpenRouter and more through LiteLLM)
-- Long-term memory and knowledge search for AI agents over MCP (Claude Desktop, Claude Code, Cursor and other MCP clients)
+- Long-term memory and knowledge search for AI agents over MCP (Claude Code, Cursor and other MCP clients that can send a header)
 - Explore how documents relate: graph search returns the nodes and edges between results, and graph path queries walk the links
 
 ## Dependencies for txtai 9.14 Hosting
@@ -45,7 +45,11 @@ curl "$URL/search?query=who+programmed+the+engine&graph=true" -H "$AUTH"
 curl "$URL/rag?query=Who+wrote+the+first+program" -H "$AUTH"
 ```
 
-**MCP.** Point an MCP client that supports SSE at `https://<your-domain>/mcp` with the header `Authorization: Bearer <API_TOKEN>`. It exposes search, add, upsert, delete, count and RAG as tools.
+**MCP.** The MCP endpoint is `https://<your-domain>/mcp` (SSE transport) with the header `Authorization: Bearer <API_TOKEN>`. It exposes search, add, upsert, delete, count and RAG as tools. In Claude Code:
+
+```bash
+claude mcp add --transport sse txtai https://<your-domain>/mcp --header "Authorization: Bearer <API_TOKEN>"
+```
 
 | Variable | Default | Purpose |
 |---|---|---|
