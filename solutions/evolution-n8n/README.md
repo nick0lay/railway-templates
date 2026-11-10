@@ -2,7 +2,7 @@
 
 WhatsApp automations and AI agents on Railway: [Evolution API](https://github.com/evolution-foundation/evolution-api) connects a WhatsApp number by scanning a QR code, with no Meta Business approval, and [n8n](https://github.com/n8n-io/n8n) runs the workflows. Incoming WhatsApp messages call an n8n webhook, and whatever the workflow answers goes back to the chat. n8n runs in queue mode with a worker and an external task runner. Both apps are pinned stable releases, the n8n integration is already turned on in Evolution API, and every public page needs a key or a login.
 
-Deploy button: added when the template is published.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/evolution-api-23-n8n-247?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
@@ -210,6 +210,8 @@ Read the release notes ([Evolution API](https://github.com/evolution-foundation/
 | Executions stay queued | `n8n-worker` isn't running; check its logs and `QUEUE_BULL_REDIS_*` |
 | `$env` access denied in an expression | n8n 2.x blocks it; paste the value into a credential instead |
 | The QR code expires | Call `/instance/connect/<name>` again or reopen the instance in the manager |
+
+Use the `WHATSAPP-BAILEYS` integration (QR code) for real numbers. In Evolution API 2.3.7 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number could trigger its bot. Don't attach production bots to `EVOLUTION` instances.
 
 WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and n8n are not affiliated with WhatsApp or Meta.
 
