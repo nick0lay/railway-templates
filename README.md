@@ -60,6 +60,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Graphiti 0.31 MCP + Neo4j](./solutions/graphiti-neo4j/) | Agent memory over MCP: Graphiti temporal knowledge graph on Neo4j for Claude and Cursor, MCP server private behind a bearer-token proxy | Not yet published |
 | [Graphiti 0.31 MCP + FalkorDB](./solutions/graphiti-falkordb/) | Lighter agent memory over MCP: Graphiti with FalkorDB in one private container, bearer-token proxy, append-only persistence on a volume | Not yet published |
 | [Neo4j MCP 2.1](./solutions/mcp-neo4j/) | Text2Cypher over MCP: the official Neo4j MCP server lets Claude and Cursor read the schema and run Cypher on Neo4j, private behind a bearer-token proxy that holds the database password | Not yet published |
+| [RAGFlow 1.0.0](./solutions/ragflow/) | RAG engine with deep document parsing and knowledge-graph compilation (GraphRAG): Elasticsearch, MySQL, Kvrocks, NATS and a Railway Bucket, sign-up closed | Not yet published |
 
 ## Structure
 
