@@ -57,6 +57,9 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Neo4j 2026.10 Community](./solutions/neo4j/) | Neo4j graph database with APOC, Browser over HTTPS behind the generated password, private Bolt for your services and a TLS-encrypted Bolt TCP proxy for drivers, volume | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/neo4j-202610-community?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [LightRAG 1.5.7](./solutions/lightrag/) | GraphRAG server: LLM-built knowledge graph plus vector search, web UI with login and API key, all data in Postgres with pgvector | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
 | [LightRAG 1.5.7 + Neo4j](./solutions/lightrag-neo4j/) | LightRAG GraphRAG with the knowledge graph in Neo4j (Browser and Cypher), documents and vectors in Postgres with pgvector, login and API key | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157-neo4j?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [Graphiti 0.31 MCP + Neo4j](./solutions/graphiti-neo4j/) | Agent memory over MCP: Graphiti temporal knowledge graph on Neo4j for Claude and Cursor, MCP server private behind a bearer-token proxy | Not yet published |
+| [Graphiti 0.31 MCP + FalkorDB](./solutions/graphiti-falkordb/) | Lighter agent memory over MCP: Graphiti with FalkorDB in one private container, bearer-token proxy, append-only persistence on a volume | Not yet published |
+| [Neo4j MCP 2.1](./solutions/mcp-neo4j/) | Text2Cypher over MCP: the official Neo4j MCP server lets Claude and Cursor read the schema and run Cypher on Neo4j, private behind a bearer-token proxy that holds the database password | Not yet published |
 
 ## Structure
 
