@@ -64,6 +64,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Neo4j LLM Graph Builder 0.8.7](./solutions/llm-graph-builder/) | Turn documents, web pages and YouTube transcripts into a Neo4j knowledge graph with an LLM, then chat with them (GraphRAG): web UI behind a login, private backend, Neo4j with Browser | Not yet published |
 | [txtai 9.14](./solutions/txtai/) | Embeddings database with semantic search, a semantic graph, RAG and an MCP server, bearer token on every route | Not yet published |
 | [Memgraph 3.14 + Lab](./solutions/memgraph/) | In-memory Cypher graph database with MAGE algorithms, Memgraph Lab behind the database login, TLS-encrypted Bolt TCP proxy, generated password, volume | Not yet published |
+| [FalkorDB 6.0.4](./solutions/falkordb/) | FalkorDB graph database (Redis protocol, Cypher, GraphRAG and agent memory) with the FalkorDB Browser behind a login, generated password, TLS TCP proxy, AOF persistence on a volume | Not yet published |
 
 ## Structure
 
