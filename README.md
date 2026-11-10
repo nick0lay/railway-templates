@@ -62,6 +62,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Neo4j MCP 2.1](./solutions/mcp-neo4j/) | Text2Cypher over MCP: the official Neo4j MCP server lets Claude and Cursor read the schema and run Cypher on Neo4j, private behind a bearer-token proxy that holds the database password | Not yet published |
 | [RAGFlow 1.0.0](./solutions/ragflow/) | RAG engine with deep document parsing and knowledge-graph compilation (GraphRAG): Elasticsearch, MySQL, Kvrocks, NATS and a Railway Bucket, sign-up closed | Not yet published |
 | [Neo4j LLM Graph Builder 0.8.7](./solutions/llm-graph-builder/) | Turn documents, web pages and YouTube transcripts into a Neo4j knowledge graph with an LLM, then chat with them (GraphRAG): web UI behind a login, private backend, Neo4j with Browser | Not yet published |
+| [txtai 9.14](./solutions/txtai/) | Embeddings database with semantic search, a semantic graph, RAG and an MCP server, bearer token on every route | Not yet published |
 
 ## Structure
 
