@@ -66,6 +66,7 @@ Pre-configured multi-service deployments with authentication and best practices.
 | [Memgraph 3.14 + Lab](./solutions/memgraph/) | In-memory Cypher graph database with MAGE algorithms, Memgraph Lab behind the database login, TLS-encrypted Bolt TCP proxy, generated password, volume | Not yet published |
 | [FalkorDB 6.0.4](./solutions/falkordb/) | FalkorDB graph database (Redis protocol, Cypher, GraphRAG and agent memory) with the FalkorDB Browser behind a login, generated password, TLS TCP proxy, AOF persistence on a volume | Not yet published |
 | [Dgraph 25.5](./solutions/dgraph/) | Dgraph graph database (GraphQL and DQL): Zero and Alpha with ACL login on every call, Ratel UI behind a login, volumes | Not yet published |
+| [PuppyGraph 1.18 + Postgres](./solutions/puppygraph-postgres/) | Graph query engine: openCypher and Gremlin straight on Postgres tables (no ETL), demo graph preloaded, login on the UI, REST, Gremlin and Bolt | Not yet published |
 
 ## Structure
 
