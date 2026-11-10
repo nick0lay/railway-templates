@@ -51,7 +51,7 @@ Self-hosted [Evolution API](https://github.com/evolution-foundation/evolution-ap
 1. Copy `AUTHENTICATION_API_KEY` from the `Evolution API` service variables.
 2. Open `https://<your-domain>/manager`, enter the server URL `https://<your-domain>` and the API key.
 3. Create an instance (channel **Baileys**), then open it and scan the QR code with WhatsApp on your phone: **Settings → Linked devices → Link a device**. You can also use a pairing code with your phone number.
-4. Send a test message, set a webhook, or connect n8n, Typebot or Chatwoot in the instance settings. For a ready-made chatbot stack, see [Evolution API + Typebot](../evolution-typebot/).
+4. Send a test message, set a webhook, or connect n8n, Typebot or Chatwoot in the instance settings.
 
 The same steps with the API:
 
@@ -89,10 +89,8 @@ API reference: https://doc.evolution-api.com
 | `TZ` | `UTC` | Time zone for logs and schedules |
 | `LOG_LEVEL` | `ERROR,WARN,INFO,LOG,WEBHOOKS` | Add `DEBUG,VERBOSE` when troubleshooting |
 | `TELEMETRY_ENABLED` | `false` | Usage telemetry to the Evolution API project |
-| `TYPEBOT_ENABLED`, `CHATWOOT_ENABLED`, `N8N_ENABLED`, `FLOWISE_ENABLED`, `OPENAI_ENABLED`, `DIFY_ENABLED` | `true` | Chatbot and inbox integrations, switched on so their tabs work in the manager. Each is still set up per instance. Set one to `false` to hide it |
-| `TYPEBOT_API_VERSION` | `latest` | Typebot 3.x API (`startChat`). `old` uses Typebot's deprecated `sendMessage` endpoint |
 
-Webhooks, RabbitMQ, SQS, S3 media storage and the global settings of the integrations above use more variables; see the [environment variable list](https://github.com/evolution-foundation/evolution-api/blob/2.3.7/.env.example). Most integrations can also be set per instance in the manager.
+Webhooks, RabbitMQ, SQS, S3 media storage, Typebot, Chatwoot, OpenAI and other integrations use more variables; see the [environment variable list](https://github.com/evolution-foundation/evolution-api/blob/2.3.7/.env.example). Most integrations can also be set per instance in the manager.
 
 ### Auto-configured (do not change)
 
