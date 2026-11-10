@@ -2,7 +2,7 @@
 
 WhatsApp chatbots on Railway without code: [Typebot](https://github.com/baptisteArno/typebot.io) is the visual flow builder, and [Evolution API](https://github.com/evolution-foundation/evolution-api) connects a WhatsApp number by scanning a QR code, with no Meta Business approval. Incoming WhatsApp messages start your Typebot flow and its answers go back to the chat. Both apps are pinned stable releases, the Typebot integration is already turned on in Evolution API, and every public page needs a key or a login.
 
-Deploy button: added when the template is published.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/evolution-api-23-typebot-319?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

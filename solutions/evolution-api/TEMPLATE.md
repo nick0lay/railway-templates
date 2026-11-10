@@ -6,7 +6,7 @@ Evolution API is an open-source REST API for WhatsApp. You connect a number by s
 
 Evolution API is a Node.js service that keeps WhatsApp sessions open and exposes them as a REST API with a web manager. It stores instances, sessions, messages and contacts in PostgreSQL and uses Redis as a cache. It needs a public HTTPS URL for its manager and webhook links, and a global API key that protects every endpoint.
 
-This template runs the latest stable Evolution API release with PostgreSQL and Redis on Railway's private network. The API key is generated, WhatsApp sessions are stored in PostgreSQL so they survive redeploys, and messages, contacts and chats are saved so you can read them back from the API.
+This template runs the latest stable Evolution API release with PostgreSQL and Redis on Railway's private network. The API key is generated, WhatsApp sessions are stored in PostgreSQL so they survive redeploys, and messages, contacts and chats are saved so you can read them back from the API. The Typebot, Chatwoot, n8n, Flowise, Dify and OpenAI integrations are switched on, so you can connect a bot or inbox to an instance from the manager.
 
 ## Common Use Cases
 
