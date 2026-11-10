@@ -2,7 +2,7 @@
 
 Deploy Dgraph 25.5 on Railway as a production-style single node: Dgraph Zero and Alpha with their own volumes, Dgraph ACL so every query, mutation and admin call needs a login, a Caddy gateway as the only public service, and the Ratel UI behind a login.
 
-Not yet published on Railway.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/dgraph-255?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 

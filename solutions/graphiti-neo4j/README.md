@@ -2,6 +2,8 @@
 
 Long-term memory for AI agents over MCP. [Graphiti](https://github.com/getzep/graphiti) (by Zep, Apache-2.0) turns what an agent tells it into a temporal knowledge graph: entities, facts between them, and when each fact was true. Claude, Cursor or any MCP client can add memories and search them back. This template runs the official Graphiti MCP server on Neo4j, behind a bearer-token proxy.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/graphiti-031-mcp-neo4j?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 **Upstream's MCP server has no authentication of its own.** Zep calls it a reference implementation and warns not to expose it to an untrusted network. In this template the MCP server is private, and the only public service is a small Caddy proxy that requires `Authorization: Bearer <PROXY_TOKEN>` on every request. The token is generated at deploy.
 
 A lighter variant with FalkorDB inside the Graphiti container (no separate database service) is in [graphiti-falkordb](../graphiti-falkordb/).

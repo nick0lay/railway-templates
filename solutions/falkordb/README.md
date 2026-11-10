@@ -2,7 +2,7 @@
 
 Deploy FalkorDB 6.0.4 on Railway with a persistent volume (AOF and snapshots), a generated password, the FalkorDB Browser over HTTPS behind its login, the private network for your Railway services, and a password-protected, TLS-encrypted TCP proxy for outside clients.
 
-> Not yet published on the Railway marketplace.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/falkordb-604?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 

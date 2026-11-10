@@ -2,7 +2,7 @@
 
 Deploy Memgraph 3.14 with MAGE graph algorithms and Memgraph Lab on Railway: a persistent volume, a generated user and password, a memory limit, Bolt with TLS for your Railway services and for outside drivers through a TCP proxy, and Lab on HTTPS behind the Memgraph login.
 
-Not yet published on Railway.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/memgraph-314-lab?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 

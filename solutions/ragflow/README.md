@@ -2,7 +2,7 @@
 
 Deploy RAGFlow 1.0.0, the open-source RAG engine with deep document understanding and knowledge graphs (GraphRAG), on Railway. You get the full upstream stack: Elasticsearch, MySQL, Kvrocks and NATS on the private network, uploaded files in a Railway Bucket, and public sign-up closed.
 
-Deploy: not yet published.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/ragflow-100?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 

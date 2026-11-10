@@ -2,6 +2,8 @@
 
 Self-hosted [txtai](https://github.com/neuml/txtai) on Railway. txtai is an embeddings database: a vector index, a SQLite content store and a semantic graph in one process, with semantic search, graph queries, retrieval augmented generation (RAG) and a Model Context Protocol (MCP) server behind one REST API.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/txtai-914?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 It is the lightweight end of GraphRAG: no separate graph or vector database, no LLM needed to build the graph (documents are linked by embedding similarity), and an LLM only for the final RAG answer.
 
 ## Architecture

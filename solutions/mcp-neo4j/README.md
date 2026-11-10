@@ -2,6 +2,8 @@
 
 Let Claude, Cursor or any MCP client query and update a Neo4j graph in plain language (Text2Cypher). The agent reads the schema, writes Cypher, runs it and answers from the results. This template runs the official [Neo4j MCP server](https://github.com/neo4j/mcp) (`neo4j/mcp`, by Neo4j, GPL-3.0) next to a Neo4j 2026.10 Community database, behind a bearer-token proxy.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/neo4j-mcp-21?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 **Clients only hold one token.** In HTTP mode the Neo4j MCP server expects every request to carry the Neo4j user and password (Basic auth) and the Bolt address (`X-Neo4j-MCP-URI` header). Here the MCP server is private, and the only public service is a small Caddy proxy. It checks `Authorization: Bearer <PROXY_TOKEN>` on every request, then adds the Neo4j credentials and the private Bolt address itself. The database password never leaves Railway's private network, and a client can't point the server at another database.
 
 ## Architecture

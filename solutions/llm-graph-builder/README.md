@@ -2,7 +2,7 @@
 
 [LLM Graph Builder](https://github.com/neo4j-labs/llm-graph-builder) from Neo4j Labs turns PDFs, Word files, web pages, Wikipedia articles and YouTube transcripts into a knowledge graph in Neo4j, using an LLM to extract entities and relationships. Then you chat with your documents through vector, graph and hybrid (GraphRAG) retrieval. This template builds release v0.8.7 from source, puts the web UI behind a login, keeps the backend private and stores the graph in Neo4j 2026.10 Community.
 
-Not yet published on the Railway marketplace.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/neo4j-llm-graph-builder-087?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

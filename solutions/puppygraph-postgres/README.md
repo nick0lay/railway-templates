@@ -2,7 +2,7 @@
 
 Deploy PuppyGraph 1.18 on Railway next to a Postgres 18 database that already holds a demo graph. PuppyGraph runs openCypher and Gremlin queries directly on SQL tables, so there's no ETL and no second copy of your data. Every endpoint needs the generated login.
 
-Not yet published on Railway.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/puppygraph-118-postgres?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 

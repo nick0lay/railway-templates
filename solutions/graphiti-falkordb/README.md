@@ -2,6 +2,8 @@
 
 The lighter variant of [Graphiti 0.31 MCP + Neo4j](../graphiti-neo4j/): the same Graphiti MCP server and bearer-token proxy, with FalkorDB (a Redis-based graph database) running inside the Graphiti container instead of a separate Neo4j service. Client setup, tools, variables and security notes are the same; read the [Neo4j variant's README](../graphiti-neo4j/README.md) for them.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/graphiti-031-mcp-falkordb?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 **Upstream's MCP server has no authentication of its own.** The MCP server is private and the only public service is a Caddy proxy that requires `Authorization: Bearer <PROXY_TOKEN>` on every request.
 
 ## Architecture
