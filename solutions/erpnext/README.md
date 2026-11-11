@@ -1,6 +1,6 @@
-# ERPNext
+# ERPNext 16 + MCP for Claude
 
-Self-hosted [ERPNext](https://github.com/frappe/erpnext) v16 on Railway: open-source ERP for accounting, inventory, sales, purchasing, manufacturing, projects and HR, an alternative to Odoo and SAP Business One. This template runs the official Frappe images with MariaDB and two Redis instances. The site is created on first start with a generated Administrator password, background jobs and the scheduler run from the start, and every version is pinned and tested.
+Self-hosted [ERPNext](https://github.com/frappe/erpnext) v16 on Railway: open-source ERP for accounting, inventory, sales, purchasing, manufacturing, projects and HR, an alternative to Odoo and SAP Business One. This template runs the official Frappe images with MariaDB and two Redis instances. The site is created on first start with a generated Administrator password, background jobs and the scheduler run from the start, and every version is pinned and tested. ERPNext's built-in MCP server is on, so Claude and other AI agents can read and update your ERP data under a normal ERPNext login.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/erpnext-1?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
@@ -41,6 +41,7 @@ Self-hosted [ERPNext](https://github.com/frappe/erpnext) v16 on Railway: open-so
 - **Everything that needs the site files in one service.** Frappe's compose file runs web, realtime, workers and scheduler as separate containers sharing one `sites` volume. Railway volumes can't be shared, so they run together in the ERPNext service, with the volume on `sites/`. If any process stops, the container exits and Railway restarts it.
 - **Background jobs and scheduler on.** One worker serves the long, default and short queues, and the scheduler is enabled, so emails, recurring documents and auto-repeat work.
 - **Private data services.** MariaDB and both Redis instances have no public URL, and every Redis instance has a generated password.
+- **MCP server ready for Claude.** Frappe v16 includes an MCP server at `/api/v2/mcp`, on by default. It is served over the same HTTPS domain and needs an ERPNext login (OAuth or an API key); see [Connect Claude](#connect-claude-and-other-ai-agents-mcp).
 - **Healthcheck** on `/api/method/ping` through nginx, with a 15-minute timeout for the first start.
 
 ## After deploy
@@ -52,6 +53,25 @@ The first deploy takes 3 to 6 minutes while the site is created. Watch for `erpn
 3. Add users under **Users** and give them roles. Use your own user day to day, not Administrator.
 4. Set up email under **Email Account** so ERPNext can send invoices and notifications.
 5. For scripts, create API keys for a user (**User → Settings → API Access**) and call `https://<your-url>/api/resource/...` with the header `Authorization: token <api_key>:<api_secret>`.
+
+## Connect Claude and other AI agents (MCP)
+
+ERPNext v16 has a built-in [MCP server](https://docs.frappe.io/framework/guides-integration/mcp) at `https://<your-url>/api/v2/mcp` (Streamable HTTP). Through it an agent can search document types, read their fields, list, read, count, create, update and delete documents, and call whitelisted methods. Every call runs with the permissions of the ERPNext user the agent logs in as.
+
+**Create a user for the agent first.** Don't connect agents as Administrator: the tools include `delete_document` and `call_method`. In ERPNext, add a user (for example `claude@your-company.com`) with only the roles the agent needs, such as Accounts User or Stock User.
+
+**claude.ai and Claude Desktop (OAuth).** Settings → Connectors → Add custom connector, URL `https://<your-url>/api/v2/mcp`. Claude registers itself with ERPNext (OAuth dynamic client registration is on by default) and opens the ERPNext login page; log in as the agent user and click **Allow**. Access tokens last an hour and Claude renews them with the refresh token.
+
+**Claude Code, n8n and scripts (API key).** Open the agent user, **Settings → API Access → Generate Keys**, and use the key and secret as a header:
+
+```bash
+claude mcp add --transport http erpnext https://<your-url>/api/v2/mcp \
+  --header "Authorization: token <api_key>:<api_secret>"
+```
+
+Then ask, for example, "list unpaid sales invoices older than 30 days" or "create a purchase order for 20 units of item X from supplier Y". Check what the agent wrote before you submit documents that post to the ledger.
+
+Without a login, `/api/v2/mcp` answers 401.
 
 ## Variables
 
@@ -104,3 +124,5 @@ ERPNext is licensed under GPL-3.0 and the Frappe framework under MIT. The images
 ## Testing
 
 Tested on 2026-11-06 with ERPNext v16.54.0 (Frappe 16.55.2) in a throwaway Railway project, from the config: all four services healthy, and the site was created on first start in about two minutes. `/api/method/ping` answered `pong`. The API refused requests without a login (403) and a wrong Administrator password (401), and accepted the generated one; the desk loaded. The setup wizard was completed through the API (company, currency, fiscal year), then an item and a customer were created and a sales invoice was submitted. A file was attached to the customer and downloaded back intact. The background worker processed jobs from the long, default and short queues, the scheduler ran scheduled jobs, and the socket.io endpoint answered through nginx. MariaDB and both Redis instances have no public URL. After redeploying all four services, the setup step logged `site frontend already set up, skipped`, and the company, customer, invoice and file were still there. The restart paths were also checked with the same image locally: a site without the setup marker is detected as installed and kept, and a changed image version runs `bench migrate` before start. Email sending and the browser setup wizard weren't tested.
+
+MCP checked on 2026-11-11 on fresh deploys of the published template. Without a login `/api/v2/mcp` answered 401 with OAuth metadata. With a user's API key, `initialize` and `tools/list` worked (13 tools). The OAuth flow a claude.ai connector uses was run step by step: client registration with the claude.ai callback URL, ERPNext login, the Allow page, the PKCE code exchange, MCP calls with the access token (valid 1 hour), and a refresh-token exchange followed by more MCP calls. Adding the connector inside the claude.ai interface itself wasn't tested.

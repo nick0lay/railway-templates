@@ -1,6 +1,6 @@
 # Deploy and Host ERPNext on Railway
 
-ERPNext is open-source ERP software built on the Frappe framework. It covers accounting, invoicing, inventory, sales and purchasing, manufacturing, projects, assets, CRM and HR in one system, with a web interface, a REST API and support for many countries' taxes and charts of accounts. It is a common alternative to Odoo, SAP Business One and NetSuite.
+ERPNext is open-source ERP software built on the Frappe framework. It covers accounting, invoicing, inventory, sales and purchasing, manufacturing, projects, assets, CRM and HR in one system, with a web interface, a REST API and support for many countries' taxes and charts of accounts. It is a common alternative to Odoo, SAP Business One and NetSuite. ERPNext v16 also includes an MCP server, so Claude and other AI agents can work with your ERP data under a normal user login.
 
 ## About Hosting ERPNext
 
@@ -14,6 +14,7 @@ This template runs Frappe's official ERPNext v16 image with MariaDB 11.8 and two
 - Inventory, warehouses, purchasing and sales orders for distribution and retail
 - Manufacturing with bills of materials, work orders and production planning
 - Projects, timesheets and billing for service companies
+- Letting Claude or another AI agent look up invoices, stock and orders, or draft documents, through ERPNext's MCP server
 - A self-hosted Odoo or NetSuite replacement with your data in your own database
 
 ## Dependencies for ERPNext Hosting
@@ -39,6 +40,7 @@ This template runs Frappe's official ERPNext v16 image with MariaDB 11.8 and two
 2. Open the ERPNext URL and log in as `Administrator` with the `ADMIN_PASSWORD` variable of the ERPNext service.
 3. Complete the setup wizard: country, currency, company and fiscal year.
 4. Add users and roles, and set up an email account to send invoices.
+5. To connect Claude: create a user with limited roles for the agent, then in claude.ai add a custom connector with the URL `https://<your-url>/api/v2/mcp` and log in as that user. For Claude Code, generate an API key for the user and pass it as `Authorization: token <key>:<secret>`.
 
 **This template:**
 
@@ -49,9 +51,10 @@ This template runs Frappe's official ERPNext v16 image with MariaDB 11.8 and two
 - Enables the scheduler, so emails, recurring documents and auto-repeat work
 - Keeps MariaDB and both Redis instances private, with generated passwords
 - Stores MariaDB data and the job queue on volumes
+- Serves ERPNext's built-in MCP server at `/api/v2/mcp` on the same domain, behind ERPNext login (OAuth or API key)
 - Checks health on `/api/method/ping`
 
-**Notes:** set `HOST_NAME` to your custom domain if you add one, so emails and links use it. Changing `ADMIN_PASSWORD` after the first deploy has no effect; change the password in ERPNext. Back up from **Backups** in ERPNext before upgrading.
+**Notes:** connect agents as a user with limited roles, never as Administrator. Set `HOST_NAME` to your custom domain if you add one, so emails and links use it. Changing `ADMIN_PASSWORD` after the first deploy has no effect; change the password in ERPNext. Back up from **Backups** in ERPNext before upgrading.
 
 ## Why Deploy ERPNext on Railway?
 
