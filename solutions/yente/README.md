@@ -2,6 +2,8 @@
 
 A self-hosted sanctions and PEP screening API. [Yente](https://github.com/opensanctions/yente) is the open-source API behind OpenSanctions: send it a person or a company and it scores them against sanctions lists, politically exposed persons (PEPs), wanted lists and more. This template runs Yente 5.5.1 with its Elasticsearch index, keeps both private, and puts a bearer-token proxy in front.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/yente-55-elasticsearch?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 > **Data licence: read this before you deploy.** Yente's code is MIT, but the OpenSanctions **data** it downloads is free only for non-commercial use (CC BY-NC 4.0). Using it in a business, including screening your own customers, needs a data licence from OpenSanctions: https://www.opensanctions.org/licensing/. The template downloads the data from OpenSanctions' public, non-commercial source by default. Making sure your use is covered is your responsibility.
 
 **Yente has no authentication of its own** (its API description says so). In this template Yente and Elasticsearch have no public domain. The only public service is a small Caddy proxy that requires `Authorization: Bearer <PROXY_TOKEN>` on every request. The token is generated at deploy.
