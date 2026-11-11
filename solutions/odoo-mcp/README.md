@@ -130,13 +130,14 @@ The Odoo service has the same variables as [Odoo 20](../odoo/README.md#variables
 
 - Give the agent only the rights it needs: open **Settings > Users > AI Agent (MCP)** and remove groups, or use `ODOO_YOLO=read`. Never point `ODOO_USER` at the admin account.
 - The token is one shared secret. Everyone who has it (or `CONNECTOR_URL`) acts as the `mcp` user.
+- To cut the agent off, change `PROXY_TOKEN` or remove the Odoo MCP service. Archiving the `mcp` user or changing its password in Odoo is undone at the next start of Odoo MCP, which sets `ODOO_PASSWORD` again and reactivates the user.
 - Text in Odoo records (e-mails, notes, product descriptions from customers) is passed to your agent. Treat it as untrusted input, as with any agent that reads business data.
 - The MCP server's own `/health` is behind the token too; only the proxy's `/healthz` is open.
 - Links in tool results point to the private Odoo address; open records from your Odoo domain.
 
 ## Troubleshooting
 
-- **Odoo MCP restarts on the first deploy**: it waits up to 30 minutes for Odoo to create the database, then for the admin login. Check the Odoo logs first.
+- **Odoo MCP restarts on the first deploy**: it waits for Odoo to create the database (Railway's healthcheck gives it 15 minutes), then for the admin login. Check the Odoo logs first.
 - **`neither admin nor mcp can log in`**: the admin password was changed in Odoo before the MCP user was created. Set `ODOO_ADMIN_PASSWORD` on the Odoo MCP service to the current admin password and redeploy it.
 - **The agent can't see an app's records**: the group is granted within 5 minutes of installing the app; or add it to the user by hand in Odoo.
 - **401 from the proxy**: the header must be exactly `Authorization: Bearer <PROXY_TOKEN>`, or use `CONNECTOR_URL`.
