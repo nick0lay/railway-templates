@@ -39,10 +39,10 @@ Measured on Railway (2026-11-11):
 
 | Scope (`OPENSANCTIONS_SCOPE`) | Entities | Download | First index | Elasticsearch RAM idle | Elasticsearch RAM peak | Index on disk |
 |------|---------:|---------:|------------:|------:|------:|------:|
-| `default` (template default, `ES_HEAP_SIZE=2g`) | 3.9M | 2.6 GB | about 20 minutes | 3.3 to 4.1 GB | 5.8 GB | about 3 GB (3.5 GB peak) |
+| `default` (template default, `ES_HEAP_SIZE=2g`) | 3.9M | 2.6 GB | about 20 minutes | about 2.8 GB | 5.8 to 6.4 GB | about 3 GB (3.5 GB peak) |
 | `sanctions` (`ES_HEAP_SIZE=1g`) | 310k | 0.4 GB | about 2 minutes | 2.5 GB | 2.5 GB | about 0.7 GB |
 
-Yente itself uses about 0.6 GB, the proxy about 0.02 GB.
+Yente itself uses about 0.5 to 0.6 GB, the proxy about 0.02 GB. Elasticsearch memory settles to the idle figure some minutes after indexing ends.
 
 After the first index, Yente checks for new data every hour (at a random minute) and applies the changes in the background. OpenSanctions publishes new data several times a day. The current index keeps answering while the next one is built, and the switch is instant.
 
@@ -56,7 +56,7 @@ Change `OPENSANCTIONS_SCOPE` on the Yente service and redeploy; Yente builds the
 
 ### Disk space
 
-Railway volumes start at 5 GB (the Hobby limit). With `default`, the index takes about 3 GB, and the hourly updates fit. A **full** re-index (a scope change, `POST /updatez`, or a future Yente version with a new index format) builds a second full index before deleting the first, and needs about 6.5 GB. Elasticsearch makes indices read-only at 95% disk. On Pro, grow the volume to 10 GB or more before that; on Hobby, use the `sanctions` scope if you expect full re-indexes.
+Railway volumes start at 5 GB (the Hobby limit). With `default`, the index takes about 3 GB. The hourly updates should fit: they copy the current index (cheaply, with hard links) and apply only the changes. A **full** rebuild of `default` (`POST /updatez`, or a future Yente version with a new index format) builds a second full index before deleting the first, so it needs roughly twice the index size, an estimated 6 to 7 GB. A scope change needs the old index plus the new one (for example about 3.7 GB from `default` to `sanctions`, more to `peps`). Elasticsearch stops allocating new indices above 85% disk and makes indices read-only at 95%. On Pro, grow the volume to 10 GB or more before a full rebuild; on Hobby, use the `sanctions` scope if you expect full rebuilds.
 
 ## After deploy
 
@@ -165,7 +165,7 @@ Tested on Railway on 2026-11-11:
 
 - Requests without the token, with a wrong token, with the token plus extra characters, with Basic auth and with the token in the query string: all 401. `/`, `/openapi.json`, `/readyz` and `/catalog` refused without the token. `/healthz` open
 - With the token: `/readyz` 200 after indexing, `/catalog` lists the scope as current, `/search` finds Vladimir Putin, `/match` scores Vladimir Putin (with birth date) 1.0 with the `sanction` and `role.pep` topics and finds Sberbank as a company
-- Both the `default` and the `sanctions` scopes
+- Both the `default` and the `sanctions` scopes, and a clean deploy with the template's default settings
 - Redeploy of Elasticsearch and Yente: Yente logged "No update needed", `/readyz` 200 right away, all checks passed again
 - Yente and Elasticsearch have no public domain or TCP proxy; Elasticsearch security on
 

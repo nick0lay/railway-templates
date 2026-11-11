@@ -55,12 +55,12 @@ Each result has a `score`, a `match` flag and topics such as `sanction` or `role
 
 **Choosing the dataset (`OPENSANCTIONS_SCOPE`):**
 
-- `default` (template default): the full collection with sanctions, PEPs, crime and debarment lists. Measured on Railway: about 20 minutes to index, Elasticsearch about 3.3 to 4.1 GB RAM idle with a 2 GB heap (5.8 GB peak while indexing), about 3 GB on disk.
+- `default` (template default): the full collection with sanctions, PEPs, crime and debarment lists. Measured on Railway: about 20 minutes to index, Elasticsearch about 2.8 GB RAM idle with a 2 GB heap (up to 6.4 GB while indexing), about 3 GB on disk.
 - `sanctions`: sanctions lists only, 310k entities. About 2 minutes to index, about 2.5 GB RAM with `ES_HEAP_SIZE=1g`, 0.7 GB on disk.
 
 The API paths use the scope: `/match/<scope>`, `/search/<scope>`.
 
-**Disk:** the full index fits the default 5 GB volume, and so do the hourly updates. A full re-index (scope change, forced update, or a future Yente version with a new index format) briefly needs about 6.5 GB, so grow the volume on Pro first, or use `sanctions`.
+**Disk:** the full index (about 3 GB) fits the default 5 GB volume, and the hourly updates should fit too (they copy the current index and apply the changes). A full rebuild of `default` (a forced update, or a future Yente version with a new index format) builds a second copy before deleting the first, so it needs roughly twice the index size, an estimated 6 to 7 GB: grow the volume on Pro first, or use `sanctions`. A scope change needs the old plus the new index.
 
 **Commercial use:** with an OpenSanctions licence, put your delivery token in `OPENSANCTIONS_DELIVERY_TOKEN` and point the manifest (`YENTE_MANIFEST_YAML`) at `https://delivery.opensanctions.com/datasets/latest/index.json` with `auth_token: "$OPENSANCTIONS_DELIVERY_TOKEN"`. The README has the exact YAML.
 
@@ -75,7 +75,7 @@ The API paths use the scope: `/match/<scope>`, `/search/<scope>`.
 - Updates the data every hour in the background
 - Generates the `/updatez` token for forced re-indexes
 
-**Notes:** Yente itself idles at about 0.6 GB RAM, the proxy at 0.02 GB. The browser docs page at `/` needs the token too; use the OpenSanctions docs or `/openapi.json`. Licences: Yente MIT, Elasticsearch AGPL-3.0 option, OpenSanctions data CC BY-NC 4.0 (non-commercial; business use needs a licence).
+**Notes:** Yente itself idles at about 0.5 GB RAM, the proxy at 0.02 GB. The browser docs page at `/` needs the token too; use the OpenSanctions docs or `/openapi.json`. Licences: Yente MIT, Elasticsearch AGPL-3.0 option, OpenSanctions data CC BY-NC 4.0 (non-commercial; business use needs a licence).
 
 ## Why Deploy Yente 5.5 + Elasticsearch on Railway?
 
