@@ -77,7 +77,7 @@ You get the sample rows, answered from the pre-aggregation in Cube Store:
 
 Each token here is valid for one hour (`exp`). In your app, sign tokens on your backend with the same secret (any JWT library, HS256), never in the browser. Put user or tenant data in the payload and use it in `CUBE_CONFIG_JS` (see below) for row-level security.
 
-Other endpoints: `GET /cubejs-api/v1/meta` lists cubes, measures and dimensions; `POST /cubejs-api/graphql` is the GraphQL API; `/readyz` and `/livez` are open health checks. Client libraries: https://cube.dev/docs/product/apis-integrations.
+Other endpoints: `GET /cubejs-api/v1/meta` lists cubes, measures and dimensions; `POST /cubejs-api/graphql` is the GraphQL API; `/readyz` and `/livez` are open health checks. Client libraries: https://docs.cube.dev/reference.
 
 ## The data model
 
@@ -86,7 +86,7 @@ Cube reads its data model from files. Railway can't mount files, so the template
 1. Edit `CUBE_MODEL` on Cube API (Railway's variable editor accepts multi-line values).
 2. Redeploy **Cube API** and **Cube Refresh Worker**.
 
-The sample cube `orders` has the measures `count`, `total_amount`, `average_amount`, the dimensions `status`, `category`, `city`, `created_at`, and the pre-aggregation `orders_by_month`. Model reference: https://cube.dev/docs/product/data-modeling/reference/cube.
+The sample cube `orders` has the measures `count`, `total_amount`, `average_amount`, the dimensions `status`, `category`, `city`, `created_at`, and the pre-aggregation `orders_by_month`. Model reference: https://docs.cube.dev/reference/data-modeling/cube.
 
 **Bigger models: keep them in git.** One variable is fine for a handful of cubes. For a real project, keep the model in a repository:
 
@@ -103,7 +103,7 @@ COPY model /cube/conf/model
 
 Every push then redeploys both services with the new model.
 
-**`CUBE_CONFIG_JS`** (optional) holds a `cube.js` configuration file, for example `queryRewrite` for row-level security or `contextToAppId` for multi-tenancy: https://cube.dev/docs/product/configuration/reference/config.
+**`CUBE_CONFIG_JS`** (optional) holds a `cube.js` configuration file, for example `queryRewrite` for row-level security or `contextToAppId` for multi-tenancy: https://docs.cube.dev/reference/configuration/config.
 
 ## Your own data
 
@@ -115,7 +115,7 @@ ClickHouse has no public domain. To load data from outside Railway, connect from
 
 Queries that match a pre-aggregation are answered from Cube Store and never reach the database. The refresh worker builds them on schedule (`refresh_key`) and the API never builds them itself (Cube's production default). Right after a deploy or a model change, a query that matches a pre-aggregation which is not built yet fails with "No pre-aggregation partitions were built yet"; it works once the refresh worker has built it, usually within a minute or two for small tables. Queries that match no pre-aggregation go to the database directly.
 
-Cube Store runs as a router and one worker. Router and worker share the Railway Bucket for pre-aggregation files and the router's metastore snapshots, so a redeploy keeps the built pre-aggregations. **One worker** is enough for this template and for small and medium datasets; add workers when pre-aggregation builds or queries get slow:
+Cube Store runs as a router and one worker. Router and worker share the Railway Bucket for pre-aggregation files and the router's metastore snapshots; Cube Store has no volume. On a redeploy the router downloads its metastore from the bucket and the built pre-aggregations are served again without a rebuild (tested). A pre-aggregation built in the last minute before a redeploy may be rebuilt, because the router uploads metastore snapshots periodically. **One worker and one API instance** keep the idle cost low and are enough to try Cube and for small datasets. Cube's production sizing guide asks for more: at least two API instances (3 GB RAM each), two or more Cube Store workers and several GB of RAM per Cube Store node, and about one worker per million rows a query scans ([sizing](https://docs.cube.dev/admin/deployment/core#appropriate-cluster-sizing)). Cube API is stateless: raise its replicas under Settings, Deploy. To add a Cube Store worker:
 
 1. Duplicate the Cube Store Worker service and give it a new name, e.g. `Cube Store Worker 2`.
 2. On Cube Store Router, append `,${{Cube Store Worker 2.RAILWAY_PRIVATE_DOMAIN}}:10001` to `CUBESTORE_WORKERS`. Workers copy the router's list.
@@ -154,18 +154,18 @@ Cube Store runs as a router and one worker. Router and worker share the Railway 
 | `CUBE_RUN_SH`, `CUBE_SEED_JS` | Cube API | Start script and sample data script |
 | `CUBESTORE_SERVER_NAME`, `CUBESTORE_META_PORT`, `CUBESTORE_META_ADDR`, `CUBESTORE_WORKER_PORT`, `CUBESTORE_WORKERS`, `CUBESTORE_*_BIND_ADDR` | Cube Store | Cluster addresses on the private network (IPv4 and IPv6) |
 | `CUBESTORE_MINIO_*` | Cube Store | The Railway Bucket (S3, path style) |
-| `PORT=3031` | Cube Store | Status port for Railway's healthcheck (`/readyz`) |
+| `PORT=3031` | Cube Store Router | Status port for Railway's healthcheck (`/readyz`); workers have no status server |
 
 ## Resource use
 
-Measured idle on Railway with the sample data:
+Measured on Railway with the sample data, about 20 minutes after deploy (the Cube Store router uses about 0.34 GB in its first minutes, then settles):
 
 | Service | Idle memory |
 |---------|------------:|
-| Cube API | 0.13 to 0.17 GB |
-| Cube Refresh Worker | 0.11 to 0.17 GB |
-| Cube Store Router | 0.34 GB |
-| Cube Store Worker | 0.25 to 0.46 GB |
+| Cube API | 0.17 GB |
+| Cube Refresh Worker | 0.16 GB |
+| Cube Store Router | 0.13 GB |
+| Cube Store Worker | 0.28 GB |
 | ClickHouse | 0.31 to 0.44 GB |
 
 Cube Store memory grows with the size of your pre-aggregations; the bucket grows with them too (the sample uses a few kilobytes).
@@ -189,8 +189,8 @@ Cube Store memory grows with the size of your pre-aggregations; the bucket grows
 
 ## Links
 
-- Cube docs: https://cube.dev/docs
-- Deployment (production checklist): https://cube.dev/docs/product/deployment/production-checklist
-- Data modeling: https://cube.dev/docs/product/data-modeling/overview
-- REST API: https://cube.dev/docs/product/apis-integrations/rest-api
+- Cube docs: https://docs.cube.dev
+- Deployment (production checklist): https://docs.cube.dev/admin/deployment/core#production-checklist
+- Data modeling: https://docs.cube.dev/docs/data-modeling/overview
+- REST API: https://docs.cube.dev/reference/core-data-apis/rest-api
 - Cube on GitHub: https://github.com/cube-js/cube

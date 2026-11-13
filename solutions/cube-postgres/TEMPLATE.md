@@ -23,10 +23,10 @@ A production Cube deployment has four parts: API instances, a refresh worker tha
 
 ### Deployment Dependencies
 
-- Cube docs: https://cube.dev/docs
-- Production checklist: https://cube.dev/docs/product/deployment/production-checklist
-- Data model reference: https://cube.dev/docs/product/data-modeling/reference/cube
-- REST API: https://cube.dev/docs/product/apis-integrations/rest-api
+- Cube docs: https://docs.cube.dev
+- Production checklist: https://docs.cube.dev/admin/deployment/core#production-checklist
+- Data model reference: https://docs.cube.dev/reference/data-modeling/cube
+- REST API: https://docs.cube.dev/reference/core-data-apis/rest-api
 - Cube on GitHub: https://github.com/cube-js/cube
 
 ### Implementation Details
@@ -58,11 +58,11 @@ The answer comes from the `orders_by_month` pre-aggregation in Cube Store, built
 - Writes the data model from a variable, since Railway can't mount files
 - Creates the sample table only when it is missing or empty, so redeploys keep your data
 - Keeps built pre-aggregations in the bucket across redeploys
-- Healthchecks on every service (`/readyz`)
+- Healthchecks on Cube API, the refresh worker and the Cube Store router (`/readyz`)
 
 **Scaling:** add Cube Store workers by duplicating the worker service and listing it in `CUBESTORE_WORKERS`; one worker is enough for small and medium data. The SQL API for BI tools is off by default; the README shows how to turn it on with a password.
 
-**Resources:** about 1.1 GB RAM in total at idle (measured on Railway). Licence: Apache 2.0 (Cube Core).
+**Resources:** about 0.85 GB RAM in total at idle (measured on Railway). Licence: Apache 2.0 (Cube Core).
 
 ## Why Deploy Cube 1.8 + Postgres 18 on Railway?
 
