@@ -38,7 +38,7 @@ The included **ops-controller automates the entire deployment process**—requir
 
 ### Deployment Dependencies
 
-- **Trigger.dev v4.8.3** - [Release notes](https://github.com/triggerdotdev/trigger.dev/releases/tag/v4.8.3), official upstream images, every image pinned
+- **Trigger.dev v4.8.5** - [Release notes](https://github.com/triggerdotdev/trigger.dev/releases/tag/v4.8.5), official upstream images, every image pinned
 - **Railway account** - [Sign up at railway.app](https://railway.app) and [create an account or workspace token](https://railway.com/account/tokens) (project tokens don't work)
 - **DigitalOcean account** - [Sign up at digitalocean.com](https://digitalocean.com) and [generate API token](https://cloud.digitalocean.com/account/api/tokens)
 - **ops-controller** - Automated deployment service (included in template)
@@ -76,8 +76,8 @@ Log in to the registry once, then deploy. The user and password are in the **reg
 
 ```bash
 docker login <registry-domain> -u trigger
-npx trigger.dev@4.8.3 login -a https://<webapp-domain>
-npx trigger.dev@4.8.3 deploy
+npx trigger.dev@4.8.5 login -a https://<webapp-domain>
+npx trigger.dev@4.8.5 deploy
 ```
 
 The first runs wait until the supervisor droplet boots and connects, usually about 5 minutes after the deploy (up to 20).

@@ -45,7 +45,7 @@ WhatsApp chatbots on Railway without code: [Typebot](https://github.com/baptiste
 | typebot-builder | `baptistearno/typebot-builder:3.19` | Flow editor, sign-in, results, API (public) |
 | typebot-viewer | `baptistearno/typebot-viewer:3.19` | Runs published flows; Evolution API talks to it (public) |
 | mailpit | `axllent/mailpit:v1.33` | Catches Typebot's sign-in emails on a password-protected page (public) |
-| files | `rclone/rclone:1.75.2` | Read-only web server for the bucket's `public/` folder: images and files used in flows (public) |
+| files | `rclone/rclone:1.76.0` | Read-only web server for the bucket's `public/` folder: images and files used in flows (public) |
 | Typebot Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Flows, results, users (private) |
 | Typebot Redis | `redis:8.10` | Typebot sessions and rate limits (private) |
 | Bucket | Railway Bucket | Uploaded images, videos and files |

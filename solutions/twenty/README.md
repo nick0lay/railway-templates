@@ -27,8 +27,8 @@ Self-hosted [Twenty](https://github.com/twentyhq/twenty) on Railway: an open-sou
 
 | Service | Source | Role |
 |---------|--------|------|
-| twenty | `twentycrm/twenty:v2.55.0` | Web app and API (public). Runs database migrations on start |
-| twenty-worker | `twentycrm/twenty:v2.55.0` | Background jobs and scheduled tasks (`yarn worker:prod`) |
+| twenty | `twentycrm/twenty:v2.57.1` | Web app and API (public). Runs database migrations on start |
+| twenty-worker | `twentycrm/twenty:v2.57.1` | Background jobs and scheduled tasks (`yarn worker:prod`) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | CRM data, users, workspace (private) |
 | Redis | `redis:8.10` | Cache and job queues, `noeviction` and append-only file on a volume (private) |
 | Bucket | Railway Bucket | Uploaded files, shared by the server and the worker |
@@ -36,7 +36,7 @@ Self-hosted [Twenty](https://github.com/twentyhq/twenty) on Railway: an open-sou
 ## What this template does differently
 
 - **Owner account and workspace created at deploy.** On a fresh Twenty install, whoever opens the URL first creates the workspace and becomes the server admin. This template creates the owner on first start with your `ADMIN_EMAIL` and a generated `ADMIN_PASSWORD`, and activates the workspace. After that, Twenty refuses sign-ups without an invitation.
-- **Pinned version.** Twenty 2.55.0, Postgres 18 and Redis 8.10 instead of `latest`. Twenty releases often and migrates the database on start, so you upgrade when you choose.
+- **Pinned version.** Twenty 2.57.1, Postgres 18 and Redis 8.10 instead of `latest`. Twenty releases often and migrates the database on start, so you upgrade when you choose.
 - **Both secrets generated.** `APP_SECRET` and `ENCRYPTION_KEY` (which encrypts connected-account tokens) are generated once and shared with the worker.
 - **Redis set up for job queues.** `noeviction`, as Twenty requires for its queues, and an append-only file on a volume so queued jobs survive restarts. Redis has no public TCP proxy.
 - **Files in a Railway Bucket**, so the server and the worker see the same files.
@@ -97,3 +97,5 @@ Change the image tag on both `twenty` and `twenty-worker` (for example `twentycr
 ## Testing
 
 Tested on 2026-11-04 with Twenty 2.55.0 in throwaway Railway projects, from the config and then from the template draft: all four services healthy, and the owner and workspace were created at first start (`owner-setup: workspace ACTIVE`). The API refused requests without a login, a stranger's sign-up was refused ("New workspace setup is disabled"), a wrong password was refused, and the owner logged in as server admin. A company and a linked person were created through the GraphQL API, and a file was uploaded and read back. The worker processed scheduled jobs. After a redeploy, the owner login, the records and the file were still there, and the setup step skipped itself. In the browser, the owner logged in, finished Twenty's first-login steps, and reached Settings → General, Members and Developers.
+
+Updated to Twenty 2.57.1 on 2026-11-13 and test-deployed from the published template: all four services healthy.

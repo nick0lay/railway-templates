@@ -30,7 +30,7 @@ Self-hosted [Ollama](https://github.com/ollama/ollama) with [Open WebUI](https:/
 | Service | Source | Role |
 |---------|--------|------|
 | Open WebUI | `ghcr.io/open-webui/open-webui:v0.13.0` | Chat UI and API (public, login required) |
-| Ollama | `ollama/ollama:0.40.15` | Runs the models (private, no public domain) |
+| Ollama | `ollama/ollama:0.40.16` | Runs the models (private, no public domain) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, chats, settings (private) |
 
 ## What this template does differently
@@ -114,3 +114,5 @@ Ollama is [MIT](https://github.com/ollama/ollama/blob/main/LICENSE). Open WebUI 
 ## Testing
 
 Tested on 2026-11-06 with Ollama 0.40.15 and Open WebUI v0.13.0 in throwaway Railway projects. All three services were healthy; the starter model downloaded in about 30 seconds and the admin was created at first start. Requests without a login, a stranger's sign-up and a wrong password were refused, and the admin logged in. Ollama had no public domain. The starter model was listed in Open WebUI and answered chats through Open WebUI's API (about 35 tokens per second once loaded). After redeploying all three services, the model download was skipped, and the admin login, the saved chat and chatting still worked. Before `LLAMA_ARG_THREADS` was set, the same setup answered at under 1 token per second and a chat timed out. Not tested: the browser UI (only its API), model pulls from the model selector, and Pro-plan sizes.
+
+Updated to Ollama 0.40.16 on 2026-11-13 and test-deployed from the published template: all three services healthy.

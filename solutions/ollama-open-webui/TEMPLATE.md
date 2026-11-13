@@ -47,7 +47,7 @@ This template runs Ollama privately with a starter model downloaded at deploy, O
 - Keeps Ollama private: only Open WebUI is public, and it requires a login
 - Caps Ollama's prompt cache at 1 GiB so it fits the plan's memory
 - Stores models, chats and files on volumes, and users and chats in PostgreSQL
-- Pins Ollama 0.40.15, Open WebUI v0.13.0 and PostgreSQL 18, with healthchecks on both apps
+- Pins Ollama 0.40.16, Open WebUI v0.13.0 and PostgreSQL 18, with healthchecks on both apps
 
 **Notes:** models run on CPU. The first reply after a deploy or after 10 idle minutes takes 30–60 seconds while the model loads. On Hobby (8 vCPU, 8 GB RAM, 5 GB volume per service), use small models of 1–4B parameters; on Pro, 7–14B models fit, and you should raise `LLAMA_ARG_THREADS` to the service's vCPU limit.
 

@@ -1,6 +1,6 @@
 # Trigger.dev v4.8
 
-Self-hosted Trigger.dev v4.8.3 on Railway (webapp and data services) plus a DigitalOcean droplet for the supervisor that runs your tasks. The template runs the official upstream images, not a patched fork.
+Self-hosted Trigger.dev v4.8.5 on Railway (webapp and data services) plus a DigitalOcean droplet for the supervisor that runs your tasks. The template runs the official upstream images, not a patched fork.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev-v48?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
@@ -35,7 +35,7 @@ The earlier [`trigger-dev`](../trigger-dev/) template (v4.0.0, patched image) st
 
 | Service | Source | Role |
 |---------|--------|------|
-| trigger.dev | image `ghcr.io/triggerdotdev/trigger.dev:v4.8.3` | Webapp, API, dashboard (public). Healthcheck `/healthcheck` |
+| trigger.dev | image `ghcr.io/triggerdotdev/trigger.dev:v4.8.5` | Webapp, API, dashboard (public). Healthcheck `/healthcheck` |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:16` | Primary database (private) |
 | Redis | `redis:8.2` | Queues, cache, pub/sub (private) |
 | ClickHouse | `clickhouse/Dockerfile` (`clickhouse/clickhouse-server:26.10` plus one setting) | Analytics for runs and logs (private) |
@@ -103,7 +103,7 @@ After the deploy, the supervisor usually connects within about 5 minutes; allow 
 
 ## Upgrading
 
-1. Change the webapp image tag (for example `ghcr.io/triggerdotdev/trigger.dev:v4.8.4`) and the ops-controller's `TRIGGER_VERSION` to the same version. Use an exact version, never `latest`: the supervisor is only replaced when the value changes.
+1. Change the webapp image tag (for example `ghcr.io/triggerdotdev/trigger.dev:v4.8.6`) and the ops-controller's `TRIGGER_VERSION` to the same version. Use an exact version, never `latest`: the supervisor is only replaced when the value changes.
 2. The webapp applies new migrations on boot.
 3. Changing `TRIGGER_VERSION` redeploys the ops-controller. It destroys the supervisor droplet tagged with the old version, waits until it is gone and creates a new one. Runs queue in the meantime.
 4. The ops-controller finds the worker token in older webapp deployments and keeps it as its own `TRIGGER_WORKER_TOKEN` variable, so webapp redeploys don't break supervisor re-creation.

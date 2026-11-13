@@ -36,7 +36,7 @@ The lightest way to get an LLM answering a WhatsApp number, without n8n or any w
 | Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API, manager UI and the OpenAI bot (public, API key) |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, bot sessions with chat history (private) |
 | Evolution Redis | `redis:8.10` | Evolution API cache (private) |
-| LiteLLM | `litellm/litellm-database:v1.106.6` | OpenAI-compatible gateway to any provider, virtual keys, budgets, spend logs, admin UI (public, master key and UI login) |
+| LiteLLM | `litellm/litellm-database:v1.109.1` | OpenAI-compatible gateway to any provider, virtual keys, budgets, spend logs, admin UI (public, master key and UI login) |
 | LiteLLM Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Virtual keys, models added in the UI, spend logs (private) |
 
 ## What this template does differently
@@ -46,7 +46,7 @@ The lightest way to get an LLM answering a WhatsApp number, without n8n or any w
 - **One key per WhatsApp number, with budgets.** Each Evolution instance gets its own LiteLLM virtual key, so you see spend per number and can cap it. The master key never leaves LiteLLM.
 - **Only the OpenAI integration on in Evolution API.** `OPENAI_ENABLED=true` plus `OPENAI_BASE_URL`. No other integration is turned on.
 - **Auth on every public service.** Evolution API needs the generated global API key, LiteLLM needs the master key (API) or the generated UI password (admin UI). The databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), LiteLLM 1.106.6, Postgres 18, Redis 8.10.
+- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), LiteLLM 1.109.1, Postgres 18, Redis 8.10.
 
 ## After deploy
 

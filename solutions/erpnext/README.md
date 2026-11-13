@@ -29,14 +29,14 @@ Self-hosted [ERPNext](https://github.com/frappe/erpnext) v16 on Railway: open-so
 
 | Service | Source | Role |
 |---------|--------|------|
-| ERPNext | `frappe/erpnext:v16.54.0` | Web server, realtime server, background worker, scheduler and nginx in one container (public). Site config and attachments on a volume |
+| ERPNext | `frappe/erpnext:v16.55.0` | Web server, realtime server, background worker, scheduler and nginx in one container (public). Site config and attachments on a volume |
 | MariaDB | `mariadb:11.8.9` | Database, with the utf8mb4 settings Frappe requires (private, volume) |
 | Redis Cache | `redis:8.10` | Cache, in memory only, least-recently-used eviction at 256 MB (private) |
 | Redis Queue | `redis:8.10` | Background job queue and realtime events, append-only file on a volume (private) |
 
 ## What this template does differently
 
-- **Official images, current version.** Frappe's own `frappe/erpnext` image at v16.54.0 and MariaDB 11.8, the versions in Frappe's compose files, instead of third-party all-in-one images, MariaDB 10.6 or Redis 6.
+- **Official images, current version.** Frappe's own `frappe/erpnext` image at v16.55.0 and MariaDB 11.8, the versions in Frappe's compose files, instead of third-party all-in-one images, MariaDB 10.6 or Redis 6.
 - **Site created for you.** On first start the container creates the site, installs ERPNext and sets the Administrator password from the generated `ADMIN_PASSWORD`. Later starts skip this. If the image version changes, the container runs `bench migrate` once before starting.
 - **Everything that needs the site files in one service.** Frappe's compose file runs web, realtime, workers and scheduler as separate containers sharing one `sites` volume. Railway volumes can't be shared, so they run together in the ERPNext service, with the volume on `sites/`. If any process stops, the container exits and Railway restarts it.
 - **Background jobs and scheduler on.** One worker serves the long, default and short queues, and the scheduler is enabled, so emails, recurring documents and auto-repeat work.
@@ -124,5 +124,7 @@ ERPNext is licensed under GPL-3.0 and the Frappe framework under MIT. The images
 ## Testing
 
 Tested on 2026-11-06 with ERPNext v16.54.0 (Frappe 16.55.2) in a throwaway Railway project, from the config: all four services healthy, and the site was created on first start in about two minutes. `/api/method/ping` answered `pong`. The API refused requests without a login (403) and a wrong Administrator password (401), and accepted the generated one; the desk loaded. The setup wizard was completed through the API (company, currency, fiscal year), then an item and a customer were created and a sales invoice was submitted. A file was attached to the customer and downloaded back intact. The background worker processed jobs from the long, default and short queues, the scheduler ran scheduled jobs, and the socket.io endpoint answered through nginx. MariaDB and both Redis instances have no public URL. After redeploying all four services, the setup step logged `site frontend already set up, skipped`, and the company, customer, invoice and file were still there. The restart paths were also checked with the same image locally: a site without the setup marker is detected as installed and kept, and a changed image version runs `bench migrate` before start. Email sending and the browser setup wizard weren't tested.
+
+Updated to ERPNext v16.55.0 on 2026-11-13 and test-deployed from the published template: all four services healthy.
 
 MCP checked on 2026-11-11 on fresh deploys of the published template. Without a login `/api/v2/mcp` answered 401 with OAuth metadata. With a user's API key, `initialize` and `tools/list` worked (13 tools). The OAuth flow a claude.ai connector uses was run step by step: client registration with the claude.ai callback URL, ERPNext login, the Allow page, the PKCE code exchange, MCP calls with the access token (valid 1 hour), and a refresh-token exchange followed by more MCP calls. Adding the connector inside the claude.ai interface itself wasn't tested.

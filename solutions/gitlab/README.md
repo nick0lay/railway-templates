@@ -30,7 +30,7 @@ Self-hosted [GitLab Community Edition](https://gitlab.com/gitlab-org/gitlab) on 
 | Service | Source | Role |
 |---------|--------|------|
 | GitLab | `gitlab/gitlab-ce:19.5.3-ce.0` | Web UI, API, Git over HTTPS and SSH, with bundled PostgreSQL, Redis and Gitaly (public, volume) |
-| GitLab Runner | `gitlab/gitlab-runner:v19.5.2` | Runs CI jobs with the shell executor. Registers itself on first start (private, volume). Optional: delete it if you don't need CI or bring your own runner |
+| GitLab Runner | `gitlab/gitlab-runner:v19.5.3` | Runs CI jobs with the shell executor. Registers itself on first start (private, volume). Optional: delete it if you don't need CI or bring your own runner |
 
 ## What this template does differently
 
@@ -111,3 +111,5 @@ Change the GitLab image tag (for example `gitlab/gitlab-ce:19.6.0-ce.0`) and red
 ## Testing
 
 Tested on 2026-11-05 with GitLab CE 19.5.3 and GitLab Runner 19.5.2 in a throwaway Railway project. GitLab became healthy in about 4 minutes; the first-start step disabled sign-up and the runner registered itself. The sign-up page redirected to sign-in, the API refused requests without a token, and root logged in with the generated password. Railway's edge served nothing until the healthcheck passed; GitLab's first response was the sign-up page redirecting to sign-in. A project was cloned and pushed over HTTPS with the password, and over SSH through the TCP proxy from a host on the internet (`Welcome to GitLab, @root!`, clone and push); one client network blocked the proxy port. Pipelines ran on the shell runner. After a redeploy of GitLab, the root password, an access token, an encrypted CI variable and the SSH host key all still worked or were unchanged, and the runner stayed online; after a redeploy of the runner it reused its registration. Idle memory was about 3.1 GB for GitLab and 0.1 GB for the runner.
+
+Updated to GitLab Runner 19.5.3 on 2026-11-13 and test-deployed from the published template: both services healthy.

@@ -34,7 +34,7 @@ Self-hosted [Typebot](https://github.com/baptisteArno/typebot.io) on Railway: a 
 | typebot-builder | `baptistearno/typebot-builder:3.19` | Bot editor, sign-in, results, API (public) |
 | typebot-viewer | `baptistearno/typebot-viewer:3.19` | Runs published bots for your visitors (public) |
 | mailpit | `axllent/mailpit:v1.33` | Catches the emails Typebot sends, such as sign-in links, and shows them on a password-protected page (public) |
-| files | `rclone/rclone:1.75.2` | Read-only web server for the bucket's `public/` folder (public) |
+| files | `rclone/rclone:1.76.0` | Read-only web server for the bucket's `public/` folder (public) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Bots, results, users (private) |
 | Redis | `redis:8.10` | Sessions and rate limits (private) |
 | Bucket | Railway Bucket | Uploaded images, videos and files |

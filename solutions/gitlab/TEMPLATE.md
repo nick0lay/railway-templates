@@ -47,7 +47,7 @@ This template tunes GitLab to about 3 GB idle, keeps its secrets on the same vol
 - Tunes memory: Puma single mode, 10 Sidekiq threads, bundled Prometheus, exporters and KAS off, PostgreSQL `shared_buffers` 256 MB
 - Registers an instance runner with the shell executor over the private network, using a short-lived token limited to creating runners
 - Git over HTTPS on the Railway domain, and over SSH through a TCP proxy with matching clone URLs
-- Pins GitLab CE 19.5.3 and GitLab Runner 19.5.2
+- Pins GitLab CE 19.5.3 and GitLab Runner 19.5.3
 
 **Notes:** GitLab uses about 3 GB of memory idle and more under load. The runner has no Docker: `image:` in CI jobs is ignored. Delete the runner service if you don't need CI. Set `GITLAB_HOST` when you add a custom domain. Upgrade by changing the image tag, following GitLab's upgrade path.
 

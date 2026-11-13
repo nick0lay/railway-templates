@@ -44,7 +44,7 @@ API equivalent: `POST /openai/creds/<instance>` with `{"name","apiKey"}`, then `
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), LiteLLM 1.106.6, PostgreSQL 18 and Redis 8.10
+- Pins Evolution API 2.3.7 (newer images need a license activation), LiteLLM 1.109.1, PostgreSQL 18 and Redis 8.10
 - Points Evolution API's OpenAI bot at LiteLLM over the private network (`OPENAI_BASE_URL`), so any provider works
 - Turns on only the OpenAI integration in Evolution API
 - Routes any model name to its provider out of the box; add aliases, fallbacks or Ollama in the LiteLLM UI

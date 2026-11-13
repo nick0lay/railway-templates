@@ -30,7 +30,7 @@ Self-hosted [Langflow](https://github.com/langflow-ai/langflow) on Railway: a vi
 
 | Service | Source | Role |
 |---------|--------|------|
-| langflow | `langflowai/langflow:1.13.1` | Visual editor, API and MCP server (public) |
+| langflow | `langflowai/langflow:1.13.2` | Visual editor, API and MCP server (public) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Flows, users, API keys, credentials (private) |
 
 ## What this template does differently
@@ -40,7 +40,7 @@ Self-hosted [Langflow](https://github.com/langflow-ai/langflow) on Railway: a vi
 - **Persistent secret key.** `LANGFLOW_SECRET_KEY` is generated once. Without it, Langflow makes a new key on every restart and saved credentials can no longer be decrypted.
 - **Data persists.** Postgres on a volume for flows and credentials, and a volume for uploaded files. Tested: a saved credential and an uploaded file were still there after a redeploy.
 - **Private database connection.** Langflow reaches Postgres over Railway's private network, not a public TCP proxy.
-- **Pinned version, quiet logs.** Langflow 1.13.1 and Postgres 18 instead of `latest`; `info` log level instead of `debug`; Langflow's usage telemetry off.
+- **Pinned version, quiet logs.** Langflow 1.13.2 and Postgres 18 instead of `latest`; `info` log level instead of `debug`; Langflow's usage telemetry off.
 - **Optional Langfuse tracing.** Fill in three variables to trace every flow run in Langfuse.
 
 ## After deploy
@@ -152,3 +152,5 @@ Change the image tag (for example `langflowai/langflow:1.13.2`). Langflow runs d
 ## Testing
 
 Tested on 2026-11-04 with Langflow 1.13.1 in a throwaway Railway project: both services healthy. Without a login, the API returned 403. A wrong password was refused, the generated admin password logged in, and public sign-up was refused. A credential variable and an uploaded file were saved, and both were still there after a redeploy. The scaling setup above (Redis, 2 workers) started, and login and saved data worked across repeated requests. In a second run: logged in through the browser, opened a flow in the editor and got a reply in the Playground; ran the same flow through the API with an API key (refused without one); added and activated a user with the commands above, who saw none of the admin's flows; all data was still there after a redeploy.
+
+Updated to Langflow 1.13.2 on 2026-11-13 and test-deployed from the published template: both services healthy.

@@ -45,7 +45,7 @@ This template creates your owner account and workspace at deploy, and runs Twent
 - Generates `APP_SECRET` and `ENCRYPTION_KEY` and shares them with the worker
 - Configures Redis with `noeviction` and an append-only file on a volume, with no public port
 - Stores files in a Railway Bucket shared by the server and worker
-- Pins Twenty 2.55.0, PostgreSQL 18 and Redis 8.10, and turns off telemetry
+- Pins Twenty 2.57.1, PostgreSQL 18 and Redis 8.10, and turns off telemetry
 - Checks health on `/healthz`
 
 **Notes:** don't change `APP_SECRET` or `ENCRYPTION_KEY` after the first deploy. Upgrade by changing the image tag on both `twenty` and `twenty-worker`; Twenty migrates the database on start. Set `SERVER_URL` when you add a custom domain.

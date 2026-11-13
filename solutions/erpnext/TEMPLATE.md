@@ -44,7 +44,7 @@ This template runs Frappe's official ERPNext v16 image with MariaDB 11.8 and two
 
 **This template:**
 
-- Uses Frappe's official `frappe/erpnext` v16.54.0 image and MariaDB 11.8.9 with the utf8mb4 settings Frappe requires
+- Uses Frappe's official `frappe/erpnext` v16.55.0 image and MariaDB 11.8.9 with the utf8mb4 settings Frappe requires
 - Creates the site and installs ERPNext on first start, with a generated Administrator password; later starts skip it
 - Runs `bench migrate` automatically when you change the image version
 - Runs web, realtime, background worker, scheduler and nginx in one service, with site files and attachments on a volume

@@ -29,8 +29,8 @@ Self-hosted [Langfuse](https://github.com/langfuse/langfuse) v4 (open-source LLM
 
 | Service | Source | Role |
 |---------|--------|------|
-| langfuse-web | `langfuse/langfuse:4.72` | UI, public API, OpenTelemetry ingestion, MCP endpoint (public) |
-| langfuse-worker | `langfuse/langfuse-worker:4.72` | Processes ingested events, evaluations, exports (private) |
+| langfuse-web | `langfuse/langfuse:4.80` | UI, public API, OpenTelemetry ingestion, MCP endpoint (public) |
+| langfuse-worker | `langfuse/langfuse-worker:4.80` | Processes ingested events, evaluations, exports (private) |
 | ClickHouse | `../clickhouse/clickhouse/Dockerfile` (our ClickHouse component, 26.8 LTS) | Traces, observations, scores (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, organizations, projects, API keys, prompts (private) |
 | Redis | `redis:8.10` with `--maxmemory-policy noeviction` | Job queues and cache (private) |

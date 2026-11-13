@@ -50,7 +50,7 @@ curl -X POST "https://<langflow-domain>/api/v1/run/<flow-id>" \
 - Generates a persistent `LANGFLOW_SECRET_KEY`, so saved credentials survive restarts
 - Keeps flows in PostgreSQL on a volume, and uploaded files on a second volume
 - Connects to PostgreSQL over the private network
-- Pins Langflow 1.13.1 and PostgreSQL 18, logs at `info` level, and turns off telemetry
+- Pins Langflow 1.13.2 and PostgreSQL 18, logs at `info` level, and turns off telemetry
 - Has optional Langfuse tracing: set `LANGFUSE_BASE_URL`, `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY`
 
 **Notes:** don't change `LANGFLOW_SECRET_KEY` after the first deploy. Upgrade by changing the image tag; Langflow migrates the database on start. Langflow needs about 1–2 GB of RAM.
