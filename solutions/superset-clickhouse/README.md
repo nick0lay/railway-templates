@@ -2,7 +2,7 @@
 
 Self-hosted [Apache Superset](https://superset.apache.org) on Railway with a [ClickHouse](https://clickhouse.com) database already connected: open-source BI with dashboards, charts, a SQL editor and a semantic layer, on top of the fastest open-source analytics database. This template runs Superset 6.1 with its Celery worker, a Postgres metadata database, Redis and ClickHouse 26.8. The admin account is created at deploy, so nobody can claim your instance, the ClickHouse connection is registered on the first start, all databases are private, and every version is pinned and tested.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/uLtYba?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/apache-superset-61-clickhouse-268?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

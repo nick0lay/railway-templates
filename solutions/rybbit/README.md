@@ -2,6 +2,8 @@
 
 Self-hosted [Rybbit](https://rybbit.com) on Railway: open-source, privacy-friendly web and product analytics, an alternative to Google Analytics, with real-time visitors, custom events, goals, funnels, user journeys, retention, session replay and web vitals. This template runs Rybbit's official images (backend and dashboard) with ClickHouse, PostgreSQL and Redis behind one Caddy proxy. The admin account is created at deploy, so nobody can claim your instance, all databases are private, and every version is pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/rybbit-29?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

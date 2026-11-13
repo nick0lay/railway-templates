@@ -2,7 +2,7 @@
 
 Self-hosted [Sentry](https://github.com/getsentry/self-hosted) 26.10 on Railway: open-source error tracking with stack traces, issue grouping, releases and alerts, for every Sentry SDK. The official self-hosted release in its errors-only mode, grouped into 9 Railway services. The admin account is created on first start and public sign-up is off. Relay creates and registers its own credentials, so nothing has to be copied by hand. Only the gateway is public. Versions are pinned and tested.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/06r7Nf?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/sentry-2610-self-hosted-errors?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

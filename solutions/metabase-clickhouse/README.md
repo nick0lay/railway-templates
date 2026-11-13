@@ -2,7 +2,7 @@
 
 Self-hosted [Metabase](https://www.metabase.com) with a [ClickHouse](https://clickhouse.com) analytics database on Railway. Metabase is open-source BI: a visual query builder, SQL editor, dashboards, alerts and sharing. ClickHouse stores and scans large tables fast. This template creates your admin account and the ClickHouse connection before Metabase is reachable, so nobody can claim your instance and you can query ClickHouse right after deploy. Metabase keeps its own data in PostgreSQL, both databases are on volumes, and every version is pinned and tested.
 
-<!-- Deploy button is added when the template is published -->
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/metabase-065-clickhouse-268?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

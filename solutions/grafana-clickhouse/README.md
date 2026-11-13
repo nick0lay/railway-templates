@@ -2,6 +2,8 @@
 
 [Grafana](https://github.com/grafana/grafana) dashboards on top of a [ClickHouse](https://github.com/ClickHouse/ClickHouse) analytics database, on Railway. The official ClickHouse data source plugin is installed and connected when the template deploys, a starter dashboard shows what is in ClickHouse, and both services keep their data on volumes. Grafana's admin password is generated, sign-up is off, and every version is pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/grafana-133-clickhouse-268?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

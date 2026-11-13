@@ -2,6 +2,8 @@
 
 Self-hosted [Lago](https://www.getlago.com) on Railway: open-source billing and metering, an alternative to Stripe Billing, Chargebee and Orb. It meters usage events, prices them with plans and charges (per unit, graduated, package, percentage, pay in advance), and issues invoices, credit notes, coupons and prepaid credits. This template runs Lago's official images with the high-volume event pipeline that the standard self-hosted setup leaves out: events go through Kafka and Lago's events processor into ClickHouse. The admin account is created at deploy and sign-up is closed, so nobody can claim your instance, each deploy gets its own signing key, and every version is pinned and tested.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lago-v157?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```
