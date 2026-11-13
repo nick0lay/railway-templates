@@ -36,7 +36,7 @@ This template runs Rybbit's official images behind one public Caddy proxy. It cr
 
 1. Open the Rybbit URL and sign in with `ADMIN_EMAIL` and the generated `ADMIN_PASSWORD` (Backend service → Variables).
 2. Create an organization, add your site's domain, and copy the tracking snippet.
-3. Add the snippet to your site: `<script src="https://your-rybbit-domain/api/script.js?siteId=1" defer></script>`.
+3. Paste the snippet into the head of your site. It loads `https://your-rybbit-domain/api/script.js` with your site id.
 
 **This template:**
 

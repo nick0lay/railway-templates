@@ -37,7 +37,7 @@ This template runs Lago's official images with the full high-volume pipeline: ev
 
 1. Open the Lago URL and log in with `LAGO_ORG_USER_EMAIL` and the generated `LAGO_ORG_USER_PASSWORD` (Lago API service → Variables).
 2. Create a billable metric, a plan, a customer and a subscription.
-3. Send usage events to `https://<your Lago API domain>/api/v1/events` with the organization's API key (`LAGO_ORG_API_KEY`).
+3. Send usage events to `https://your-lago-api-domain/api/v1/events` with the organization's API key (`LAGO_ORG_API_KEY`).
 
 **This template:**
 
