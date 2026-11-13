@@ -75,8 +75,8 @@ The included **ops-controller automates the entire deployment process**—requir
 Log in to the registry once, then deploy. The user and password are in the **registry** service's Variables tab:
 
 ```bash
-docker login <registry-domain> -u trigger
-npx trigger.dev@4.8.5 login -a https://<webapp-domain>
+docker login your-registry-domain -u trigger
+npx trigger.dev@4.8.5 login -a https://your-webapp-domain
 npx trigger.dev@4.8.5 deploy
 ```
 
@@ -158,7 +158,7 @@ Requires a verified domain and SES production access.
 When email is not configured, find invitation links in Railway logs:
 1. Go to Railway dashboard → **trigger.dev service** → **View Logs**
 2. Look for entries: `##### sendEmail to [email], subject: [subject]`
-3. Copy magic link URLs: `https://your-app.up.railway.app/magic?token=<token>`
+3. Copy magic link URLs: `https://your-app.up.railway.app/magic?token=your-token`
 4. Share links with users for registration
 
 ## Why Deploy Trigger.dev on Railway?

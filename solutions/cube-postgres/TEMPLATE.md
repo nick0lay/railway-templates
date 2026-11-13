@@ -36,12 +36,12 @@ A production Cube deployment has four parts: API instances, a refresh worker tha
 **After deploy:** copy `CUBEJS_API_SECRET` from the Cube API variables, mint a JWT and query:
 
 ```bash
-CUBEJS_API_SECRET="<from the Cube API variables>"
+CUBEJS_API_SECRET="paste-from-Cube-API-variables"
 b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
 H=$(printf '{"alg":"HS256","typ":"JWT"}' | b64url)
 P=$(printf '{"exp":%d}' $(( $(date +%s) + 3600 )) | b64url)
 S=$(printf '%s.%s' "$H" "$P" | openssl dgst -sha256 -hmac "$CUBEJS_API_SECRET" -binary | b64url)
-curl -s "https://<domain>/cubejs-api/v1/load" -H "Authorization: Bearer $H.$P.$S" \
+curl -s "https://your-cube-api.up.railway.app/cubejs-api/v1/load" -H "Authorization: Bearer $H.$P.$S" \
   -G --data-urlencode 'query={"measures":["orders.count"],"dimensions":["orders.status"]}'
 ```
 

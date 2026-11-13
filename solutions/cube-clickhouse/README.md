@@ -4,6 +4,8 @@ A self-hosted [Cube](https://cube.dev) semantic layer: define metrics and dimens
 
 The template runs Cube's production layout: an API instance, a refresh worker that builds pre-aggregations, and a Cube Store cluster (router + worker) that serves them, with a Railway Bucket as shared storage. Only the API is public, and every API request needs a JWT signed with a generated secret. The Playground (dev mode) is off.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/cube-18-clickhouse-268?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```
@@ -181,7 +183,7 @@ Cube Store memory grows with the size of your pre-aggregations; the bucket grows
 ## Versions
 
 - Cube 1.8.22 and Cube Store 1.8.22: pinned tags; update both together (same version).
-- ClickHouse 26.8 LTS (`CLICKHOUSE_IMAGE_TAG`). ClickHouse can only be upgraded, not downgraded.
+- ClickHouse 26.8 LTS (prebuilt `clickhouse/clickhouse-server:26.8`). ClickHouse can only be upgraded, not downgraded.
 
 ## Tested
 

@@ -6,7 +6,7 @@ Deploy a single ClickHouse server on Railway, with persistent storage and ready-
 
 ## Overview
 
-- **ClickHouse**: column-oriented OLAP database, from the official `clickhouse/clickhouse-server` image, newest tested LTS release by default
+- **ClickHouse**: column-oriented OLAP database, from the official prebuilt `clickhouse/clickhouse-server` image, pinned to LTS `26.8`
 - **Volume** at `/var/lib/clickhouse`, so data survives redeploys and restarts
 - HTTP interface on port 8123, reachable over the public domain (HTTPS) and the private network
 - High-volume internal log tables disabled, so they don't fill the volume
@@ -37,7 +37,7 @@ For a web SQL editor on top, see [ClickHouse + CH-UI](../clickhouse-chui/).
 
 | Service | Source | Role |
 |---------|--------|------|
-| ClickHouse | `clickhouse/Dockerfile` | OLAP database, HTTP interface (public) |
+| ClickHouse | `clickhouse/clickhouse-server:26.8` (Docker Hub) | OLAP database, HTTP interface (public) |
 
 ## Environment Variables
 
@@ -45,14 +45,16 @@ For a web SQL editor on top, see [ClickHouse + CH-UI](../clickhouse-chui/).
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CLICKHOUSE_IMAGE_TAG` | empty | Empty uses the newest ClickHouse LTS release tested with this template (currently `26.8`). Set any tag from [Docker Hub](https://hub.docker.com/r/clickhouse/clickhouse-server/tags) (for example `26.8`, `26.10` or `latest`) to choose the version yourself. Test upgrades on a copy first: downgrading after ClickHouse has written data with a newer version is not supported. |
 | `CLICKHOUSE_USER` | `clickhouse` | User created on first start |
 | `CLICKHOUSE_PASSWORD` | generated | Password for that user |
 | `CLICKHOUSE_DB` | `railway` | Database created on first start |
 | `CLICKHOUSE_ACCESS_MANAGEMENT` | `0` | `1` lets the user manage users and grants with SQL |
 | `CLICKHOUSE_SKIP_USER_SETUP` | `0` | `1` skips user setup. The default user then has no password; don't use with a public domain |
+| `RAILWAY_CH_SYSTEM_LOGS_XML` | system log settings | ClickHouse config written to `config.d/` at start: disables high-volume system log tables and keeps `query_log`, `part_log` and `error_log` for 7 days. Clear it to use ClickHouse's defaults |
 
 User, password and database are applied on the **first** start only. To change them later, use SQL.
+
+To run another ClickHouse version, change the image tag in the service settings (Source, Docker image), for example `clickhouse/clickhouse-server:26.10`. Test upgrades on a copy first: downgrading after ClickHouse has written data with a newer version is not supported.
 
 ### Auto-Configured (Do Not Change)
 
@@ -79,9 +81,13 @@ From another service in the same project, use `${{ClickHouse.CLICKHOUSE_URL}}`.
 
 ## Files
 
+The template deploys the prebuilt image directly. Its start command writes `RAILWAY_CH_SYSTEM_LOGS_XML` to `/etc/clickhouse-server/config.d/railway-system-logs.xml` and then runs the image's own entrypoint. The official image already listens on IPv4 and IPv6, so no other config is needed.
+
+The `clickhouse/` folder builds the same setup from a Dockerfile. Older deployments of this template and solutions that embed ClickHouse (for example Langfuse and Tracely) still build from it.
+
 | File | Purpose |
 |------|---------|
-| `clickhouse/Dockerfile` | Official image + Railway config |
+| `clickhouse/Dockerfile` | Official image + Railway config (tag from `CLICKHOUSE_IMAGE_TAG`, LTS fallback) |
 | `clickhouse/network.xml` | Listen on IPv6 and IPv4 (`::`), HTTP port from `PORT` |
 | `clickhouse/system-logs.xml` | Disable high-volume system log tables; keep `query_log`, `part_log`, `error_log` for 7 days |
 | `clickhouse/railway.json` | Dockerfile build, `/ping` healthcheck, restart on failure |
@@ -95,8 +101,10 @@ From another service in the same project, use `${{ClickHouse.CLICKHOUSE_URL}}`.
 
 ## Version updates
 
-ClickHouse publishes two LTS releases a year (`YY.3` and `YY.8`), each supported for a year. A weekly GitHub Action (`.github/workflows/clickhouse-lts.yml`) opens a PR when a newer LTS appears on Docker Hub. After the PR is tested and merged, new deployments with an empty `CLICKHOUSE_IMAGE_TAG` get that version. Existing deployments change only when they are rebuilt from the new commit. Moving from one LTS to the next is a supported upgrade, but it can't be undone, so set `CLICKHOUSE_IMAGE_TAG` to a fixed tag if you want to control when that happens.
+ClickHouse publishes two LTS releases a year (`YY.3` and `YY.8`), each supported for a year. The template pins the current LTS tag and moves to the next one after it has been tested. Existing deployments keep their tag until you change it. Moving from one LTS to the next is a supported upgrade, but it can't be undone.
 
 ## History
 
 Until November 2026 this template was built from a fork of the ClickHouse source repository (`nick0lay/ClickHouse`, default branch `master`) with no volume. Deployments created before the switch still build from there. The repo was archived on 2026-11-01: it is read-only but still public, so those deployments can still rebuild.
+
+On 2026-11-13 the template moved from a Dockerfile build of this folder to the prebuilt image, so new deployments start without a build step. Deployments created between 2026-11-01 and 2026-11-13 keep building from `clickhouse/` and are unaffected.

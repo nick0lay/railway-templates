@@ -4,6 +4,8 @@ A self-hosted [Cube](https://cube.dev) semantic layer: define metrics and dimens
 
 The template runs Cube's production layout: an API instance, a refresh worker that builds pre-aggregations, and a Cube Store cluster (router + worker) that serves them, with a Railway Bucket as shared storage. Only the API is public, and every API request needs a JWT signed with a generated secret. The Playground (dev mode) is off.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/cube-18-postgres-18?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 ## Architecture
 
 ```

@@ -35,12 +35,12 @@ This template deploys both on Railway's private network: Evolution API with its 
 
 **After deploy:**
 
-1. Open `https://<litellm-domain>/ui`, log in with `UI_USERNAME` and the generated `UI_PASSWORD`, and create a virtual key (Virtual Keys → Create New Key, optionally with a budget).
-2. Open `https://<evolution-domain>/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance (Baileys) and link your number: scan the QR code in WhatsApp (Settings → Linked devices), or request a pairing code with `GET /instance/connect/<name>?number=<your number>`.
+1. Open `https://your-litellm-domain/ui`, log in with `UI_USERNAME` and the generated `UI_PASSWORD`, and create a virtual key (Virtual Keys → Create New Key, optionally with a budget).
+2. Open `https://your-evolution-domain/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance (Baileys) and link your number: scan the QR code in WhatsApp (Settings → Linked devices), or request a pairing code with `GET /instance/connect/your-instance?number=your-number`.
 3. In the instance, open Integrations → OpenAI. Add a credential with a unique name and the virtual key, then add a bot: type Chat Completion, a model such as `gpt-4o-mini`, `anthropic/claude-haiku-4-5` or `gemini/gemini-2.5-flash`, max tokens, a system message and trigger = all messages.
 4. Message your number from another phone.
 
-API equivalent: `POST /openai/creds/<instance>` with `{"name","apiKey"}`, then `POST /openai/create/<instance>` with `{"enabled":true,"openaiCredsId","botType":"chatCompletion","model","maxTokens","systemMessages":[...],"triggerType":"all",...}`.
+API equivalent: `POST /openai/creds/your-instance` with `{"name","apiKey"}`, then `POST /openai/create/your-instance` with `{"enabled":true,"openaiCredsId","botType":"chatCompletion","model","maxTokens","systemMessages":[...],"triggerType":"all",...}`.
 
 **This template:**
 

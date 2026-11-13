@@ -38,7 +38,7 @@ This template deploys Langflow with PostgreSQL over Railway's private network, a
 3. Start from a template, then call your flow:
 
 ```bash
-curl -X POST "https://<langflow-domain>/api/v1/run/<flow-id>" \
+curl -X POST "https://your-langflow-domain/api/v1/run/your-flow-id" \
   -H "x-api-key: $LANGFLOW_API_KEY" -H "Content-Type: application/json" \
   -d '{"input_value": "Hello", "input_type": "chat", "output_type": "chat"}'
 ```
