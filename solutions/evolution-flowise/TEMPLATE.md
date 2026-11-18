@@ -38,11 +38,11 @@ This template deploys both apps on Railway's private network: Evolution API with
 1. Open the `flowise` URL and log in with `ADMIN_EMAIL` and the generated `ADMIN_PASSWORD` (variables of the `flowise` service). Add your LLM key under Credentials.
 2. Build an Agentflow or Chatflow and test it in the chat panel.
 3. Create an API key under API Keys and assign it to the flow (flow → API Endpoint). Without an assigned key, anyone who knows the flow ID can call it.
-4. Open `https://<evolution-domain>/manager` and log in with the `AUTHENTICATION_API_KEY` of the Evolution API service. Create an instance and pair it: scan the QR code in WhatsApp (Settings → Linked devices), or get a pairing code from `/instance/connect/<name>?number=<your number>`.
+4. Open `https://your-evolution-domain/manager` and log in with the `AUTHENTICATION_API_KEY` of the Evolution API service. Create an instance and pair it: scan the QR code in WhatsApp (Settings → Linked devices), or get a pairing code from `/instance/connect/your-name?number=your-number`.
 5. In the instance's Flowise integration, add a bot. Set the API URL to the `PRIVATE_PREDICTION_URL` variable of flowise followed by the flow ID, the API key to the Flowise key, and the trigger to all messages or a keyword.
 6. Message your number from another phone.
 
-The same steps work through the API with `POST /flowise/create/<instance>` and the body `{"enabled":true,"apiUrl":"...","apiKey":"...","triggerType":"all"}`.
+The same steps work through the API with `POST /flowise/create/your-instance` and the body `{"enabled":true,"apiUrl":"...","apiKey":"...","triggerType":"all"}`.
 
 **This template:**
 

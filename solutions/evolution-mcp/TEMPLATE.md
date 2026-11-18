@@ -35,9 +35,9 @@ This template deploys both on Railway's private network: Evolution API with its 
 
 **After deploy:**
 
-1. Open `https://<evolution-domain>/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance named `whatsapp` (channel Baileys) and scan its QR code in WhatsApp (Settings → Linked devices). For a pairing code instead: `GET /instance/connect/whatsapp?number=<your number>` with the `apikey` header.
+1. Open `https://your-evolution-domain/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance named `whatsapp` (channel Baileys) and scan its QR code in WhatsApp (Settings → Linked devices). For a pairing code instead: `GET /instance/connect/whatsapp?number=your-number` with the `apikey` header.
 2. Copy `MCP_URL` and `MCP_AUTH_TOKEN` from the Evolution MCP service.
-3. Claude Code: `claude mcp add --transport http whatsapp <MCP_URL> --header "Authorization: Bearer <MCP_AUTH_TOKEN>"`. Claude Desktop: use the `mcp-remote` bridge with the same header. Any streamable HTTP client with custom headers works.
+3. Claude Code: `claude mcp add --transport http whatsapp your-mcp-url --header "Authorization: Bearer your-mcp-auth-token"`. Claude Desktop: use the `mcp-remote` bridge with the same header. Any streamable HTTP client with custom headers works.
 4. Ask your agent to list your chats.
 
 claude.ai's custom connectors and ChatGPT expect OAuth and can't send a static bearer token, so they can't connect directly.

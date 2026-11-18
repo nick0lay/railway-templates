@@ -39,7 +39,7 @@ This template runs the official `odoo:20.0` image with PostgreSQL 18, created an
 2. Install the apps you use from **Apps** (CRM, Sales, Invoicing, Inventory, ...). The agent's user gets user-level access to them within 5 minutes.
 3. Connect Claude. In the **Token Proxy** service, Variables:
    - **claude.ai / Claude Desktop:** Settings > Connectors > Add custom connector, paste `CONNECTOR_URL` (the token is in the URL; keep it secret).
-   - **Claude Code:** `claude mcp add --transport http odoo <MCP_URL> --header "Authorization: Bearer <PROXY_TOKEN>"`
+   - **Claude Code:** `claude mcp add --transport http odoo your-mcp-url --header "Authorization: Bearer your-proxy-token"`
 4. Ask Claude about your Odoo data.
 
 **This template:**

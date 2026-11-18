@@ -39,7 +39,7 @@ This template deploys the whole stack on Railway's private network. Evolution AP
 1. Open the `Dify` URL and log in with `ADMIN_EMAIL` and the generated `ADMIN_PASSWORD` (variables of the `Dify` service).
 2. In **Settings → Model Provider**, install a model provider and paste its API key.
 3. Build a Chatflow, Chatbot or Agent, publish it, and create an API key under **API Access** (`app-...`).
-4. Open `https://<evolution-domain>/manager` and log in with the `AUTHENTICATION_API_KEY` of the Evolution API service. Create an instance and scan its QR code in WhatsApp (Settings → Linked devices), or request a pairing code with `/instance/connect/<name>?number=<phone>`.
+4. Open `https://your-evolution-domain/manager` and log in with the `AUTHENTICATION_API_KEY` of the Evolution API service. Create an instance and scan its QR code in WhatsApp (Settings → Linked devices), or request a pairing code with `/instance/connect/your-name?number=your-phone`.
 5. In the instance's Dify integration, add a bot. Type: Chatbot (or Agent). API URL: the `DIFY_PRIVATE_API_URL` variable of the `Dify` service. API key: your `app-...` key. Trigger: all messages or a keyword.
 6. Message your number from another phone.
 

@@ -37,7 +37,7 @@ This template deploys the whole stack on Railway's private network: Evolution AP
 
 1. Open the `n8n` URL and log in with `N8N_INSTANCE_OWNER_EMAIL` and the generated `N8N_OWNER_PASSWORD` (variables of the `n8n` service).
 2. Build a workflow: Webhook trigger (POST, Basic Auth, respond with the Respond to Webhook node), your logic, and Respond to Webhook with `{"output": "reply text"}`. Publish it.
-3. Open `https://<evolution-domain>/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance and scan its QR code in WhatsApp (Settings → Linked devices).
+3. Open `https://your-evolution-domain/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance and scan its QR code in WhatsApp (Settings → Linked devices).
 4. In the instance's n8n integration, add a bot: Webhook URL = the `PRIVATE_WEBHOOK_URL` variable of n8n plus your webhook path, the basic auth user and password, trigger = all messages or a keyword.
 5. Message your number from another phone.
 

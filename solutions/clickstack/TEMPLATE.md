@@ -35,7 +35,7 @@ This template creates your admin account at deploy so sign-up is closed, turns o
 
 1. Open the HyperDX URL and log in with `HYPERDX_ADMIN_EMAIL` and the generated `HYPERDX_ADMIN_PASSWORD` (HyperDX service → Variables).
 2. In HyperDX, open Team Settings and copy the ingestion API key.
-3. In your app, set `OTEL_EXPORTER_OTLP_ENDPOINT` to the Collector's `OTEL_EXPORTER_OTLP_ENDPOINT` variable, `OTEL_EXPORTER_OTLP_HEADERS=authorization=<API key>` and `OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf`. Apps in the same Railway project can use the private endpoints in the Collector variables.
+3. In your app, set `OTEL_EXPORTER_OTLP_ENDPOINT` to the Collector's `OTEL_EXPORTER_OTLP_ENDPOINT` variable, `OTEL_EXPORTER_OTLP_HEADERS=authorization=your-api-key` and `OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf`. Apps in the same Railway project can use the private endpoints in the Collector variables.
 
 **This template:**
 

@@ -38,25 +38,25 @@ This template deploys all three on Railway's private network, each app with its 
 3. From the `Evolution API` variables copy `AUTHENTICATION_API_KEY`, `CHATWOOT_URL`, `CHATWOOT_TOKEN` and `TYPEBOT_URL`, and create an instance linked to Chatwoot:
 
 ```
-POST https://<evolution-domain>/instance/create   (header apikey: <AUTHENTICATION_API_KEY>)
+POST https://your-evolution-domain/instance/create   (header apikey: your-authentication-api-key)
 {"instanceName":"support-x7k2q9","integration":"WHATSAPP-BAILEYS","qrcode":true,
- "chatwootAccountId":"1","chatwootToken":"<CHATWOOT_TOKEN>","chatwootUrl":"<CHATWOOT_URL>",
+ "chatwootAccountId":"1","chatwootToken":"your-chatwoot-token","chatwootUrl":"your-chatwoot-url",
  "chatwootSignMsg":true,"chatwootReopenConversation":true,"chatwootAutoCreate":true}
 ```
 
-4. Pair the number: scan the QR code in `https://<evolution-domain>/manager`, or call `GET /instance/connect/<instance>?number=<your number>` and enter the pairing code in WhatsApp (Linked devices).
+4. Pair the number: scan the QR code in `https://your-evolution-domain/manager`, or call `GET /instance/connect/your-instance?number=your-number` and enter the pairing code in WhatsApp (Linked devices).
 5. Attach the flow:
 
 ```
-POST https://<evolution-domain>/typebot/create/support-x7k2q9
-{"enabled":true,"url":"<TYPEBOT_URL>","typebot":"<public id>","triggerType":"keyword",
+POST https://your-evolution-domain/typebot/create/support-x7k2q9
+{"enabled":true,"url":"your-typebot-url","typebot":"your-public-id","triggerType":"keyword",
  "triggerOperator":"equals","triggerValue":"hi","expire":1440,"keywordFinish":"#stop",
  "delayMessage":1000,"listeningFromMe":false,"stopBotFromMe":true,"keepOpen":false,"debounceTime":3}
 ```
 
    Or use the manager's **Integrations → Chatwoot** (Auto create on) and **Integrations → Typebot** (Stop bot from me on).
 
-**Bot and human:** bot answers appear in the Chatwoot conversation. An agent reply pauses the contact's bot session (`stopBotFromMe`). The bot resumes after `POST /typebot/changeStatus/<instance>` with `status` `opened`, or `expire` minutes after the last agent reply (`0` = never). Resolving a conversation in Chatwoot does not resume it.
+**Bot and human:** bot answers appear in the Chatwoot conversation. An agent reply pauses the contact's bot session (`stopBotFromMe`). The bot resumes after `POST /typebot/changeStatus/your-instance` with `status` `opened`, or `expire` minutes after the last agent reply (`0` = never). Resolving a conversation in Chatwoot does not resume it.
 
 **This template:**
 
@@ -67,7 +67,7 @@ POST https://<evolution-domain>/typebot/create/support-x7k2q9
 - Gives each app its own PostgreSQL and Redis; all databases are private
 - Stores WhatsApp sessions in PostgreSQL so restarts don't log your number out
 
-**Security notes:** Evolution API 2.3.7's `/chatwoot/webhook/<instance>` has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production bots belong on `WHATSAPP-BAILEYS` instances. The Typebot viewer and `files` are public by design (they serve published bots).
+**Security notes:** Evolution API 2.3.7's `/chatwoot/webhook/your-instance` has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production bots belong on `WHATSAPP-BAILEYS` instances. The Typebot viewer and `files` are public by design (they serve published bots).
 
 **Notes:** Don't change `SECRET_KEY_BASE`, `ACTIVE_RECORD_ENCRYPTION_*` or Typebot's `ENCRYPTION_SECRET` after the first deploy. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API, Typebot and Chatwoot are not affiliated with WhatsApp or Meta.
 

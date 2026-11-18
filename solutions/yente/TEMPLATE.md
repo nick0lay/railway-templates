@@ -45,20 +45,20 @@ In this template Yente and Elasticsearch have no public domain. A Caddy proxy is
 3. Screen a person:
 
 ```bash
-curl -X POST https://<domain>/match/default \
-  -H "Authorization: Bearer <PROXY_TOKEN>" -H "Content-Type: application/json" \
+curl -X POST https://your-domain/match/default \
+  -H "Authorization: Bearer your-proxy-token" -H "Content-Type: application/json" \
   -d '{"queries": {"q1": {"schema": "Person",
         "properties": {"name": ["Vladimir Putin"], "birthDate": ["1952-10-07"]}}}}'
 ```
 
-Each result has a `score`, a `match` flag and topics such as `sanction` or `role.pep`. Text search: `GET /search/default?q=<name>`. Services in the same project can use `${{Yente.PRIVATE_URL}}` without the token.
+Each result has a `score`, a `match` flag and topics such as `sanction` or `role.pep`. Text search: `GET /search/default?q=your-name`. Services in the same project can use `${{Yente.PRIVATE_URL}}` without the token.
 
 **Choosing the dataset (`OPENSANCTIONS_SCOPE`):**
 
 - `default` (template default): the full collection with sanctions, PEPs, crime and debarment lists. Measured on Railway: about 20 minutes to index, Elasticsearch about 2.8 GB RAM idle with a 2 GB heap (up to 6.4 GB while indexing), about 3 GB on disk.
 - `sanctions`: sanctions lists only, 310k entities. About 2 minutes to index, about 2.5 GB RAM with `ES_HEAP_SIZE=1g`, 0.7 GB on disk.
 
-The API paths use the scope: `/match/<scope>`, `/search/<scope>`.
+The API paths use the scope: `/match/your-scope`, `/search/your-scope`.
 
 **Disk:** the full index (about 3 GB) fits the default 5 GB volume, and the hourly updates should fit too (they copy the current index and apply the changes). A full rebuild of `default` (a forced update, or a future Yente version with a new index format) builds a second copy before deleting the first, so it needs roughly twice the index size, an estimated 6 to 7 GB: grow the volume on Pro first, or use `sanctions`. A scope change needs the old plus the new index.
 

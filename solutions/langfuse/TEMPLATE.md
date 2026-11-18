@@ -39,7 +39,7 @@ It starts ready to use. On first boot it creates your admin account, an organiza
 2. Copy `LANGFUSE_INIT_PROJECT_PUBLIC_KEY` and `LANGFUSE_INIT_PROJECT_SECRET_KEY` into your app:
 
 ```bash
-LANGFUSE_HOST=https://<your-langfuse-domain>
+LANGFUSE_HOST=https://your-langfuse-domain
 LANGFUSE_PUBLIC_KEY=pk-lf-...
 LANGFUSE_SECRET_KEY=sk-lf-...
 ```
@@ -57,8 +57,8 @@ LANGFUSE_SECRET_KEY=sk-lf-...
 **Connect Claude Code or Cursor:** Langfuse v4 includes an MCP server at `/api/public/mcp`. Use Basic auth with `base64(public_key:secret_key)`:
 
 ```bash
-claude mcp add --transport http langfuse https://<your-langfuse-domain>/api/public/mcp \
-    --header "Authorization: Basic <base64 token>"
+claude mcp add --transport http langfuse https://your-langfuse-domain/api/public/mcp \
+    --header "Authorization: Basic your-base64-token"
 ```
 
 **Notes:**

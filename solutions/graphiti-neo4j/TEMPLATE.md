@@ -4,7 +4,7 @@ Graphiti is Zep's open-source temporal knowledge graph for AI agent memory. Agen
 
 ## About Hosting Graphiti 0.31 MCP + Neo4j
 
-Upstream's MCP server has no authentication: Zep calls it a reference implementation and warns not to expose it to an untrusted network. Other Graphiti templates put it on a public domain anyway. Here the MCP server (`zepai/knowledge-graph-mcp:1.1.3-graphiti-0.31.2`) is private, and the only public service is a small Caddy proxy that requires `Authorization: Bearer <token>` on every request. The token is generated at deploy. Responses stream through without buffering (MCP streamable HTTP). Graphiti talks to Neo4j 2026.10 Community over the private network with Bolt encrypted by TLS. Neo4j keeps the graph on a volume, and its memory is capped (512 MB heap, 256 MB page cache). Neo4j Browser and a Bolt TCP proxy are protected by a generated password. All images are pinned. You only enter your OpenAI (or OpenAI-compatible) API key.
+Upstream's MCP server has no authentication: Zep calls it a reference implementation and warns not to expose it to an untrusted network. Other Graphiti templates put it on a public domain anyway. Here the MCP server (`zepai/knowledge-graph-mcp:1.1.3-graphiti-0.31.2`) is private, and the only public service is a small Caddy proxy that requires `Authorization: Bearer your-token` on every request. The token is generated at deploy. Responses stream through without buffering (MCP streamable HTTP). Graphiti talks to Neo4j 2026.10 Community over the private network with Bolt encrypted by TLS. Neo4j keeps the graph on a volume, and its memory is capped (512 MB heap, 256 MB page cache). Neo4j Browser and a Bolt TCP proxy are protected by a generated password. All images are pinned. You only enter your OpenAI (or OpenAI-compatible) API key.
 
 ## Common Use Cases
 
@@ -33,8 +33,8 @@ After deploy, open the **Token Proxy** service's Variables tab and copy `MCP_URL
 Claude Code:
 
 ```bash
-claude mcp add --transport http graphiti https://<domain>/mcp \
-  --header "Authorization: Bearer <PROXY_TOKEN>"
+claude mcp add --transport http graphiti https://your-domain/mcp \
+  --header "Authorization: Bearer your-proxy-token"
 ```
 
 Cursor (`~/.cursor/mcp.json`):
@@ -43,8 +43,8 @@ Cursor (`~/.cursor/mcp.json`):
 {
   "mcpServers": {
     "graphiti": {
-      "url": "https://<domain>/mcp",
-      "headers": { "Authorization": "Bearer <PROXY_TOKEN>" }
+      "url": "https://your-domain/mcp",
+      "headers": { "Authorization": "Bearer your-proxy-token" }
     }
   }
 }
@@ -57,8 +57,8 @@ Claude Desktop's custom connector dialog has no field for custom headers, so use
   "mcpServers": {
     "graphiti": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://<domain>/mcp", "--header", "Authorization:${GRAPHITI_AUTH}"],
-      "env": { "GRAPHITI_AUTH": "Bearer <PROXY_TOKEN>" }
+      "args": ["-y", "mcp-remote", "https://your-domain/mcp", "--header", "Authorization:${GRAPHITI_AUTH}"],
+      "env": { "GRAPHITI_AUTH": "Bearer your-proxy-token" }
     }
   }
 }

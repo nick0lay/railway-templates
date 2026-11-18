@@ -39,10 +39,10 @@ Since version 25, Dgraph's access control (ACL) is open source. This template tu
 2. From code, log in first, then send the token with every request:
 
 ```bash
-TOKEN=$(curl -s https://<gateway-domain>/login \
-  -d '{"userid":"groot","password":"<DGRAPH_PASSWORD>"}' | jq -r .data.accessJWT)
+TOKEN=$(curl -s https://your-gateway-domain/login \
+  -d '{"userid":"groot","password":"your-dgraph-password"}' | jq -r .data.accessJWT)
 
-curl https://<gateway-domain>/query -H "X-Dgraph-AccessToken: $TOKEN" \
+curl https://your-gateway-domain/query -H "X-Dgraph-AccessToken: $TOKEN" \
   -H "Content-Type: application/dql" -d '{ q(func: has(name)) { name } }'
 ```
 

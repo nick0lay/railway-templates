@@ -31,10 +31,10 @@ After the deploy, open the **frontend** domain and create your account. Then cre
 ```python
 import tracely_sdk as tracely
 
-tracely.init(endpoint="https://<backend-domain>", api_key="<ingest-key>", service_name="my-agent")
+tracely.init(endpoint="https://your-backend-domain", api_key="your-ingest-key", service_name="my-agent")
 ```
 
-Any OTLP/HTTP exporter also works: send to `https://<backend-domain>/v1/traces` with `Authorization: Bearer <ingest-key>`.
+Any OTLP/HTTP exporter also works: send to `https://your-backend-domain/v1/traces` with `Authorization: Bearer your-ingest-key`.
 
 How this template is set up:
 

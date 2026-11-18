@@ -35,11 +35,11 @@ LiteLLM starts with Langfuse's OpenTelemetry integration enabled and the keys of
 
 **After deploy:**
 
-1. LiteLLM UI: open `https://<litellm-domain>/ui`, log in as `admin` with the generated `UI_PASSWORD`, and add a model with your provider key.
+1. LiteLLM UI: open `https://your-litellm-domain/ui`, log in as `admin` with the generated `UI_PASSWORD`, and add a model with your provider key.
 2. Call the gateway with the generated `LITELLM_MASTER_KEY` or a virtual key:
 
 ```bash
-curl https://<litellm-domain>/v1/chat/completions \
+curl https://your-litellm-domain/v1/chat/completions \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
   -H "Content-Type: application/json" \
   -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello"}]}'

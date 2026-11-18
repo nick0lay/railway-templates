@@ -36,7 +36,7 @@ This template runs OpenPanel's official images behind one public Caddy proxy. It
 
 1. Open the OpenPanel URL and log in with `ADMIN_EMAIL` and the generated `ADMIN_PASSWORD` (API service → Variables).
 2. Create an organization and a project, and copy the client ID (and secret for app/backend projects).
-3. Add the SDK to your site or app with `apiUrl: 'https://<your OpenPanel domain>/api'`.
+3. Add the SDK to your site or app with `apiUrl: 'https://your-openpanel-domain/api'`.
 
 **This template:**
 

@@ -35,7 +35,7 @@ This template sets all of that up in one deploy. The Medusa server, a separate M
 **After deploy:**
 
 1. Wait for the Medusa service to turn healthy (3 to 5 minutes on the first start: migrations and demo data).
-2. Open `https://<Medusa domain>/app` and log in with `MEDUSA_ADMIN_EMAIL` and the generated `MEDUSA_ADMIN_PASSWORD`.
+2. Open `https://your-medusa-domain/app` and log in with `MEDUSA_ADMIN_EMAIL` and the generated `MEDUSA_ADMIN_PASSWORD`.
 3. Open the Storefront URL to see the shop with the demo products.
 4. Add your products, regions and payment providers in the admin.
 

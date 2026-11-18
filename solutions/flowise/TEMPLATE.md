@@ -38,7 +38,7 @@ This template creates the owner account at deploy with your email and a generate
 3. Build a flow, create an API key and assign it to the flow, then call it:
 
 ```bash
-curl -X POST "https://<flowise-domain>/api/v1/prediction/<flow-id>" \
+curl -X POST "https://your-flowise-domain/api/v1/prediction/your-flow-id" \
   -H "Authorization: Bearer $FLOWISE_API_KEY" -H "Content-Type: application/json" \
   -d '{"question": "Hello"}'
 ```

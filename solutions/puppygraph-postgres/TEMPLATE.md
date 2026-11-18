@@ -49,7 +49,7 @@ It returns two paths: marko knows josh, who created lop and ripple.
 3. From code, use the REST API with basic auth, or connect a Neo4j driver or Gremlin client from another service in the project:
 
 ```
-curl -u puppygraph:<password> -X POST https://<domain>/submitCypher \
+curl -u puppygraph:your-password -X POST https://your-domain/submitCypher \
   -H 'Content-Type: application/json' \
   -d '{"query":"MATCH (p:person) RETURN p.name"}'
 ```

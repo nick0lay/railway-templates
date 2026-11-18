@@ -37,9 +37,9 @@ SQL Server needs at least 2 GB of RAM, so it runs on the Hobby or Pro plan, not 
 **Connect from SSMS or Azure Data Studio.** Use the values from the MSSQL service's Variables tab:
 
 ```
-Server:   <MSSQL_PUBLIC_HOST>,<MSSQL_PUBLIC_PORT>     (comma, not colon)
+Server:   your-mssql-public-host,your-mssql-public-port     (comma, not colon)
 Login:    sa
-Password: <MSSQL_SA_PASSWORD>
+Password: your-mssql-sa-password
 Encrypt:  Mandatory, and tick "Trust server certificate"
 ```
 
@@ -49,10 +49,10 @@ Encrypt:  Mandatory, and tick "Trust server certificate"
 ConnectionStrings__Default=${{MSSQL.MSSQL_CONNECTION_STRING}}
 ```
 
-**Restore a backup** (files are in the bucket under `mssql-backups/<db>/<db>_<Mon..Sun>.bak`):
+**Restore a backup** (files are in the bucket under `mssql-backups/your-db/your-db_{Mon..Sun}.bak`):
 
 ```sql
-RESTORE DATABASE mydb FROM URL = 's3://<endpoint host>/<bucket>/mssql-backups/mydb/mydb_Mon.bak' WITH REPLACE;
+RESTORE DATABASE mydb FROM URL = 's3://your-endpoint-host/your-bucket/mssql-backups/mydb/mydb_Mon.bak' WITH REPLACE;
 ```
 
 `MSSQL_MEMORY_LIMIT_MB` (default 2048) caps the memory SQL Server uses. Raise it on bigger plans. The server starts with trace flag 1800, which SQL Server needs on Railway volumes: without it, the first start crashes on misaligned disk writes.

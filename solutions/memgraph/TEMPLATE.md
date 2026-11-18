@@ -47,7 +47,7 @@ MEMGRAPH_PASSWORD=${{Memgraph.DB_PASSWORD}}
 
 ```python
 from neo4j import GraphDatabase
-driver = GraphDatabase.driver("bolt+ssc://<proxy-domain>:<port>", auth=("memgraph", "<MEMGRAPH_PASSWORD>"))
+driver = GraphDatabase.driver("bolt+ssc://your-proxy-domain:your-port", auth=("memgraph", "your-memgraph-password"))
 driver.execute_query("CALL pagerank.get() YIELD node, rank RETURN node, rank LIMIT 5")
 ```
 

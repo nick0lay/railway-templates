@@ -39,15 +39,15 @@ This template deploys both on Railway's private network, each with its own Postg
 3. Create an instance linked to Chatwoot in one call:
 
 ```
-POST https://<evolution-domain>/instance/create   (header apikey: <AUTHENTICATION_API_KEY>)
+POST https://your-evolution-domain/instance/create   (header apikey: your-authentication-api-key)
 {"instanceName":"sales-x7k2q9","integration":"WHATSAPP-BAILEYS","qrcode":true,
- "chatwootAccountId":"1","chatwootToken":"<CHATWOOT_TOKEN>","chatwootUrl":"<CHATWOOT_URL>",
+ "chatwootAccountId":"1","chatwootToken":"your-chatwoot-token","chatwootUrl":"your-chatwoot-url",
  "chatwootSignMsg":true,"chatwootReopenConversation":true,"chatwootConversationPending":false,
  "chatwootAutoCreate":true}
 ```
 
-   Or open `https://<evolution-domain>/manager`, create an instance, and fill **Integrations → Chatwoot** with the same values and **Auto create** on. An existing instance is linked with `POST /chatwoot/set/<instance>`.
-4. Pair the number: scan the QR code in the manager (WhatsApp → Settings → Linked devices), or call `GET /instance/connect/<instance>?number=<your number>` and enter the pairing code in WhatsApp.
+   Or open `https://your-evolution-domain/manager`, create an instance, and fill **Integrations → Chatwoot** with the same values and **Auto create** on. An existing instance is linked with `POST /chatwoot/set/your-instance`.
+4. Pair the number: scan the QR code in the manager (WhatsApp → Settings → Linked devices), or call `GET /instance/connect/your-instance?number=your-number` and enter the pairing code in WhatsApp.
 5. Evolution API creates the inbox in Chatwoot. Message your number from another phone and reply from Chatwoot.
 
 **This template:**
@@ -60,7 +60,7 @@ POST https://<evolution-domain>/instance/create   (header apikey: <AUTHENTICATIO
 - Protects every public service: generated Evolution API key and Chatwoot login; databases stay private
 - Stores WhatsApp sessions in PostgreSQL so restarts don't log your number out
 
-**Security notes:** In Evolution API 2.3.7 the Chatwoot webhook route (`/chatwoot/webhook/<instance>`) has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production numbers belong on `WHATSAPP-BAILEYS` instances. `ADMIN_ACCESS_TOKEN` is applied on every Chatwoot start; rotate it there, then run `/chatwoot/set` again for each instance.
+**Security notes:** In Evolution API 2.3.7 the Chatwoot webhook route (`/chatwoot/webhook/your-instance`) has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production numbers belong on `WHATSAPP-BAILEYS` instances. `ADMIN_ACCESS_TOKEN` is applied on every Chatwoot start; rotate it there, then run `/chatwoot/set` again for each instance.
 
 **Notes:** Add Chatwoot's `SMTP_*` variables to send agent invitations and password resets. Don't change `SECRET_KEY_BASE` or the `ACTIVE_RECORD_ENCRYPTION_*` keys after the first deploy. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and Chatwoot are not affiliated with WhatsApp or Meta.
 

@@ -37,8 +37,8 @@ After deploy:
 Call the API with the generated `LIGHTRAG_API_KEY`:
 
 ```bash
-curl -X POST "https://<your-domain>/query" \
-  -H "X-API-Key: <LIGHTRAG_API_KEY>" -H "Content-Type: application/json" \
+curl -X POST "https://your-domain/query" \
+  -H "X-API-Key: your-lightrag-api-key" -H "Content-Type: application/json" \
   -d '{"query": "What are the main topics?", "mode": "mix"}'
 ```
 

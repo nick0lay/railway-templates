@@ -38,10 +38,10 @@ After deploy:
 Your apps use the realm's OpenID Connect discovery URL:
 
 ```
-https://<your-domain>/realms/<realm>/.well-known/openid-configuration
+https://your-domain/realms/your-realm/.well-known/openid-configuration
 ```
 
-When you add a custom domain, set `KC_HOSTNAME` to `https://<custom-domain>` and redeploy. Settings that matter:
+When you add a custom domain, set `KC_HOSTNAME` to `https://your-custom-domain` and redeploy. Settings that matter:
 
 | Variable | Default | Purpose |
 |---|---|---|

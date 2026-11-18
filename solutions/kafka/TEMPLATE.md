@@ -38,10 +38,10 @@ This template runs one Kafka 4.4 node in KRaft mode (broker and controller in on
 3. From outside Railway, use `KAFKA_PUBLIC_BOOTSTRAP_SERVERS` (Kafka service → Variables) with SASL:
 
 ```properties
-bootstrap.servers=<KAFKA_PUBLIC_BOOTSTRAP_SERVERS>
+bootstrap.servers=your-kafka-public-bootstrap-servers
 security.protocol=SASL_PLAINTEXT
 sasl.mechanism=SCRAM-SHA-512
-sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="<KAFKA_SASL_PASSWORD>";
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="your-kafka-sasl-password";
 ```
 
 **This template:**

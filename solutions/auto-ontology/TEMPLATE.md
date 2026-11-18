@@ -46,7 +46,7 @@ This template runs NVIDIA's official 1.2.0 images and loads a sample database so
 1. Open the Auto Ontology URL and log in with `AUTO_ONTOLOGY_ADMIN_EMAIL` and the generated `AUTO_ONTOLOGY_ADMIN_PASSWORD` (Auto Ontology service → Variables).
 2. Ask a question about the bundled Chinook music-store database.
 3. Point `CONNECTION_STRINGS` (API service) at your own databases, or clear it and add connections in Settings.
-4. Add `https://<your MCP domain>/mcp` to your AI client and sign in when it asks.
+4. Add `https://your-mcp-domain/mcp` to your AI client and sign in when it asks.
 
 **This template:**
 

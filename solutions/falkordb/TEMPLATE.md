@@ -44,17 +44,17 @@ FALKORDB_PORT=6379
 FALKORDB_PASSWORD=${{FalkorDB.DB_PASSWORD}}
 ```
 
-3. From outside Railway, use `PUBLIC_URL` (`rediss://default:<password>@<proxy-domain>:<port>`). It is TLS only, with a self-signed certificate, so turn off certificate verification or compare the fingerprint printed in the deploy log:
+3. From outside Railway, use `PUBLIC_URL` (`rediss://default:your-password@your-proxy-domain:your-port`). It is TLS only, with a self-signed certificate, so turn off certificate verification or compare the fingerprint printed in the deploy log:
 
 ```python
 from falkordb import FalkorDB
-db = FalkorDB(host="<proxy-domain>", port=<port>, password="<DB_PASSWORD>",
+db = FalkorDB(host="your-proxy-domain", port=your-port, password="your-db-password",
               ssl=True, ssl_cert_reqs="none")
 g = db.select_graph("social")
 g.query("CREATE (:Person {name:'Ada'})-[:KNOWS]->(:Person {name:'Charles'})")
 ```
 
-With redis-cli: `redis-cli --tls --insecure -u "<PUBLIC_URL>" GRAPH.LIST`.
+With redis-cli: `redis-cli --tls --insecure -u "your-public-url" GRAPH.LIST`.
 
 **This template:**
 

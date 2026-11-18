@@ -37,12 +37,12 @@ This template deploys all three on Railway's private network, each app with its 
 
 1. Log in to Chatwoot with `ADMIN_EMAIL` / `ADMIN_PASSWORD`, and to n8n with `N8N_INSTANCE_OWNER_EMAIL` / `N8N_OWNER_PASSWORD`.
 2. In n8n, build a workflow: Webhook (POST, Basic Auth, respond with the Respond to Webhook node), your logic, then Respond to Webhook with `{"output": "reply"}`. Publish it.
-3. Open `https://<evolution-domain>/manager` with `AUTHENTICATION_API_KEY` and create a **Baileys** instance with a hard-to-guess name.
+3. Open `https://your-evolution-domain/manager` with `AUTHENTICATION_API_KEY` and create a **Baileys** instance with a hard-to-guess name.
 4. **Integrations → Chatwoot:** paste `CHATWOOT_URL`, account `1` and `CHATWOOT_TOKEN` from the Evolution API variables, and turn on Auto create. Evolution API creates the inbox.
 5. **Integrations → n8n:** webhook URL = `PRIVATE_WEBHOOK_URL` of n8n plus your path, your basic auth, trigger all, **Stop bot from me** on.
-6. Scan the QR code, or request a pairing code with `GET /instance/connect/<instance>?number=<phone>`.
+6. Scan the QR code, or request a pairing code with `GET /instance/connect/your-instance?number=your-phone`.
 
-Give a chat back to the bot with `POST /n8n/changeStatus/<instance>` and `{"remoteJid": "...", "status": "opened"}`.
+Give a chat back to the bot with `POST /n8n/changeStatus/your-instance` and `{"remoteJid": "...", "status": "opened"}`.
 
 **This template:**
 
@@ -53,7 +53,7 @@ Give a chat back to the bot with `POST /n8n/changeStatus/<instance>` and `{"remo
 - Runs n8n in queue mode with a worker and an external task runner
 - Protects every public service: Evolution API key, Chatwoot and n8n logins; workers and databases stay private
 
-**Notes:** In Evolution API 2.3.7, Chatwoot's callback `/chatwoot/webhook/<instance>` has no API-key check, so keep instance names secret. The built-in EVOLUTION test channel's `/webhook/evolution` has no API-key check either, so production bots belong on WHATSAPP-BAILEYS instances. Send the n8n basic-auth password as `basicAuthPass`. Never change `SECRET_KEY_BASE`, `ACTIVE_RECORD_ENCRYPTION_*` or `N8N_ENCRYPTION_KEY` after the first deploy. Tested on 2026-11-10 with simulated messages: the bot answered, and its replies showed up in the Chatwoot conversation. An agent reply paused the bot in a simulated test where the contact and reply numbers matched; this is not yet confirmed with a paired phone. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API, Chatwoot and n8n are not affiliated with WhatsApp or Meta.
+**Notes:** In Evolution API 2.3.7, Chatwoot's callback `/chatwoot/webhook/your-instance` has no API-key check, so keep instance names secret. The built-in EVOLUTION test channel's `/webhook/evolution` has no API-key check either, so production bots belong on WHATSAPP-BAILEYS instances. Send the n8n basic-auth password as `basicAuthPass`. Never change `SECRET_KEY_BASE`, `ACTIVE_RECORD_ENCRYPTION_*` or `N8N_ENCRYPTION_KEY` after the first deploy. Tested on 2026-11-10 with simulated messages: the bot answered, and its replies showed up in the Chatwoot conversation. An agent reply paused the bot in a simulated test where the contact and reply numbers matched; this is not yet confirmed with a paired phone. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API, Chatwoot and n8n are not affiliated with WhatsApp or Meta.
 
 ## Why Deploy Evolution API + Chatwoot + n8n on Railway?
 

@@ -30,7 +30,7 @@ This template runs the official `neuml/txtai-cpu` image, pinned to 9.14.0, as a 
 After deploy, copy `API_TOKEN` from the txtai service's Variables tab and send it as a bearer token:
 
 ```bash
-URL=https://<your-domain>; AUTH="Authorization: Bearer <API_TOKEN>"
+URL=https://your-domain; AUTH="Authorization: Bearer your-api-token"
 
 # Add documents, then build and save the index
 curl -X POST "$URL/add" -H "$AUTH" -H "Content-Type: application/json" \
@@ -45,10 +45,10 @@ curl "$URL/search?query=who+programmed+the+engine&graph=true" -H "$AUTH"
 curl "$URL/rag?query=Who+wrote+the+first+program" -H "$AUTH"
 ```
 
-**MCP.** The MCP endpoint is `https://<your-domain>/mcp` (SSE transport) with the header `Authorization: Bearer <API_TOKEN>`. It exposes search, add, upsert, delete, count and RAG as tools. In Claude Code:
+**MCP.** The MCP endpoint is `https://your-domain/mcp` (SSE transport) with the header `Authorization: Bearer your-api-token`. It exposes search, add, upsert, delete, count and RAG as tools. In Claude Code:
 
 ```bash
-claude mcp add --transport sse txtai https://<your-domain>/mcp --header "Authorization: Bearer <API_TOKEN>"
+claude mcp add --transport sse txtai https://your-domain/mcp --header "Authorization: Bearer your-api-token"
 ```
 
 | Variable | Default | Purpose |

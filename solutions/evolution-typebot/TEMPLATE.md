@@ -38,7 +38,7 @@ This template deploys the whole stack on Railway's private network: Evolution AP
 
 1. Open the `typebot-builder` URL, enter your `ADMIN_EMAIL`, and get the sign-in code from the `mailpit` URL (user `admin`, password `MAILPIT_PASSWORD`).
 2. Build a flow in Typebot, click Publish, and copy its public ID from the Share tab.
-3. Open `https://<evolution-domain>/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance and scan its QR code in WhatsApp (Settings → Linked devices).
+3. Open `https://your-evolution-domain/manager`, log in with the `AUTHENTICATION_API_KEY` of the Evolution API service, create an instance and scan its QR code in WhatsApp (Settings → Linked devices).
 4. In the instance's Typebot integration, add a bot: URL = the `TYPEBOT_URL` variable of Evolution API, Typebot = the public ID, trigger = all messages or a keyword.
 5. Message your number from another phone.
 

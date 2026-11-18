@@ -34,7 +34,7 @@ This template creates your owner account at deploy and limits sign-up to people 
 **After deploy:**
 
 1. Open the Plausible URL and log in with `ADMIN_EMAIL` and the generated `ADMIN_PASSWORD` (Plausible service → Variables).
-2. Click Add a website, enter your domain and paste the script tag into your site's `<head>`.
+2. Click Add a website, enter your domain and paste the script tag into the `head` section of your site.
 3. To invite teammates or get weekly reports by email, add SMTP variables (see the README).
 
 **This template:**
