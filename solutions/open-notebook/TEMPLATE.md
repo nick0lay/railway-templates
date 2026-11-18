@@ -48,7 +48,7 @@ This template runs Open Notebook with SurrealDB and a private Kokoro text-to-spe
 - Keeps SurrealDB and Kokoro private, with no public URL
 - Stores SurrealDB data and uploaded files on volumes
 - Serves the web app and the API from one URL
-- Pins Open Notebook 1.15.1, SurrealDB 2.7.0 and Kokoro-FastAPI 0.9.2
+- Pins Open Notebook 1.15.1, SurrealDB 2.7.0 and Kokoro-FastAPI 0.10.0
 - Checks health on `/api/auth/status`, `/health` (SurrealDB) and `/health` (Kokoro)
 
 **Notes:** Kokoro runs on CPU, so a podcast takes a few minutes to voice. Don't change `OPEN_NOTEBOOK_ENCRYPTION_KEY` after you save provider keys, or they can't be decrypted. Open Notebook has one shared password, not user accounts.

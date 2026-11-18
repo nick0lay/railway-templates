@@ -29,8 +29,8 @@ Self-hosted [SigNoz](https://github.com/SigNoz/signoz) on Railway: open-source o
 
 | Service | Source | Role |
 |---------|--------|------|
-| SigNoz | `signoz/signoz:v0.149.0` | UI, query API, alerts and dashboards; SQLite metadata on a volume (public, login required) |
-| Collector | `signoz/signoz-otel-collector:v0.144.15` | Receives OTLP traces, metrics and logs and writes them to ClickHouse; runs the schema migrations (public on OTLP/HTTP, token required) |
+| SigNoz | `signoz/signoz:v0.151.0` | UI, query API, alerts and dashboards; SQLite metadata on a volume (public, login required) |
+| Collector | `signoz/signoz-otel-collector:v0.144.16` | Receives OTLP traces, metrics and logs and writes them to ClickHouse; runs the schema migrations (public on OTLP/HTTP, token required) |
 | ClickHouse | `clickhouse/clickhouse-server:25.12.11` | Telemetry storage with an embedded ClickHouse Keeper (private) |
 
 ## What this template does differently
@@ -112,3 +112,5 @@ SigNoz is MIT-licensed except for the `ee` directory, which is under SigNoz's en
 ## Testing
 
 Tested on 2026-11-07 with SigNoz v0.149.0, collector v0.144.15 and ClickHouse 25.12.11 in a throwaway Railway project. All three services were healthy about a minute and a half after deploy; the collector ran the migrations in about 45 seconds. API requests without a login, a wrong password and a stranger's sign-up were refused, and the admin logged in. OTLP traces, logs and metrics sent without a token or with a wrong token got 401; with the token they were stored and read back through SigNoz's query API, and the service appeared in the services list. After redeploying all three services three times, earlier traces, logs, metrics and a dashboard were still there, and the admin still logged in. Idle memory: ClickHouse about 0.47 GB, Collector 0.04 to 0.13 GB, SigNoz about 0.06 GB. Not tested: the browser UI (only its API), alerts with notification channels, and email.
+
+2026-11-18, after the update to SigNoz v0.151.0 and collector v0.144.16 (ClickHouse unchanged): a fresh deploy was healthy and the collector ran the migrations; OTLP without a token or with a wrong token got 401; a trace and a JSON log sent with the token were stored and read back through the query API; the API refused requests without a login and self-registration stayed disabled. Since v0.150 SigNoz also writes log bodies to a native JSON column during a transition, which needs some extra collector CPU and memory, ClickHouse CPU and log disk space.

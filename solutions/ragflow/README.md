@@ -9,8 +9,8 @@ Deploy RAGFlow 1.0.0, the open-source RAG engine with deep document understandin
 - **RAGFlow** from the official `infiniflow/ragflow:v1.0.0` image (the Go rewrite: 0.36 GB image, no bundled models, embeddings and chat through your LLM provider)
 - **Elasticsearch 8.11.3** for chunks, vectors, full-text search and knowledge-graph data, 1 GB heap, with a volume
 - **MySQL 8.0.40** for users, datasets, documents and pipelines, with a volume
-- **Kvrocks 2.16.0**, RAGFlow's Redis-protocol cache (the only cache v1.0 supports), with a volume
-- **NATS 2.14.2** with JetStream, the ingestion queue between the API and the ingestion worker, with a volume
+- **Kvrocks 2.17.0**, RAGFlow's Redis-protocol cache (the only cache v1.0 supports), with a volume
+- **NATS 2.15.3** with JetStream, the ingestion queue between the API and the ingestion worker, with a volume
 - **Railway Bucket** (S3) for uploaded files, instead of MinIO
 - **Login on the only public service**: public sign-up is off, the first user is created with a generated password, and the superuser can only use `/admin`
 
@@ -32,7 +32,7 @@ Deploy RAGFlow 1.0.0, the open-source RAG engine with deep document understandin
     ▼               ▼              ▼              ▼            ▼
 ┌──────────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌──────────┐
 │Elasticsearch │ │  MySQL    │ │ Kvrocks   │ │ NATS      │ │ Railway  │
-│ 8.11.3       │ │  8.0.40   │ │ 2.16.0    │ │ JetStream │ │ Bucket   │
+│ 8.11.3       │ │  8.0.40   │ │ 2.17.0    │ │ JetStream │ │ Bucket   │
 │ (volume)     │ │ (volume)  │ │ (volume)  │ │ (volume)  │ │ (files)  │
 └──────────────┘ └───────────┘ └───────────┘ └───────────┘ └──────────┘
         all private (*.railway.internal), generated passwords
@@ -45,8 +45,8 @@ Deploy RAGFlow 1.0.0, the open-source RAG engine with deep document understandin
 | RAGFlow | `infiniflow/ragflow:v1.0.0` | Web UI, REST/OpenAI-compatible/MCP API, ingestion worker, admin server (public, login) |
 | Elasticsearch | `elasticsearch:8.11.3` | Document engine: chunks, vectors, graphs (private, volume) |
 | MySQL | `mysql:8.0.40` | Metadata database (private, volume) |
-| Kvrocks | `apache/kvrocks:2.16.0` | Cache, locks and agent run state, Redis protocol with a password (private, volume) |
-| NATS | `nats:2.14.2` | JetStream ingestion queue (private, volume) |
+| Kvrocks | `apache/kvrocks:2.17.0` | Cache, locks and agent run state, Redis protocol with a password (private, volume) |
+| NATS | `nats:2.15.3` | JetStream ingestion queue (private, volume) |
 | Bucket | Railway Bucket | S3 storage for uploaded files |
 
 ## Getting Started

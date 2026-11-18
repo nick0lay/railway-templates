@@ -44,7 +44,7 @@ This template creates your admin account at deploy so sign-up is closed, turns o
 - Keeps ClickHouse and MongoDB private and password-protected
 - Sets up the ClickHouse connection and the Logs, Traces, Metrics and Sessions sources on the first start
 - Keeps ClickHouse system logs to 3 days and turns off the noisy ones
-- Pins HyperDX 2.43.1, ClickHouse 26.8.36.3 and MongoDB 7.0.45, with healthchecks
+- Pins HyperDX 2.45.0, ClickHouse 26.8.36.3 and MongoDB 7.0.45, with healthchecks
 
 **Notes:** the stack idles at about 1.5 GB of RAM; ClickHouse memory and the volume grow with the data you send. Telemetry is kept for 30 days by default.
 

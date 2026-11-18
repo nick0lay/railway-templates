@@ -31,7 +31,7 @@ Self-hosted [Plane](https://github.com/makeplane/plane) on Railway: open-source 
 
 | Service | Source | Role |
 |---------|--------|------|
-| Plane | `makeplane/plane-aio-community:v1.4.3` | Web app, admin panel, spaces, API, worker, scheduler, real-time server and proxy in one container (public). Migrates the database on start |
+| Plane | `makeplane/plane-aio-community:v1.5.0` | Web app, admin panel, spaces, API, worker, scheduler, real-time server and proxy in one container (public). Migrates the database on start |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Workspaces, projects, work items, users (private) |
 | Redis | `redis:8.10` | Cache, append-only file on a volume (private) |
 | RabbitMQ | `rabbitmq:3.13.7-alpine` | Queue for background jobs: activity history, notifications, emails, webhooks (private) |
@@ -43,7 +43,7 @@ Self-hosted [Plane](https://github.com/makeplane/plane) on Railway: open-source 
 - **Public sign-up off.** Only people invited to a workspace can create an account. You can turn sign-up on in the admin panel.
 - **One app service.** Plane's official all-in-one image runs every Plane process behind its own proxy, so you get one public URL with no path routing to set up and one image tag to upgrade.
 - **Attachments in a Railway Bucket**, with no MinIO to run. Browsers upload straight to the Bucket with signed URLs.
-- **Pinned versions.** Plane 1.4.3, Postgres 18, Redis 8.10 and RabbitMQ 3.13.7 (the RabbitMQ line Plane's own compose file uses) instead of `stable` or `latest`.
+- **Pinned versions.** Plane 1.5.0, Postgres 18, Redis 8.10 and RabbitMQ 3.13.7 (the RabbitMQ line Plane's own compose file uses) instead of `stable` or `latest`.
 - **Secrets generated.** `SECRET_KEY` and `LIVE_SERVER_SECRET_KEY` are generated once, so sessions survive redeploys.
 - **Logs in Railway.** Plane's processes write to log files inside the container; the start command streams the error logs and the worker log to the Railway log view.
 - **Private networking** for Postgres, Redis and RabbitMQ; healthcheck on `/api/instances/`.
@@ -108,3 +108,5 @@ Change the image tag of the `Plane` service (for example `makeplane/plane-aio-co
 ## Testing
 
 Tested on 2026-11-05 with Plane 1.4.3 in a throwaway Railway project, from the config: all four services healthy, and the instance admin was created at first start (`admin-setup: HTTP 302 instance admin created`). The web app and the admin panel loaded. The API refused requests without a login, a stranger's attempt to claim the instance admin was refused (`ADMIN_ALREADY_EXIST`), a stranger's sign-up was refused (`SIGNUP_DISABLED`) and a wrong password was refused. The admin logged in to the app and to the admin panel, created a workspace, a project and a work item, and attached a file: the file was uploaded to the Bucket with a signed URL and read back, and the Bucket answered a browser CORS preflight. An invited teammate signed up and logged in. The worker wrote the work item's activity history. After redeploying all services, the logins, the work item and the attachment were still there, the setup step skipped itself, and the worker processed new jobs. On 2026-11-06 the template draft was deployed and tested in a browser: the admin logged in, went through onboarding, and attached a PNG and a PDF to a work item; both were stored in the Bucket and downloaded back.
+
+Updated to Plane 1.5.0 on 2026-11-18 and test-deployed from the published template: all four services healthy, and the instance admin was created at first start.

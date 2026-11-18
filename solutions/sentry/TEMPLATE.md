@@ -43,7 +43,7 @@ This template groups the stack into 9 Railway services. The Sentry web app, its 
 - Keeps Postgres, Redis, Kafka, ClickHouse, Snuba and the web app private; only the gateway is public
 - Runs database and ClickHouse migrations and creates Kafka topics on every start, so upgrades apply them
 - Deletes events older than `SENTRY_EVENT_RETENTION_DAYS` (default 90) every day
-- Pins Sentry, Snuba, Relay and Taskbroker 26.10.1
+- Pins Sentry, Snuba, Relay and Taskbroker 26.11.0
 
 **Notes:** errors-only mode leaves out performance tracing, session replay, profiling, uptime and cron monitoring. Sentry is a heavy stack: it settles at about 8 GB of RAM across 9 services, so expect roughly $80 to $100 a month on Railway before you send much data.
 

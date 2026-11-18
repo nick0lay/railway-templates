@@ -14,7 +14,7 @@ MCP client (Claude, Cursor, agents)
    ▼
 ┌──────────────────────────┐   private network     ┌──────────────────────────┐   Bolt TLS (bolt+ssc)   ┌───────────────────────────┐
 │ Token Proxy (public)     │ ────────────────────▶ │ Neo4j MCP (private)      │ ──────────────────────▶ │ Neo4j (Browser public,    │
-│ caddy:2.11.9-alpine :8080│ http :8000            │ neo4j/mcp:v2.1.0         │        :7687            │ password; Bolt TCP proxy) │
+│ caddy:2.11.9-alpine :8080│ http :8000            │ neo4j/mcp:v2.1.1         │        :7687            │ password; Bolt TCP proxy) │
 │ 401 without the token    │ /db/neo4j/mcp         │ streamable HTTP          │                         │ neo4j:2026.10.1-community │
 │ sets Neo4j Basic auth +  │ + Basic auth          │                          │                         │ APOC, volume /data        │
 │ X-Neo4j-MCP-URI          │ + X-Neo4j-MCP-URI     │                          │                         │                           │
@@ -26,7 +26,7 @@ MCP client (Claude, Cursor, agents)
 | Service | Source | Role |
 |---------|--------|------|
 | Token Proxy | `caddy:2.11.9-alpine` | Public HTTPS. Checks the bearer token, rewrites `/mcp` to `/db/neo4j/mcp`, sets the Neo4j credentials and Bolt address, streams responses |
-| Neo4j MCP | `neo4j/mcp:v2.1.0` | Official Neo4j MCP server, HTTP transport, private, no domain |
+| Neo4j MCP | `neo4j/mcp:v2.1.1` | Official Neo4j MCP server, HTTP transport, private, no domain |
 | Neo4j | `neo4j:2026.10.1-community` | Graph database with APOC (the MCP server's `get-schema` needs it), volume. Browser over HTTPS and a Bolt TCP proxy (TLS, self-signed certificate), both behind a generated password |
 
 No LLM key is needed: your MCP client's own model writes the Cypher.
@@ -164,3 +164,5 @@ Measured on Railway at idle: Neo4j about 1.24 GB, Neo4j MCP 0.007 GB, proxy 0.01
 - Memory at idle: Neo4j 1.23–1.24 GB, Neo4j MCP 0.007 GB, Token Proxy 0.016 GB.
 - Locally (Docker): with `NEO4J_MCP_READ_ONLY=true` the server lists only `get-schema` and `read-cypher`, and a client sending `X-Neo4j-MCP-ReadOnly: false` still gets `unknown tool "write-cypher"` (request headers can only narrow the tools, not widen them).
 - Not tested: the Claude Desktop `mcp-remote` bridge.
+
+2026-11-18, update to `neo4j/mcp:v2.1.1`: the same proxy, MCP session, Cypher and Query API checks pass (server `neo4j-mcp v2.1.1`).

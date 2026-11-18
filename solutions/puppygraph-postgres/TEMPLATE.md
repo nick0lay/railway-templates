@@ -1,8 +1,8 @@
-# Deploy and Host PuppyGraph 1.18 + Postgres on Railway
+# Deploy and Host PuppyGraph 1.19 + Postgres on Railway
 
 PuppyGraph is a graph query engine that runs openCypher and Gremlin queries directly on your existing SQL tables, with no ETL and no separate graph database. This template runs the free PuppyGraph Developer edition next to a Postgres 18 database that already holds a demo graph, so your first graph query works right after deploy.
 
-## About Hosting PuppyGraph 1.18 + Postgres
+## About Hosting PuppyGraph 1.19 + Postgres
 
 PuppyGraph needs a data source, a graph schema that maps tables to nodes and edges, a login, and a place to keep schemas and users. Out of the box the image uses a public default password, and its Gremlin and Bolt endpoints accept queries without any login. Its query engine also refuses to start when its storage has less than 5 GB free, more than a 5 GB Railway volume ever has.
 
@@ -15,9 +15,9 @@ This template sets all of that up. Postgres starts with the demo tables (people,
 - Graph exploration and visualization in the PuppyGraph web UI
 - Evaluating graph queries or GraphRAG retrieval over SQL data before choosing a graph stack
 
-## Dependencies for PuppyGraph 1.18 + Postgres Hosting
+## Dependencies for PuppyGraph 1.19 + Postgres Hosting
 
-- PuppyGraph 1.18.1 Developer edition (`puppygraph/puppygraph` image)
+- PuppyGraph 1.19.1 Developer edition (`puppygraph/puppygraph` image)
 - PostgreSQL 18 with pgvector 0.8.7 (`pgvector/pgvector:0.8.7-pg18` image)
 
 ### Deployment Dependencies
@@ -63,7 +63,7 @@ PUPPYGRAPH_GREMLIN=${{PuppyGraph.GREMLIN_URL}}
 
 **This template:**
 
-- Pins PuppyGraph 1.18.1 and pgvector Postgres 18
+- Pins PuppyGraph 1.19.1 and pgvector Postgres 18
 - Generates the login password, the token signing key and the internal cluster key (the image defaults are public)
 - Requires the login on Gremlin and Bolt too, which the image leaves open by default
 - Keeps Postgres, Gremlin and Bolt private. Only the web UI and REST API are public, and they need the login
@@ -72,8 +72,8 @@ PUPPYGRAPH_GREMLIN=${{PuppyGraph.GREMLIN_URL}}
 
 **Resources:** PuppyGraph's vendor minimum is 8 GB RAM for dev and test. Measured on Railway: PuppyGraph idles at 2.9 to 3.4 GB and Postgres at about 0.1 GB, which fits in an 8 GB service.
 
-## Why Deploy PuppyGraph 1.18 + Postgres on Railway?
+## Why Deploy PuppyGraph 1.19 + Postgres on Railway?
 
 Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
 
-By deploying PuppyGraph 1.18 + Postgres on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.
+By deploying PuppyGraph 1.19 + Postgres on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.

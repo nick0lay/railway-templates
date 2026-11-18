@@ -1,6 +1,6 @@
 # Sentry (self-hosted, errors-only)
 
-Self-hosted [Sentry](https://github.com/getsentry/self-hosted) 26.10 on Railway: open-source error tracking with stack traces, issue grouping, releases and alerts, for every Sentry SDK. The official self-hosted release in its errors-only mode, grouped into 9 Railway services. The admin account is created on first start and public sign-up is off. Relay creates and registers its own credentials, so nothing has to be copied by hand. Only the gateway is public. Versions are pinned and tested.
+Self-hosted [Sentry](https://github.com/getsentry/self-hosted) 26.11 on Railway: open-source error tracking with stack traces, issue grouping, releases and alerts, for every Sentry SDK. The official self-hosted release in its errors-only mode, grouped into 9 Railway services. The admin account is created on first start and public sign-up is off. Relay creates and registers its own credentials, so nothing has to be copied by hand. Only the gateway is public. Versions are pinned and tested.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/sentry-2610-self-hosted-errors?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
@@ -37,10 +37,10 @@ Self-hosted [Sentry](https://github.com/getsentry/self-hosted) 26.10 on Railway:
 | Service | Source | Role |
 |---------|--------|------|
 | Gateway | `nginx:1.31.8-alpine` | Public entry point: SDK event uploads go to Relay, everything else to Sentry (public) |
-| Sentry | `ghcr.io/getsentry/sentry:26.10.1` | Web UI and API, event ingest consumers, post-processing, task worker and scheduler, daily cleanup; files on a volume (private) |
-| Relay | `relay/Dockerfile` (`ghcr.io/getsentry/relay:26.10.1` plus busybox) | Receives events from SDKs, checks DSNs and rate limits, writes to Kafka (private, reached through the gateway) |
-| Snuba | `ghcr.io/getsentry/snuba:26.10.1` | Sentry's query API and the consumers that write errors and outcomes into ClickHouse (private) |
-| Taskbroker | `ghcr.io/getsentry/taskbroker:26.10.1` | Task queue between Kafka and Sentry's task workers; SQLite on a volume (private) |
+| Sentry | `ghcr.io/getsentry/sentry:26.11.0` | Web UI and API, event ingest consumers, post-processing, task worker and scheduler, daily cleanup; files on a volume (private) |
+| Relay | `relay/Dockerfile` (`ghcr.io/getsentry/relay:26.11.0` plus busybox) | Receives events from SDKs, checks DSNs and rate limits, writes to Kafka (private, reached through the gateway) |
+| Snuba | `ghcr.io/getsentry/snuba:26.11.0` | Sentry's query API and the consumers that write errors and outcomes into ClickHouse (private) |
+| Taskbroker | `ghcr.io/getsentry/taskbroker:26.11.0` | Task queue between Kafka and Sentry's task workers; SQLite on a volume (private) |
 | ClickHouse | `clickhouse/clickhouse-server:26.8` | Event search and stats storage, on a volume (private, password) |
 | Kafka | `apache/kafka:4.4.0` | Event pipeline between Relay, Sentry and Snuba; one KRaft node on a volume (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Users, projects, issues and event payloads (private) |
@@ -128,5 +128,7 @@ Sentry, Snuba, Relay and Taskbroker are under the [Functional Source License](ht
 ## Testing
 
 Tested on 2026-11-13 with Sentry, Snuba, Relay and Taskbroker 26.10.1, ClickHouse 26.8 and Kafka 4.4.0 in a throwaway Railway project. All 9 services deployed cleanly and Sentry answered about 5 minutes after the deploy started. Checked through the public gateway: anonymous API calls, a wrong password and Relay registration were refused, sign-up was closed, and the generated admin logged in as superuser. A new project's DSN pointed at the gateway domain; an event sent to the store endpoint and one sent as an envelope (what current SDKs use) were both accepted by Relay, became issues found through Snuba search, and the event payload and the stats page loaded. An unknown DSN key was rejected. After redeploying all 9 services, the admin still logged in (and was not recreated), and earlier projects and issues were still there; new events kept flowing. Idle memory is listed under Size and cost. Not tested: the browser UI (only its API), email, alerts, source map processing, and upgrades.
+
+Updated Sentry, Snuba and Taskbroker to 26.11.0 on 2026-11-18 (Relay was still 26.10.1 in that test) and test-deployed from the published template: all 9 services stayed healthy for 40 minutes, the health endpoint and login page answered through the gateway, the API refused anonymous requests, and Relay rejected an envelope without a valid DSN.
 
 During that test Relay was built from a public repository with the same busybox wrapper as `relay/Dockerfile`; this repository's `relay/Dockerfile` was built and run locally.

@@ -26,7 +26,7 @@ Self-hosted [Metabase](https://www.metabase.com) with a [ClickHouse](https://cli
 
 | Service | Source | Role |
 |---------|--------|------|
-| Metabase | `metabase/metabase:v0.65.4.3` | BI web app (login required) |
+| Metabase | `metabase/metabase:v0.65.5.1` | BI web app (login required) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Metabase application database: users, settings, questions, dashboards (private) |
 | ClickHouse | [`solutions/clickhouse/clickhouse`](../clickhouse/clickhouse) (official image 26.8 LTS) | Your analytics data. Password-protected HTTPS domain for loading data |
 
@@ -37,7 +37,7 @@ Self-hosted [Metabase](https://www.metabase.com) with a [ClickHouse](https://cli
 - **Production application database.** Metabase stores everything in PostgreSQL on a volume instead of the built-in H2 file, which is lost on redeploy. Connection details Metabase stores are encrypted with a generated `MB_ENCRYPTION_SECRET_KEY`.
 - **Memory capped.** `JAVA_OPTS=-Xmx2g` limits the Java heap. Without it, Java sizes the heap from the host's RAM, which on Railway can be far more than Metabase needs. With the cap, Metabase idles at about 2.2 GB.
 - **ClickHouse tuned for a small service.** Our tested ClickHouse service: listens on IPv6 and IPv4, a generated password, high-volume internal log tables off and the rest kept for 7 days.
-- **Pinned versions.** Metabase 0.65.4.3, ClickHouse 26.8 LTS and PostgreSQL 17 instead of `latest`.
+- **Pinned versions.** Metabase 0.65.5.1, ClickHouse 26.8 LTS and PostgreSQL 17 instead of `latest`.
 
 ## After deploy
 
@@ -112,3 +112,5 @@ Metabase open-source edition is [AGPL-3.0](https://github.com/metabase/metabase/
 ## Testing
 
 Tested on 2026-11-13 with Metabase 0.65.4.3 in a throwaway Railway project deployed from the template. All three services were healthy within four minutes of the deploy. On the first start Metabase listened only on 127.0.0.1 while it created the admin and the ClickHouse connection, then restarted on `::`. Afterwards the setup page was closed (no setup token), anonymous API calls were refused, and a wrong password was refused. The admin logged in as a superuser, with the ClickHouse database already connected and the site URL set to the Railway domain. Rows loaded into ClickHouse over its public HTTPS domain (anonymous queries refused) were returned by a native SQL query in Metabase, and the new table appeared after a schema sync. After redeploying Metabase, the start script skipped the setup, and the admin, the single ClickHouse connection and the data were still there (18/18 checks before and after). At idle the services used about 2.2 GB (Metabase), 0.7 GB (ClickHouse) and 0.3 GB (Postgres) of RAM. Not tested: the Metabase UI in a real browser, email, and upgrades.
+
+2026-11-18, after the update to Metabase 0.65.5.1: a fresh deploy from the template was healthy; setup was closed, anonymous calls and the API without a session were refused, the admin logged in as a superuser and a native SQL query ran on the connected ClickHouse 26.8.

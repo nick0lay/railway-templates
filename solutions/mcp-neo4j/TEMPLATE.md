@@ -4,7 +4,7 @@ Neo4j MCP is the official Model Context Protocol server from Neo4j. It lets Clau
 
 ## About Hosting Neo4j MCP 2.1
 
-In HTTP mode the Neo4j MCP server expects every request to carry the Neo4j user and password and the database address. Here the MCP server (`neo4j/mcp:v2.1.0`) is private, and the only public service is a small Caddy proxy that requires `Authorization: Bearer your-token` on every request. The token is generated at deploy. The proxy then adds the Neo4j credentials and the private Bolt address itself, so your clients hold only the token, the database password stays on Railway's private network, and nobody can point the server at another database. The MCP server talks to Neo4j over Bolt encrypted with TLS. Neo4j keeps the graph on a volume, ships with APOC (needed for schema discovery) and has its memory capped (512 MB heap, 256 MB page cache). Neo4j Browser and a Bolt TCP proxy are protected by a generated password. All images are pinned. No LLM API key is needed: your MCP client's model writes the Cypher.
+In HTTP mode the Neo4j MCP server expects every request to carry the Neo4j user and password and the database address. Here the MCP server (`neo4j/mcp:v2.1.1`) is private, and the only public service is a small Caddy proxy that requires `Authorization: Bearer your-token` on every request. The token is generated at deploy. The proxy then adds the Neo4j credentials and the private Bolt address itself, so your clients hold only the token, the database password stays on Railway's private network, and nobody can point the server at another database. The MCP server talks to Neo4j over Bolt encrypted with TLS. Neo4j keeps the graph on a volume, ships with APOC (needed for schema discovery) and has its memory capped (512 MB heap, 256 MB page cache). Neo4j Browser and a Bolt TCP proxy are protected by a generated password. All images are pinned. No LLM API key is needed: your MCP client's model writes the Cypher.
 
 ## Common Use Cases
 
@@ -15,7 +15,7 @@ In HTTP mode the Neo4j MCP server expects every request to carry the Neo4j user 
 
 ## Dependencies for Neo4j MCP 2.1 Hosting
 
-- Neo4j MCP server 2.1.0 (`neo4j/mcp:v2.1.0`), private
+- Neo4j MCP server 2.1.1 (`neo4j/mcp:v2.1.1`), private
 - Token Proxy (`caddy:2.11.9-alpine`), public, bearer token required
 - Neo4j 2026.10.1 Community with APOC (`neo4j:2026.10.1-community`), Browser and Bolt TCP proxy behind its password, Bolt TLS, volume
 

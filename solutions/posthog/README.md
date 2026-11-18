@@ -54,10 +54,10 @@ Self-hosted [PostHog](https://github.com/PostHog/posthog) on Railway: open-sourc
 | Temporal | `temporalio/auto-setup:1.29.7` | Workflow engine, stores state in Postgres (private) |
 | ClickHouse | `ghcr.io/posthog/clickhouse-posthog:26.9.5.2` | Events, persons, recordings metadata (private, volume) |
 | Kafka | `redpandadata/redpanda:v25.1.9` | Event queue between capture, ingestion and ClickHouse (private, volume) |
-| ZooKeeper | `zookeeper:3.7.0` | ClickHouse coordination (private, volume) |
+| ZooKeeper | `zookeeper:3.9.7` | ClickHouse coordination (private, volume) |
 | Postgres | `postgres-ssl:15` | App data, persons, Temporal, plugin job queue (private, volume) |
 | Redis | `redis:7.2-alpine` | Cache and queues (private, volume) |
-| Storage | `chrislusf/seaweedfs:4.29` | S3 storage for recordings, exports and uploads (private, volume) |
+| Storage | `chrislusf/seaweedfs:4.53` | S3 storage for recordings, exports and uploads (private, volume) |
 
 ## What this template does differently
 

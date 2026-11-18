@@ -47,7 +47,7 @@ This template runs Plane's official all-in-one image with PostgreSQL, Redis, Rab
 - Runs the whole Plane app in one service from the official all-in-one image (web, admin, spaces, API, workers, real-time server and proxy)
 - Stores attachments in a Railway Bucket, uploaded straight from the browser with signed URLs
 - Generates `SECRET_KEY` and `LIVE_SERVER_SECRET_KEY`
-- Pins Plane 1.4.3, PostgreSQL 18, Redis 8.10 and RabbitMQ 3.13.7
+- Pins Plane 1.5.0, PostgreSQL 18, Redis 8.10 and RabbitMQ 3.13.7
 - Keeps Redis and RabbitMQ private, with an append-only file on a volume for Redis
 - Checks health on `/api/instances/`
 

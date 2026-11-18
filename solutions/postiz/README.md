@@ -33,7 +33,7 @@ Self-hosted [Postiz](https://github.com/gitroomhq/postiz-app) on Railway: an ope
 
 | Service | Source | Role |
 |---------|--------|------|
-| Postiz | `ghcr.io/gitroomhq/postiz-app:v2.25.3` | Web app, API and orchestrator worker in one container (public, login required) |
+| Postiz | `ghcr.io/gitroomhq/postiz-app:v2.26.0` | Web app, API and orchestrator worker in one container (public, login required) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Postiz database (private) |
 | Redis | `redis:8.10` | Cache and rate limits, append-only file on a volume (private) |
 | Temporal | `temporalio/auto-setup:1.29.7` | Workflow engine that runs scheduled posts; creates its schema on first start (private) |
@@ -95,7 +95,7 @@ Postiz runs three Node.js processes and uses about 1.5 GB of RAM at idle; Tempor
 
 ## Upgrading
 
-Change the Postiz image tag (for example `ghcr.io/gitroomhq/postiz-app:v2.26.0`) and redeploy. Postiz updates its database schema on start. Read the [release notes](https://github.com/gitroomhq/postiz-app/releases) first. Keep Temporal on `auto-setup:1.29.x`; it is the last line of that image.
+Change the Postiz image tag (for example `ghcr.io/gitroomhq/postiz-app:v2.27.0`) and redeploy. Postiz updates its database schema on start. Read the [release notes](https://github.com/gitroomhq/postiz-app/releases) first. Keep Temporal on `auto-setup:1.29.x`; it is the last line of that image.
 
 ## Troubleshooting
 
@@ -116,3 +116,5 @@ Postiz is [AGPL-3.0](https://github.com/gitroomhq/postiz-app/blob/main/LICENSE).
 ## Testing
 
 Tested on 2026-11-07 with Postiz v2.25.3 and Temporal 1.29.7 in throwaway Railway projects. All five services were healthy, and the admin was created 2 seconds after the API started. Only Postiz had a public domain. Requests without a login got 401, a stranger's registration was refused ("Registration is disabled"), a wrong password was refused, and the admin logged in through the API and in a browser, staying logged in after a reload. An image upload was stored and served from `/uploads`. A post scheduled 75 seconds ahead for a channel with a fake token was picked up by Temporal at its time and ended as an error with a notification, which shows the worker runs scheduled posts. After redeploying all five services, the login, the post, the media entry and the uploaded file were all still there. Without `NOT_SECURED`, the browser login stayed on the login page because the cookie was set for `railway.app`. With Temporal's sample search attributes left on, the API failed to start. Not tested: posting to real social networks, the AI assistant, team invites and custom domains.
+
+Updated to Postiz v2.26.0 on 2026-11-18 and test-deployed from the published template: all five services healthy.

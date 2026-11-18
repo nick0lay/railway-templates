@@ -37,7 +37,7 @@ The earlier [`trigger-dev`](../trigger-dev/) template (v4.0.0, patched image) st
 |---------|--------|------|
 | trigger.dev | image `ghcr.io/triggerdotdev/trigger.dev:v4.8.5` | Webapp, API, dashboard (public). Healthcheck `/healthcheck` |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:16` | Primary database (private) |
-| Redis | `redis:8.2` | Queues, cache, pub/sub (private) |
+| Redis | `redis:8.10` | Queues, cache, pub/sub (private) |
 | ClickHouse | `clickhouse/Dockerfile` (`clickhouse/clickhouse-server:26.10` plus one setting) | Analytics for runs and logs (private) |
 | Bucket | Railway Bucket | S3-compatible storage for large payloads |
 | registry | `registry/Dockerfile` (`registry:2` with basic auth, volume at `/var/lib/registry`) | Docker registry for deployed task images (public, password-protected) |

@@ -8,8 +8,8 @@ This template runs the official `infiniflow/ragflow:v1.0.0` image with the same 
 
 - Elasticsearch 8.11.3 for chunks, vectors and graphs
 - MySQL 8.0.40 for metadata
-- Kvrocks 2.16.0 as the cache
-- NATS 2.14.2 with JetStream for the ingestion queue
+- Kvrocks 2.17.0 as the cache
+- NATS 2.15.3 with JetStream for the ingestion queue
 - A Railway Bucket instead of MinIO, so uploaded files are kept in S3 storage
 
 Only RAGFlow has a public domain. Everything else is private, with a volume and generated passwords. Public sign-up is closed. Your first user is created for you, and its password is generated at deploy. You add your LLM key (OpenAI or any of 50+ providers) in the RAGFlow UI.
@@ -26,8 +26,8 @@ Only RAGFlow has a public domain. Everything else is private, with a volume and 
 - RAGFlow v1.0.0 (`infiniflow/ragflow:v1.0.0`): web UI, API, ingestion worker and admin server. Public, login required
 - Elasticsearch 8.11.3, private, volume, 1 GB heap
 - MySQL 8.0.40, private, volume
-- Kvrocks 2.16.0 (Redis protocol), private, volume
-- NATS 2.14.2 with JetStream, private, volume
+- Kvrocks 2.17.0 (Redis protocol), private, volume
+- NATS 2.15.3 with JetStream, private, volume
 - Railway Bucket (S3) for uploaded files
 - An API key for an LLM provider (OpenAI, Anthropic, Gemini, OpenRouter, Ollama, and many more)
 

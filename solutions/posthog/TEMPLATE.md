@@ -18,7 +18,7 @@ This template runs PostHog's official images as 23 services behind one public Ca
 
 ## Dependencies for PostHog Hosting
 
-- ClickHouse 26.9 (PostHog build), Kafka API (Redpanda 25.1), ZooKeeper 3.7
+- ClickHouse 26.9 (PostHog build), Kafka API (Redpanda 25.1), ZooKeeper 3.9
 - PostgreSQL 15, Redis 7.2, S3 storage (SeaweedFS)
 - Temporal 1.29
 

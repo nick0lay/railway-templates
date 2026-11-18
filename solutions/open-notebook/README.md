@@ -33,7 +33,7 @@ Self-hosted [Open Notebook](https://github.com/lfnovo/open-notebook) on Railway:
 |---------|--------|------|
 | Open Notebook | `lfnovo/open_notebook:1.15.1` | Web app, API and background worker in one container (public, password). Uploaded files on a volume |
 | SurrealDB | `surrealdb/surrealdb:v2.7.0` | Database for notebooks, sources, notes, embeddings and the job queue (private, volume) |
-| Kokoro | `ghcr.io/remsky/kokoro-fastapi-cpu:v0.9.2` | OpenAI-compatible text-to-speech with 70+ voices, model included in the image (private) |
+| Kokoro | `ghcr.io/remsky/kokoro-fastapi-cpu:v0.10.0` | OpenAI-compatible text-to-speech with 70+ voices, model included in the image (private) |
 
 ## What this template does differently
 
@@ -42,7 +42,7 @@ Self-hosted [Open Notebook](https://github.com/lfnovo/open-notebook) on Railway:
 - **Free podcast voices.** Kokoro runs as a private service. On first start, the template registers it in Open Notebook as a credential and a text-to-speech model, makes it the default text-to-speech model, and switches the built-in speaker profiles to Kokoro voices. Out of the box, those profiles use OpenAI voices and need an OpenAI key billed per minute.
 - **One URL.** The web app forwards `/api` to the API in the same container, so the browser, the REST API and the API docs all use the public URL. Port 5055 isn't exposed.
 - **Private database.** SurrealDB has no public URL and a generated user and password, instead of the `root`/`root` of the upstream compose file.
-- **Pinned versions.** Open Notebook 1.15.1, SurrealDB 2.7.0 and Kokoro-FastAPI 0.9.2 instead of `v1-latest`, `v2` and `latest`.
+- **Pinned versions.** Open Notebook 1.15.1, SurrealDB 2.7.0 and Kokoro-FastAPI 0.10.0 instead of `v1-latest`, `v2` and `latest`.
 - **Healthchecks** on `/api/auth/status` (passes when the web app and the API both answer), and on `/health` for SurrealDB and Kokoro.
 
 ## After deploy
@@ -103,3 +103,5 @@ Change the image tag of the `Open Notebook` service (for example `lfnovo/open_no
 ## Testing
 
 Tested on 2026-11-06 with Open Notebook 1.15.1 in a throwaway Railway project, from the config: all three services healthy, and on first start the setup step registered Kokoro as a credential and a text-to-speech model, made it the default, and switched the three built-in speaker profiles to Kokoro voices. The web app loaded. The API refused requests without a password and with a wrong password, and accepted the generated one. A notebook, a text source and an uploaded file were created, and the file was downloaded back. Open Notebook's model test generated speech through Kokoro over the private network (`Speech generation successful`; Kokoro logged `POST /v1/audio/speech 200`). SurrealDB and Kokoro have no public URL. After redeploying all services, the notebook, the sources, the uploaded file, the Kokoro model and the speaker profiles were still there, and the setup step skipped itself. A full podcast wasn't generated, because it needs an AI provider key for the script.
+
+Updated to Kokoro-FastAPI 0.10.0 on 2026-11-18 and test-deployed from the published template: all three services healthy.
