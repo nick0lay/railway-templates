@@ -2,6 +2,8 @@
 
 [n8n](https://github.com/n8n-io/n8n) 3.2 on Railway, set up the way n8n recommends for production: queue mode with a worker, Code nodes in separate task runner containers, PostgreSQL 18 and Redis. The owner account is created at deploy time, so nobody can claim a fresh instance, and every image is the official one with a pinned tag.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/n8n-32-queue-mode-task-runners?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
 > **Early access.** n8n publishes the 3.x line as an early access release: every 3.x release is marked as a pre-release on GitHub, and n8n's `stable` and `latest` Docker tags still point to 2.x. Use this template to try n8n 3 or to start new projects on it. For an instance you depend on, stay on 2.x until n8n moves `stable` to 3.x.
 
 This is a separate template. Our n8n 2.x templates stay on 2.47 and are not changed; deploying this one does not touch them.
