@@ -18,7 +18,7 @@ This template runs the whole stack on Railway: the Excalidraw app, the official 
 
 ## Dependencies for Excalidraw Hosting
 
-- PostgreSQL 17
+- PostgreSQL 18
 - Caddy 2.10 (gateway)
 
 ### Deployment Dependencies

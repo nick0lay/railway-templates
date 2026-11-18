@@ -19,7 +19,7 @@ This template runs Temporal 1.32 from official images on PostgreSQL, with no Ela
 
 ## Dependencies for Temporal Hosting
 
-- PostgreSQL 17 (history and visibility)
+- PostgreSQL 18 (history and visibility)
 - Temporal Admin Tools 1.32 (schema setup, temporal CLI)
 - Temporal UI 2.58
 - Caddy 2.11 (login gateway)

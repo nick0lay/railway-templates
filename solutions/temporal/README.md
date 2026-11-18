@@ -37,7 +37,7 @@ Only the Gateway has a public domain. Everything else is reachable only over Rai
 | Admin Tools | `temporalio/admin-tools:1.32.2` | Creates and upgrades the schema, creates the default namespace, then stays up as a shell with the `temporal` CLI (private) |
 | UI | `temporalio/ui:2.58.1` | Temporal Web UI (private) |
 | Gateway | `caddy:2.11.9-alpine` | Public entry point: login (HTTP basic auth) in front of the UI |
-| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | History (`temporal`) and visibility (`temporal_visibility`) databases (private, volume) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | History (`temporal`) and visibility (`temporal_visibility`) databases (private, volume) |
 
 ## What this template does differently
 

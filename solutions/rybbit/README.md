@@ -32,7 +32,7 @@ Self-hosted [Rybbit](https://rybbit.com) on Railway: open-source, privacy-friend
 | Backend | `ghcr.io/rybbit-io/rybbit-backend:v2.9.2` | Tracking script and event ingestion, API, login, database migrations |
 | Client | `ghcr.io/rybbit-io/rybbit-client:v2.9.2` | Web dashboard (login required) |
 | ClickHouse | `clickhouse/clickhouse-server:26.8.36.3` | Events (private) |
-| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Users, organizations, sites, settings (private) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, organizations, sites, settings (private) |
 | Redis | `redis:8.10.3-alpine` | Sessions, visitor identity, bot detection counters (private, `noeviction`) |
 
 ## What this template does differently

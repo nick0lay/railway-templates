@@ -17,7 +17,7 @@ This template groups the stack into 9 Railway services. The Sentry web app, its 
 
 ## Dependencies for Sentry (self-hosted) Hosting
 
-- Postgres 17, Redis 8, Apache Kafka 4.4 and ClickHouse 26.8 (all included, private)
+- Postgres 18, Redis 8, Apache Kafka 4.4 and ClickHouse 26.8 (all included, private)
 - An app with a Sentry SDK to send errors
 
 ### Deployment Dependencies

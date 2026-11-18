@@ -34,7 +34,7 @@ Only the gateway has a public domain. The app, the collaboration server, the sto
 | Frontend | `alswl/excalidraw:v0.18.1-fork-b2` | Excalidraw v0.18.1 app, built with a self-hosted storage backend and runtime settings (private) |
 | Room | `excalidraw/excalidraw-room:sha-03ff435` | Official Excalidraw collaboration server, Socket.IO (private) |
 | Storage | `alswl/excalidraw-storage-backend:v2023.11.11` | Stores share-link scenes, collaboration rooms and images (private) |
-| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Storage database (private, volume) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Storage database (private, volume) |
 
 The Frontend image comes from [alswl/excalidraw](https://github.com/alswl/excalidraw), a fork that follows upstream releases and adds two things the official image lacks: settings read at container start instead of build time, and an HTTP storage backend instead of Firebase for collaboration rooms and images.
 

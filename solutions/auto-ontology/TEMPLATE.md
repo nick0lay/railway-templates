@@ -25,7 +25,7 @@ This template runs NVIDIA's official 1.2.0 images and loads a sample database so
 
 ## Dependencies for NVIDIA Auto Ontology Hosting
 
-- PostgreSQL 17
+- PostgreSQL 18
 - A model API key: a free `nvapi-` key from build.nvidia.com by default, or another OpenAI-compatible endpoint
 
 ### Deployment Dependencies
@@ -56,7 +56,7 @@ This template runs NVIDIA's official 1.2.0 images and loads a sample database so
 - Loads the Chinook sample database on first start, with a read-only user, so there is data to query immediately
 - Runs both migrations on start instead of separate one-shot jobs
 - Binds the API and ingestion service to IPv6 and IPv4 for Railway's private network
-- Pins NVIDIA's 1.2.0 images by digest, with PostgreSQL 17
+- Pins NVIDIA's 1.2.0 images by digest, with PostgreSQL 18
 
 **Notes:**
 

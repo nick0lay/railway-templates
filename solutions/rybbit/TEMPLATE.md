@@ -19,7 +19,7 @@ This template runs Rybbit's official images behind one public Caddy proxy. It cr
 ## Dependencies for Rybbit Hosting
 
 - ClickHouse 26.8
-- PostgreSQL 17
+- PostgreSQL 18
 - Redis 8
 
 ### Deployment Dependencies
@@ -46,7 +46,7 @@ This template runs Rybbit's official images behind one public Caddy proxy. It cr
 - Keeps ClickHouse, PostgreSQL and Redis private, with no public domain or TCP proxy
 - Runs the Postgres migrations on every start, so upgrades need no manual step
 - Tunes ClickHouse for a small service: high-volume internal logs off, async inserts as Rybbit recommends
-- Pins Rybbit 2.9.2, ClickHouse 26.8, PostgreSQL 17, Redis 8.10 and Caddy 2.11
+- Pins Rybbit 2.9.2, ClickHouse 26.8, PostgreSQL 18, Redis 8.10 and Caddy 2.11
 
 **Notes:** the six services idle at about 1.7 GB of RAM together. The globe map needs a free Mapbox token (`MAPBOX_TOKEN` on the Backend); everything else works without it. For a custom domain, update `BASE_URL` (see the README).
 

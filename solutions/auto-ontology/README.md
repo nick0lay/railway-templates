@@ -42,7 +42,7 @@ This template runs NVIDIA's official 1.2.0 images: the web app, the API, the ing
 | API | `nvcr.io/nvidia/auto-ontology:1.2.0` | Text-to-SQL, catalog and semantic layer. Loads the sample database and runs migrations on start (private) |
 | Ingestion | `nvcr.io/nvidia/auto-ontology:1.2.0` | Reads your databases' schemas and builds embeddings, once at start and then every 24 hours (private) |
 | MCP | `nvcr.io/nvidia/auto-ontology-mcp:1.2.0` | MCP server for AI agents; users sign in with their Auto Ontology account |
-| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Auto Ontology's data and the Chinook sample database (private, volume) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Auto Ontology's data and the Chinook sample database (private, volume) |
 
 Railway templates can't reference `nvcr.io` images directly, so the `api`, `web` and `mcp` folders hold one-line Dockerfiles (`FROM` the official image, pinned by digest). Railway pulls the image at build time; nothing is compiled.
 
@@ -53,7 +53,7 @@ Railway templates can't reference `nvcr.io` images directly, so the `api`, `web`
 - **Works on Railway's private network.** The API and ingestion service bind to `0.0.0.0` in NVIDIA's images. Railway's private DNS returns IPv6 addresses, so the start scripts bind them to IPv6 and IPv4.
 - **Something to ask about on day one.** On first start, the API loads the [Chinook](https://github.com/lerocha/chinook-database) music-store database (11 tables, checksum-verified) into its own database with a read-only user, and `CONNECTION_STRINGS` points at it. Clear the variable to use your own databases.
 - **No one-shot jobs.** Upstream runs the two migrations as separate containers. Here the API runs `alembic upgrade head` and the web app syncs its schema before each starts, so upgrades need no manual step.
-- **Pinned.** NVIDIA's 1.2.0 images by digest, PostgreSQL 17.
+- **Pinned.** NVIDIA's 1.2.0 images by digest, PostgreSQL 18.
 
 ## After deploy
 

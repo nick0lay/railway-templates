@@ -27,7 +27,7 @@ Self-hosted [NocoDB](https://github.com/nocodb/nocodb) on Railway: an open-sourc
 | Service | Source | Role |
 |---------|--------|------|
 | NocoDB | `nocodb/nocodb:2026.10.1` | Spreadsheet UI and API (public, login required) |
-| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | NocoDB's metadata and your tables (private) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | NocoDB's metadata and your tables (private) |
 | Bucket | Railway Bucket | File attachments (private) |
 
 ## What this template does

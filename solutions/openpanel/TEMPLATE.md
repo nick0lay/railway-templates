@@ -19,7 +19,7 @@ This template runs OpenPanel's official images behind one public Caddy proxy. It
 ## Dependencies for OpenPanel Hosting
 
 - ClickHouse 25.10
-- PostgreSQL 17
+- PostgreSQL 18
 - Redis 8
 
 ### Deployment Dependencies
@@ -47,7 +47,7 @@ This template runs OpenPanel's official images behind one public Caddy proxy. It
 - Runs the Postgres and ClickHouse migrations on every start, so upgrades need no manual step
 - Tunes ClickHouse for a small service: high-volume internal logs off, fewer query threads
 - Routes `/api` to the API and everything else to the dashboard through one domain, keeping the visitor's real IP for geolocation
-- Pins OpenPanel 2.3.0, ClickHouse 25.10, PostgreSQL 17, Redis 8.10 and Caddy 2.10
+- Pins OpenPanel 2.3.0, ClickHouse 25.10, PostgreSQL 18, Redis 8.10 and Caddy 2.10
 
 **Notes:** the seven services idle at about 1.7 GB of RAM together. Email (invitations, password resets) needs a Resend API key; without it, everything else works. For a custom domain, update `DASHBOARD_URL`, `API_URL` and `CUSTOM_COOKIE_DOMAIN` (see the README).
 

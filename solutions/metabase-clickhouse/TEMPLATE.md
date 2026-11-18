@@ -18,7 +18,7 @@ This template runs Metabase's official image with PostgreSQL and ClickHouse. It 
 
 ## Dependencies for Metabase + ClickHouse Hosting
 
-- PostgreSQL 17 (Metabase application database)
+- PostgreSQL 18 (Metabase application database)
 - ClickHouse 26.8 LTS
 
 ### Deployment Dependencies
@@ -45,7 +45,7 @@ This template runs Metabase's official image with PostgreSQL and ClickHouse. It 
 - Caps Metabase's Java heap at 2 GB, so it doesn't size itself from the host's RAM
 - Runs ClickHouse with a volume, a generated password, IPv6 and IPv4 listeners and small internal log tables
 - Gives ClickHouse a password-protected HTTPS domain for loading data; PostgreSQL stays private
-- Pins Metabase 0.65.5.1, ClickHouse 26.8 LTS and PostgreSQL 17
+- Pins Metabase 0.65.5.1, ClickHouse 26.8 LTS and PostgreSQL 18
 
 **Notes:** the first start takes 2-4 minutes (Metabase starts twice while it sets itself up). The three services idle at about 3.2 GB of RAM together (Metabase's Java heap is capped at 2 GB with `JAVA_OPTS`).
 

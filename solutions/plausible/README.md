@@ -28,7 +28,7 @@ Self-hosted [Plausible Community Edition](https://github.com/plausible/community
 | Service | Source | Role |
 |---------|--------|------|
 | Plausible | `ghcr.io/plausible/community-edition:v3.2.1` | Dashboard, tracking script and event API (public, login required) |
-| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Users, sites, goals and settings (private) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, sites, goals and settings (private) |
 | ClickHouse | `clickhouse/clickhouse-server:24.12.6.70-alpine` | Pageviews and events (private) |
 
 ## What this template does differently

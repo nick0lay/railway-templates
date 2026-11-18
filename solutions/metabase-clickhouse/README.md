@@ -27,7 +27,7 @@ Self-hosted [Metabase](https://www.metabase.com) with a [ClickHouse](https://cli
 | Service | Source | Role |
 |---------|--------|------|
 | Metabase | `metabase/metabase:v0.65.5.1` | BI web app (login required) |
-| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:17` | Metabase application database: users, settings, questions, dashboards (private) |
+| Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Metabase application database: users, settings, questions, dashboards (private) |
 | ClickHouse | [`solutions/clickhouse/clickhouse`](../clickhouse/clickhouse) (official image 26.8 LTS) | Your analytics data. Password-protected HTTPS domain for loading data |
 
 ## What this template does differently
@@ -37,7 +37,7 @@ Self-hosted [Metabase](https://www.metabase.com) with a [ClickHouse](https://cli
 - **Production application database.** Metabase stores everything in PostgreSQL on a volume instead of the built-in H2 file, which is lost on redeploy. Connection details Metabase stores are encrypted with a generated `MB_ENCRYPTION_SECRET_KEY`.
 - **Memory capped.** `JAVA_OPTS=-Xmx2g` limits the Java heap. Without it, Java sizes the heap from the host's RAM, which on Railway can be far more than Metabase needs. With the cap, Metabase idles at about 2.2 GB.
 - **ClickHouse tuned for a small service.** Our tested ClickHouse service: listens on IPv6 and IPv4, a generated password, high-volume internal log tables off and the rest kept for 7 days.
-- **Pinned versions.** Metabase 0.65.5.1, ClickHouse 26.8 LTS and PostgreSQL 17 instead of `latest`.
+- **Pinned versions.** Metabase 0.65.5.1, ClickHouse 26.8 LTS and PostgreSQL 18 instead of `latest`.
 
 ## After deploy
 
