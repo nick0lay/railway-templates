@@ -1,6 +1,6 @@
 # Deploy and Host NocoDB on Railway
 
-NocoDB is an open-source Airtable alternative: it turns a database into a collaborative spreadsheet with grid, kanban, gallery and form views, automations and a REST API. This template runs the official NocoDB image (2026.10.1) with PostgreSQL and a Railway Bucket for file attachments.
+NocoDB is an open-source Airtable alternative: it turns a database into a collaborative spreadsheet with grid, kanban, gallery and form views, automations and a REST API. This template runs the official NocoDB image (2026.10.2) with PostgreSQL and a Railway Bucket for file attachments.
 
 ## About Hosting NocoDB
 

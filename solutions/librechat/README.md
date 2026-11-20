@@ -37,9 +37,9 @@ Self-hosted [LibreChat](https://github.com/danny-avila/LibreChat) on Railway: a 
 | Service | Source | Role |
 |---------|--------|------|
 | LibreChat | `ghcr.io/librechat-ai/librechat:v0.8.9` | Web client and API (public) |
-| MongoDB | `mongo:8.0.20` | Users, conversations, stored keys, file records (private, volume) |
+| MongoDB | `mongo:8.0.38` | Users, conversations, stored keys, file records (private, volume) |
 | Meilisearch | `getmeili/meilisearch:v1.35.1` | Conversation search (private, volume) |
-| RAG-API | `ghcr.io/librechat-ai/librechat-rag-api-dev-lite:v0.9.0` | File search: chunks and embeds uploaded files (private) |
+| RAG-API | `ghcr.io/librechat-ai/librechat-rag-api-dev-lite:v0.9.1` | File search: chunks and embeds uploaded files (private) |
 | VectorDB | `pgvector/pgvector:0.8.0-pg15-trixie` | Embeddings for file search (private, volume) |
 
 MongoDB, Meilisearch and pgvector use the versions pinned in LibreChat's own docker-compose for v0.8.9.
@@ -47,7 +47,7 @@ MongoDB, Meilisearch and pgvector use the versions pinned in LibreChat's own doc
 ## What this template does differently
 
 - **Admin account created at deploy, sign-up off.** On a fresh LibreChat with open registration, anyone who finds the URL can sign up, and the first account becomes the admin. Every signed-up user can then spend the API keys you set on the server. This template creates the admin from `ADMIN_EMAIL` and a generated `ADMIN_PASSWORD` with LibreChat's own `create-user` command, and keeps `ALLOW_REGISTRATION=false`.
-- **Pinned releases.** LibreChat v0.8.9 and RAG API v0.9.0 instead of the `librechat-dev:latest` / `rag-api-dev-lite:latest` nightly builds that upstream compose files use, so a redeploy doesn't pull an untested build.
+- **Pinned releases.** LibreChat v0.8.9 and RAG API v0.9.1 instead of the `librechat-dev:latest` / `rag-api-dev-lite:latest` nightly builds that upstream compose files use, so a redeploy doesn't pull an untested build.
 - **Uploads persist.** A volume at `/app/data` keeps uploaded files, generated images and avatars across redeploys.
 - **Config file in a variable.** `LIBRECHAT_YAML` is written to `librechat.yaml` at start. It adds OpenRouter, Groq, Mistral, DeepSeek and xAI next to the built-in OpenAI, Anthropic and Google; edit it in the Railway dashboard to add providers, MCP servers or interface settings.
 - **File search works with your OpenAI key.** The RAG API takes its embeddings key from LibreChat's `OPENAI_API_KEY`, so setting one key turns on both chat and file search.

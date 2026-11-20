@@ -45,7 +45,7 @@ WhatsApp support where a bot answers first and a person takes over when needed, 
 | Chatwoot Redis | `redis:8.2.11-alpine` | Sidekiq jobs, Action Cable, cache (private) |
 | typebot-builder | `baptistearno/typebot-builder:3.19` | Flow editor, sign-in, results, API (public) |
 | typebot-viewer | `baptistearno/typebot-viewer:3.19` | Runs published flows; Evolution API talks to it (public, like any published bot) |
-| mailpit | `axllent/mailpit:v1.33` | Catches Typebot's sign-in emails (public, password) |
+| mailpit | `axllent/mailpit:v1.34` | Catches Typebot's sign-in emails (public, password) |
 | files | `rclone/rclone:1.76.0` | Read-only server for the bucket's `public/` folder: media used in flows (public, no listing) |
 | Typebot Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Flows, results, users (private) |
 | Typebot Redis | `redis:8.10` | Typebot sessions and rate limits (private) |

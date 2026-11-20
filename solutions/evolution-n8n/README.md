@@ -40,9 +40,9 @@ WhatsApp automations and AI agents on Railway: [Evolution API](https://github.co
 | Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key). Calls your n8n webhook for each chat |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, contacts, bot sessions (private) |
 | Evolution Redis | `redis:8.10` | Evolution API cache (private) |
-| n8n | `n8nio/n8n:2.47.3` | Editor, REST API and webhooks; puts executions on the queue (public, owner login) |
-| n8n-worker | `n8nio/n8n:2.47.3` | Runs all executions from the queue, including manual ones (private) |
-| n8n-runner | `n8nio/runners:2.47.3` | Runs Code node JavaScript and Python for the worker, isolated from n8n (private) |
+| n8n | `n8nio/n8n:2.48.6` | Editor, REST API and webhooks; puts executions on the queue (public, owner login) |
+| n8n-worker | `n8nio/n8n:2.48.6` | Runs all executions from the queue, including manual ones (private) |
+| n8n-runner | `n8nio/runners:2.48.6` | Runs Code node JavaScript and Python for the worker, isolated from n8n (private) |
 | n8n Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Workflows, credentials, executions, binary data (private) |
 | n8n Redis | `redis:8.10` | Execution queue, append-only file on a volume (private) |
 
@@ -55,7 +55,7 @@ WhatsApp automations and AI agents on Railway: [Evolution API](https://github.co
 - **Separate databases.** Evolution API and n8n each get their own Postgres and Redis. n8n's Redis holds the job queue and needs `noeviction` and persistence; Evolution's is a cache. A Redis or Postgres restart for one app doesn't touch the other.
 - **No n8n volume needed.** In queue mode n8n keeps binary data in Postgres, the encryption key is a variable, and community nodes you install from the UI are reinstalled after a redeploy (`N8N_REINSTALL_MISSING_PACKAGES=true`).
 - **Auth on every public service.** Evolution API needs the generated global API key, n8n needs the owner login. Worker, runner and databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), n8n 2.47.3 (the `stable` tag on the day of testing), Postgres 18, Redis 8.10.
+- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), n8n 2.48.6 (the `stable` tag on the day of testing), Postgres 18, Redis 8.10.
 
 ## After deploy
 

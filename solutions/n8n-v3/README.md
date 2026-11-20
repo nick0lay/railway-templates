@@ -1,12 +1,12 @@
 # n8n 3 (queue mode + task runners)
 
-[n8n](https://github.com/n8n-io/n8n) 3.2 on Railway, set up the way n8n recommends for production: queue mode with a worker, Code nodes in separate task runner containers, PostgreSQL 18 and Redis. The owner account is created at deploy time, so nobody can claim a fresh instance, and every image is the official one with a pinned tag.
+[n8n](https://github.com/n8n-io/n8n) 3.3 on Railway, set up the way n8n recommends for production: queue mode with a worker, Code nodes in separate task runner containers, PostgreSQL 18 and Redis. The owner account is created at deploy time, so nobody can claim a fresh instance, and every image is the official one with a pinned tag.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/n8n-32-queue-mode-task-runners?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 > **Early access.** n8n publishes the 3.x line as an early access release: every 3.x release is marked as a pre-release on GitHub, and n8n's `stable` and `latest` Docker tags still point to 2.x. Use this template to try n8n 3 or to start new projects on it. For an instance you depend on, stay on 2.x until n8n moves `stable` to 3.x.
 
-This is a separate template. Our n8n 2.x templates stay on 2.47 and are not changed; deploying this one does not touch them.
+This is a separate template. Our n8n 2.x templates stay on 2.x and are not changed; deploying this one does not touch them.
 
 ## Architecture
 
@@ -38,9 +38,9 @@ This is a separate template. Our n8n 2.x templates stay on 2.47 and are not chan
 
 | Service | Source | Role |
 |---------|--------|------|
-| n8n | `n8nio/n8n:3.2.2` | Editor, REST API and webhooks; puts executions on the queue (public, owner login) |
-| n8n-worker | `n8nio/n8n:3.2.2` | Runs all executions from the queue, including manual runs from the editor (private) |
-| n8n-runner | `n8nio/runners:3.2.2` | Runs Code node JavaScript and Python for the worker, isolated from n8n (private) |
+| n8n | `n8nio/n8n:3.3.0` | Editor, REST API and webhooks; puts executions on the queue (public, owner login) |
+| n8n-worker | `n8nio/n8n:3.3.0` | Runs all executions from the queue, including manual runs from the editor (private) |
+| n8n-runner | `n8nio/runners:3.3.0` | Runs Code node JavaScript and Python for the worker, isolated from n8n (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Workflows, credentials, executions, binary data (private, volume) |
 | Redis | `redis:8.10` | Execution queue, append-only file on a volume, `noeviction` (private) |
 
@@ -52,7 +52,7 @@ This is a separate template. Our n8n 2.x templates stay on 2.47 and are not chan
 - **No n8n volume.** In queue mode n8n 3 stores binary data in Postgres by default, the encryption key is a variable, and community nodes you install from the UI are reinstalled after a redeploy.
 - **Generated secrets.** `N8N_ENCRYPTION_KEY` (shared by main and worker), `N8N_OWNER_PASSWORD`, the runner token, and the Postgres and Redis passwords.
 - **Private by default.** Only `n8n` has a public domain. Worker, runners, Postgres and Redis have no domain or TCP proxy.
-- **Pinned versions.** n8n 3.2.2 on all three n8n services, Postgres 18, Redis 8.10.
+- **Pinned versions.** n8n 3.3.0 on all three n8n services, Postgres 18, Redis 8.10.
 - **No deprecation warnings at startup.** The webhook base URL uses `N8N_WEBHOOK_URL`, which replaces `WEBHOOK_URL` in n8n 3.
 
 ## After deploy

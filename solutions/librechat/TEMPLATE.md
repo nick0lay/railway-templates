@@ -45,15 +45,15 @@ This template deploys the full upstream stack on Railway's private network, crea
 | Service | Image | Access |
 |---|---|---|
 | LibreChat | `librechat:v0.8.9` | public, login required |
-| MongoDB | `mongo:8.0.20` | private, password |
+| MongoDB | `mongo:8.0.38` | private, password |
 | Meilisearch | `meilisearch:v1.35.1` | private, master key |
-| RAG-API | `librechat-rag-api-dev-lite:v0.9.0` | private, JWT |
+| RAG-API | `librechat-rag-api-dev-lite:v0.9.1` | private, JWT |
 | VectorDB | `pgvector:0.8.0-pg15` | private, password |
 
 **This template:**
 
 - Creates the admin account at deploy and keeps public sign-up off, so nobody else can claim your instance or use your keys
-- Pins LibreChat v0.8.9 and RAG API v0.9.0 instead of the nightly `latest` builds, and the database versions LibreChat itself pins
+- Pins LibreChat v0.8.9 and RAG API v0.9.1 instead of the nightly `latest` builds, and the database versions LibreChat itself pins
 - Keeps uploads and generated images on a volume, so they survive redeploys
 - Generates `CREDS_KEY`, `CREDS_IV`, `JWT_SECRET`, `JWT_REFRESH_SECRET` and the Meilisearch master key once
 - Ships a `librechat.yaml` in the `LIBRECHAT_YAML` variable with OpenRouter, Groq, Mistral, DeepSeek and xAI, editable from the dashboard

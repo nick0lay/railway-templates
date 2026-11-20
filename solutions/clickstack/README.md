@@ -28,17 +28,17 @@ Self-hosted [ClickStack](https://clickhouse.com/use-cases/observability) on Rail
 
 | Service | Source | Role |
 |---------|--------|------|
-| HyperDX | `hyperdx/hyperdx:2.45.0` | UI, API, alert checks and the OpAMP server that configures the collector (public, login required) |
-| Collector | `hyperdx/hyperdx-otel-collector:2.45.0` | Receives OTLP logs, traces and metrics and writes them to ClickHouse (public on OTLP/HTTP, API key required) |
-| ClickHouse | `clickhouse/clickhouse-server:26.8.36.3-alpine` | Telemetry storage (private, password) |
-| MongoDB | `mongo:7.0.45` | Users, teams, dashboards, saved searches and alerts (private, password) |
+| HyperDX | `hyperdx/hyperdx:2.46.0` | UI, API, alert checks and the OpAMP server that configures the collector (public, login required) |
+| Collector | `hyperdx/hyperdx-otel-collector:2.46.0` | Receives OTLP logs, traces and metrics and writes them to ClickHouse (public on OTLP/HTTP, API key required) |
+| ClickHouse | `clickhouse/clickhouse-server:26.8.41.14-alpine` | Telemetry storage (private, password) |
+| MongoDB | `mongo:7.0.48` | Users, teams, dashboards, saved searches and alerts (private, password) |
 
 ## What this template does differently
 
 - **No one can claim your instance.** On a fresh HyperDX, the first visitor to open the URL creates the admin account. This template creates the admin from `HYPERDX_ADMIN_EMAIL` and a generated `HYPERDX_ADMIN_PASSWORD` on the first start. HyperDX allows one team, so after that sign-up is closed; teammates join by invitation.
 - **Ingest needs an API key.** Creating the team turns on API-key authentication on the collector. OTLP requests without your team's ingestion API key get 401, so nobody can fill your ClickHouse or your bill with junk data. The key is in HyperDX under Team Settings.
 - **Databases are private and password-protected.** The other ClickStack templates on Railway expose MongoDB through a public TCP proxy, and one also gives ClickHouse a public domain.
-- **Pinned versions** (HyperDX 2.45.0, ClickHouse 26.8.36.3, MongoDB 7.0.45) instead of `latest` or a floating `:2`, and healthchecks on HyperDX, the collector and ClickHouse.
+- **Pinned versions** (HyperDX 2.46.0, ClickHouse 26.8.41.14, MongoDB 7.0.48) instead of `latest` or a floating `:2`, and healthchecks on HyperDX, the collector and ClickHouse.
 - **Short ClickHouse system-log retention.** ClickHouse's own query and part logs are kept for 3 days; the noisy ones (trace, text, metric logs) are off, so the volume holds your telemetry, not ClickHouse's.
 - **Works on Railway's IPv6 private network.** ClickHouse, MongoDB and the HyperDX UI listen on IPv6 and IPv4, so the services and your other Railway apps can reach each other over `*.railway.internal`.
 
@@ -118,3 +118,5 @@ HyperDX is MIT-licensed. ClickHouse is Apache-2.0. MongoDB Community Server is u
 Tested on 2026-11-08 with HyperDX 2.43.1, the HyperDX collector 2.43.1, ClickHouse 26.8.36.3 and MongoDB 7.0.45 in a throwaway Railway project. All four services were healthy within a minute of deploy, and the admin was created a second after the API started. API requests without a login, a wrong password and a stranger's sign-up were refused; the admin logged in and saw the four default sources and the ClickHouse connection. OTLP requests without an API key or with a wrong key got 401; a trace and a log sent with the team's key were stored in ClickHouse and read back through HyperDX's ClickHouse proxy. A service in the same project reached the collector's private endpoint: 401 without the key, 200 with it. After redeploying all four services, earlier traces, the admin and the sources were still there, sign-up stayed closed and new data was ingested. Idle memory: ClickHouse about 0.8 GB, HyperDX 0.4 to 0.55 GB, MongoDB 0.24 GB, Collector 0.05 GB. Not tested: the browser UI beyond its API, alerts, session replay and email.
 
 2026-11-18, after the update to HyperDX and the HyperDX collector 2.45.0 (ClickHouse and MongoDB unchanged): a fresh deploy was healthy and the admin was created at start; a stranger's sign-up and a wrong password were refused; OTLP without a key or with a wrong key got 401, and a trace sent with the team's key was stored in ClickHouse and read back through HyperDX.
+
+2026-11-20, after the update to HyperDX and the HyperDX collector 2.46.0, ClickHouse 26.8.41.14 and MongoDB 7.0.48: a fresh deploy was healthy and the admin was created at start; a stranger's sign-up and a wrong password were refused; OTLP without a key or with a wrong key got 401, and a trace sent with the team's key was stored in ClickHouse and read back through HyperDX.

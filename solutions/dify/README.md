@@ -39,12 +39,12 @@ Only the `Dify` gateway is public. Every other service, both Postgres databases,
 | Service | Source | Role |
 |---------|--------|------|
 | Dify | `nginx:1.30.6-alpine` | Gateway: one public origin for the console, the APIs and plugin hooks (public, admin login) |
-| dify-api | `langgenius/dify-api:1.19.0` | Console and service API, runs migrations, creates the admin account |
-| dify-worker | `langgenius/dify-api:1.19.0` | Celery worker: document indexing, workflow storage, mail |
-| dify-beat | `langgenius/dify-api:1.19.0` | Celery beat: scheduled tasks |
-| dify-web | `langgenius/dify-web:1.19.0` | Console UI and published web apps |
+| dify-api | `langgenius/dify-api:1.20.0` | Console and service API, runs migrations, creates the admin account |
+| dify-worker | `langgenius/dify-api:1.20.0` | Celery worker: document indexing, workflow storage, mail |
+| dify-beat | `langgenius/dify-api:1.20.0` | Celery beat: scheduled tasks |
+| dify-web | `langgenius/dify-web:1.20.0` | Console UI and published web apps |
 | dify-sandbox | `langgenius/dify-sandbox:0.2.15` | Runs Python and JavaScript Code nodes |
-| dify-plugin-daemon | `langgenius/dify-plugin-daemon:0.6.14-local` | Runs model provider and tool plugins (volume for installed plugins) |
+| dify-plugin-daemon | `langgenius/dify-plugin-daemon:0.6.15-local` | Runs model provider and tool plugins (volume for installed plugins) |
 | dify-ssrf-proxy | `ubuntu/squid:6.6-24.04_beta` | Outbound proxy for HTTP and Code nodes; blocks private addresses |
 | Dify Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Dify data (`railway` database) and plugin data (`dify_plugin`) |
 | Dify Vector | `pgvector/pgvector:0.8.7-pg16` | Vector store for knowledge bases |
@@ -58,7 +58,7 @@ Only the `Dify` gateway is public. Every other service, both Postgres databases,
 - **No Weaviate, no MinIO.** Knowledge bases use pgvector in its own Postgres, and files go to a Railway Bucket. The MinIO repository was archived upstream, and its Docker Hub images are gone.
 - **One public origin.** Dify's console uses `__Host-` cookies, and two separate `*.up.railway.app` domains can't share them. The nginx gateway serves the UI, the APIs and plugin endpoints from one domain, following upstream's routes.
 - **No default secrets.** Upstream compose ships fixed keys for the plugin daemon, the sandbox and the inner API. Here every one is generated per deploy.
-- **Pinned, tested versions:** Dify 1.19.0 with the sandbox and plugin daemon versions its compose file pins, PostgreSQL 18, pgvector 0.8.7, Redis 8.10.
+- **Pinned, tested versions:** Dify 1.20.0 with the sandbox and plugin daemon versions its compose file pins, PostgreSQL 18, pgvector 0.8.7, Redis 8.10.
 
 Not included: the Agent V2 backend and its local sandbox (new in Dify 1.19 and off here: `NEXT_PUBLIC_ENABLE_AGENT_V2=false`), the collaboration websocket and the plugin remote-debugging port. Classic Agent apps, chatflows, workflows and knowledge bases work without them.
 

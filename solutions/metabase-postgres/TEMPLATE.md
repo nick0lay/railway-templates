@@ -45,7 +45,7 @@ This template runs Metabase's official open-source image with a private PostgreS
 - Caps Metabase's Java heap at 2 GB with `JAVA_OPTS`, so it doesn't size itself from the host's RAM
 - Health check on `/api/health`, restart on failure and a clean shutdown on redeploy
 - Sets the site URL to your Railway domain and turns anonymous usage tracking off
-- Pins Metabase 0.65.5.1 and PostgreSQL 18 instead of `latest`
+- Pins Metabase 0.65.6.2 and PostgreSQL 18 instead of `latest`
 
 **Notes:** the first start takes 2-4 minutes (Metabase migrates its database, sets itself up and restarts once). Metabase idles at about 2 GB of RAM. Keep the app database for Metabase itself; connect your business data as separate databases. Metabase's open-source edition is AGPL-3.0; you are responsible for using it under its license.
 

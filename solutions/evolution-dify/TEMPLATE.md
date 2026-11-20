@@ -45,7 +45,7 @@ This template deploys the whole stack on Railway's private network. Evolution AP
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), Dify 1.19.0, PostgreSQL 18, pgvector 0.8.7 and Redis 8.10
+- Pins Evolution API 2.3.7 (newer images need a license activation), Dify 1.20.0, PostgreSQL 18, pgvector 0.8.7 and Redis 8.10
 - Creates the Dify admin account at deploy time and guards `/install` with a generated init password, so nobody else can claim a fresh instance
 - Uses pgvector and a Railway Bucket instead of Weaviate and MinIO (MinIO is archived upstream)
 - Serves the Dify console and APIs from one public gateway, so login cookies work

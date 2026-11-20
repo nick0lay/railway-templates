@@ -40,12 +40,12 @@ Only `Evolution API` and the `Dify` gateway are public. Every other service, all
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, bot sessions |
 | Evolution Redis | `redis:8.10` | Evolution API cache |
 | Dify | `nginx:1.30.6-alpine` | Gateway: one public origin for the console, the APIs and plugin hooks (public, admin login) |
-| dify-api | `langgenius/dify-api:1.19.0` | Console and service API, runs migrations, creates the admin account |
-| dify-worker | `langgenius/dify-api:1.19.0` | Celery worker: document indexing, workflow storage, mail |
-| dify-beat | `langgenius/dify-api:1.19.0` | Celery beat: scheduled tasks |
-| dify-web | `langgenius/dify-web:1.19.0` | Console UI and published web apps |
+| dify-api | `langgenius/dify-api:1.20.0` | Console and service API, runs migrations, creates the admin account |
+| dify-worker | `langgenius/dify-api:1.20.0` | Celery worker: document indexing, workflow storage, mail |
+| dify-beat | `langgenius/dify-api:1.20.0` | Celery beat: scheduled tasks |
+| dify-web | `langgenius/dify-web:1.20.0` | Console UI and published web apps |
 | dify-sandbox | `langgenius/dify-sandbox:0.2.15` | Runs Python and JavaScript Code nodes |
-| dify-plugin-daemon | `langgenius/dify-plugin-daemon:0.6.14-local` | Runs model provider and tool plugins (volume for installed plugins) |
+| dify-plugin-daemon | `langgenius/dify-plugin-daemon:0.6.15-local` | Runs model provider and tool plugins (volume for installed plugins) |
 | dify-ssrf-proxy | `ubuntu/squid:6.6-24.04_beta` | Outbound proxy for HTTP nodes and Code nodes; blocks private addresses except Evolution API |
 | Dify Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Dify data (`railway` database) and plugin data (`dify_plugin`) |
 | Dify Vector | `pgvector/pgvector:0.8.7-pg16` | Vector store for knowledge bases |
@@ -60,7 +60,7 @@ Only `Evolution API` and the `Dify` gateway are public. Every other service, all
 - **Dify integration on in Evolution API.** `DIFY_ENABLED=true`, nothing else.
 - **Private wiring, ready to copy.** The `Dify` service has `DIFY_PRIVATE_API_URL` (`http://dify-api.railway.internal:5001/v1`), the API URL Evolution API calls. The SSRF proxy allows Evolution API's private address, so Dify HTTP Request nodes can call Evolution back without leaving Railway.
 - **No default secrets.** Upstream compose ships fixed keys for the plugin daemon, the sandbox and the inner API. Here every one is generated per deploy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Dify 1.19.0 with the sandbox and plugin daemon versions its compose file pins.
+- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Dify 1.20.0 with the sandbox and plugin daemon versions its compose file pins.
 
 Not included: the Agent V2 backend and its local sandbox (new in Dify 1.19 and off here: `NEXT_PUBLIC_ENABLE_AGENT_V2=false`), the collaboration websocket and the plugin remote-debugging port. Classic Agent apps, chatflows, workflows and knowledge bases work without them.
 

@@ -45,9 +45,9 @@ One WhatsApp instance is linked to both: Evolution API sends each incoming messa
 | Chatwoot | `chatwoot/chatwoot:v4.19.1-ce` | Agent inbox: Rails web and Sidekiq in one service, attachments on a volume (public, login) |
 | Chatwoot Postgres | `pgvector/pgvector:0.8.7-pg16` | Chatwoot data, with the pgvector extension Chatwoot needs (private) |
 | Chatwoot Redis | `redis:8.2.11-alpine` | Sidekiq jobs, Action Cable, cache (private) |
-| n8n | `n8nio/n8n:2.47.3` | Editor, REST API and webhooks; queues executions (public, owner login) |
-| n8n-worker | `n8nio/n8n:2.47.3` | Runs every execution from the queue (private) |
-| n8n-runner | `n8nio/runners:2.47.3` | Runs Code node JavaScript and Python for the worker (private) |
+| n8n | `n8nio/n8n:2.48.6` | Editor, REST API and webhooks; queues executions (public, owner login) |
+| n8n-worker | `n8nio/n8n:2.48.6` | Runs every execution from the queue (private) |
+| n8n-runner | `n8nio/runners:2.48.6` | Runs Code node JavaScript and Python for the worker (private) |
 | n8n Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Workflows, credentials, executions (private) |
 | n8n Redis | `redis:8.10` | Execution queue, append-only file on a volume (private) |
 
@@ -60,7 +60,7 @@ One WhatsApp instance is linked to both: Evolution API sends each incoming messa
 - **n8n in queue mode** with a worker and an external task runner, on the official images.
 - **Separate databases.** Each app has its own Postgres and Redis.
 - **Auth on every public service.** Evolution API needs the generated API key, Chatwoot and n8n a login. Worker, runner and databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Chatwoot 4.19.1 CE, n8n 2.47.3.
+- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Chatwoot 4.19.1 CE, n8n 2.48.6.
 
 ## After deploy
 

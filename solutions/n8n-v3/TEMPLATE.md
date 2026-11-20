@@ -1,6 +1,6 @@
 # Deploy and Host n8n 3 (queue mode + task runners) on Railway
 
-n8n is a workflow automation tool with 400+ app nodes, AI agents, webhooks and JavaScript or Python code. This template runs n8n 3.2 the way n8n recommends for production: queue mode with a worker, Code nodes in isolated task runner containers, PostgreSQL 18 and Redis, with the owner account created at deploy time.
+n8n is a workflow automation tool with 400+ app nodes, AI agents, webhooks and JavaScript or Python code. This template runs n8n 3.3 the way n8n recommends for production: queue mode with a worker, Code nodes in isolated task runner containers, PostgreSQL 18 and Redis, with the owner account created at deploy time.
 
 ## About Hosting n8n 3 (queue mode + task runners)
 
@@ -36,7 +36,7 @@ n8n 3 is an early access release: n8n still marks every 3.x release as a pre-rel
 
 **This template:**
 
-- Pins n8n 3.2.2 on main, worker and runner, PostgreSQL 18 and Redis 8.10
+- Pins n8n 3.3.0 on main, worker and runner, PostgreSQL 18 and Redis 8.10
 - Creates the owner account before n8n listens, so there is no setup screen anyone could claim
 - Runs n8n in queue mode: main for the editor and webhooks, a worker for every execution
 - Runs Code nodes in an external task runner with a generated token, no internal-mode fallback

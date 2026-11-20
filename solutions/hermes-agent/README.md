@@ -1,6 +1,6 @@
 # Hermes Agent 0.23
 
-Self-hosted [Hermes Agent](https://github.com/NousResearch/hermes-agent) on Railway: the open-source, self-improving AI agent from Nous Research. It keeps memory across sessions, writes its own skills, runs scheduled tasks, and talks to you from Telegram, Discord, Slack, WhatsApp, Signal or the web dashboard. This template runs the official image pinned to v0.23.1, puts the dashboard behind a generated password, and keeps all state on a volume.
+Self-hosted [Hermes Agent](https://github.com/NousResearch/hermes-agent) on Railway: the open-source, self-improving AI agent from Nous Research. It keeps memory across sessions, writes its own skills, runs scheduled tasks, and talks to you from Telegram, Discord, Slack, WhatsApp, Signal or the web dashboard. This template runs the official image pinned to v0.23.2, puts the dashboard behind a generated password, and keeps all state on a volume.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/hermes-agent-023?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
@@ -29,11 +29,11 @@ Self-hosted [Hermes Agent](https://github.com/NousResearch/hermes-agent) on Rail
 
 | Service | Source | Role |
 |---------|--------|------|
-| hermes-agent | `nousresearch/hermes-agent:v0.23.1` | Gateway and web dashboard (public, login required) |
+| hermes-agent | `nousresearch/hermes-agent:v0.23.2` | Gateway and web dashboard (public, login required) |
 
 ## What this template does differently
 
-- **Official image, pinned.** `nousresearch/hermes-agent:v0.23.1` instead of `latest`, a wrapper repo or a source build that can hit GitHub rate limits during the build.
+- **Official image, pinned.** `nousresearch/hermes-agent:v0.23.2` instead of `latest`, a wrapper repo or a source build that can hit GitHub rate limits during the build.
 - **Gateway and dashboard together.** The start command goes through the image's own entrypoint, so its s6 supervisor runs both and restarts either one if it crashes.
 - **Dashboard behind a login.** Username `admin` and a generated password, with a generated session secret so logins survive restarts. Since June 2026 Hermes refuses to serve a public dashboard without an auth provider, and this sets one up for you.
 - **State on a volume.** The volume is mounted at `/opt/data`, the image's own `HERMES_HOME`, so config, memory, skills, sessions and cron jobs survive a redeploy without any path remapping.

@@ -46,7 +46,7 @@ Give a chat back to the bot with `POST /n8n/changeStatus/your-instance` and `{"r
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), Chatwoot 4.19.1 CE and n8n 2.47.3
+- Pins Evolution API 2.3.7 (newer images need a license activation), Chatwoot 4.19.1 CE and n8n 2.48.6
 - Creates the Chatwoot admin, its API token and the n8n owner at deploy time, and closes Chatwoot's onboarding page
 - Turns on only the n8n and Chatwoot integrations in Evolution API
 - Puts private URLs and keys for Evolution API, Chatwoot and n8n in variables, ready to paste

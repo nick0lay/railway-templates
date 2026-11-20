@@ -14,7 +14,7 @@ Your app, BI tool or AI agent
    ▼
 ┌──────────────────────────┐                    ┌──────────────────────────┐
 │ Cube API (public) :4000  │        SQL         │ Postgres (private)       │
-│ cubejs/cube:v1.8.27      │ ─────────────────▶ │ postgres-ssl:18, volume  │
+│ cubejs/cube:v1.8.30      │ ─────────────────▶ │ postgres-ssl:18, volume  │
 │ REST, GraphQL, JWT       │                    │ sample table `orders`    │
 └─────────────┬────────────┘                    └─────────────┬────────────┘
               │ rollups, :3030                                ▲
@@ -22,13 +22,13 @@ Your app, BI tool or AI agent
 ┌──────────────────────────┐   builds rollups   ┌─────────────┴────────────┐
 │ Cube Store Router        │ ◀───────────────── │ Cube Refresh Worker      │
 │ (private) :3030, :9999   │                    │ (private)                │
-│ cubejs/cubestore:v1.8.27 │                    │ cubejs/cube:v1.8.27      │
+│ cubejs/cubestore:v1.8.30 │                    │ cubejs/cube:v1.8.30      │
 └─────────────┬────────────┘                    └──────────────────────────┘
               │ :10001
               ▼
 ┌──────────────────────────┐
 │ Cube Store Worker        │
-│ (private) v1.8.27        │
+│ (private) v1.8.30        │
 └─────────────┬────────────┘
               │ S3: rollup files and metastore snapshots (router and worker)
               ▼
@@ -41,10 +41,10 @@ Your app, BI tool or AI agent
 
 | Service | Source | Role |
 |---------|--------|------|
-| Cube API | `cubejs/cube:v1.8.27` | Public. REST (`/cubejs-api/v1`) and GraphQL API, JWT required. Reads the data model from `CUBE_MODEL` |
-| Cube Refresh Worker | `cubejs/cube:v1.8.27` | Private. Builds and refreshes pre-aggregations into Cube Store on schedule (`CUBEJS_REFRESH_WORKER=true`). Shares the API's settings |
-| Cube Store Router | `cubejs/cubestore:v1.8.27` | Private. Cube Store metastore and query router; Cube API queries pre-aggregations here |
-| Cube Store Worker | `cubejs/cubestore:v1.8.27` | Private. Stores and scans pre-aggregation partitions |
+| Cube API | `cubejs/cube:v1.8.30` | Public. REST (`/cubejs-api/v1`) and GraphQL API, JWT required. Reads the data model from `CUBE_MODEL` |
+| Cube Refresh Worker | `cubejs/cube:v1.8.30` | Private. Builds and refreshes pre-aggregations into Cube Store on schedule (`CUBEJS_REFRESH_WORKER=true`). Shares the API's settings |
+| Cube Store Router | `cubejs/cubestore:v1.8.30` | Private. Cube Store metastore and query router; Cube API queries pre-aggregations here |
+| Cube Store Worker | `cubejs/cubestore:v1.8.30` | Private. Stores and scans pre-aggregation partitions |
 | Bucket | Railway Bucket | Private S3 storage shared by router and worker: pre-aggregation files and metastore snapshots |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Private. Database with the sample `orders` table, volume, password |
 
@@ -95,7 +95,7 @@ The sample cube `orders` has the measures `count`, `total_amount`, `average_amou
 1. Create a repo with a `model/` folder (your `.yml` or `.js` files) and this Dockerfile:
 
 ```dockerfile
-FROM cubejs/cube:v1.8.27
+FROM cubejs/cube:v1.8.30
 COPY model /cube/conf/model
 # optional: COPY cube.js /cube/conf/cube.js
 ```
@@ -182,7 +182,7 @@ Cube Store memory grows with the size of your pre-aggregations; the bucket grows
 
 ## Versions
 
-- Cube 1.8.27 and Cube Store 1.8.27: pinned tags; update both together (same version).
+- Cube 1.8.30 and Cube Store 1.8.30: pinned tags; update both together (same version).
 - Postgres 18 (`ghcr.io/railwayapp-templates/postgres-ssl:18`).
 
 ## Tested
@@ -190,6 +190,8 @@ Cube Store memory grows with the size of your pre-aggregations; the bucket grows
 2026-11-13 on Railway: a fresh deploy reached all-green; the sample table was created in Postgres, the rollup was built by the refresh worker within a minute and served from Cube Store; requests without a token, with a token signed by another secret, an expired token and an `alg: none` token got 403; the snippet above returned the sample rows; a query outside the rollup read the 1000 rows from Postgres; only Cube API has a public domain. A redeploy of every service kept the data and restored the rollup from the bucket without a rebuild.
 
 2026-11-18, after the update to Cube and Cube Store 1.8.27: the functional checks (auth, rollup from Cube Store, queries to the database, the snippet) passed again on a fresh deploy.
+
+2026-11-20, after the update to Cube and Cube Store 1.8.30: the functional checks (auth, rollup from Cube Store, queries to the database, the snippet) passed again on a fresh deploy.
 
 ## Links
 

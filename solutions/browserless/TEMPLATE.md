@@ -1,10 +1,10 @@
-# Deploy and Host Browserless 2.63 (Chromium) on Railway
+# Deploy and Host Browserless 2.64 (Chromium) on Railway
 
-Browserless is headless Chrome as a service. Connect Puppeteer or Playwright to a remote browser over a websocket, or call its REST API to get rendered HTML, screenshots, PDFs and scraped data. This template runs Browserless v2 from the official image, pinned to release v2.63.2, behind a generated token.
+Browserless is headless Chrome as a service. Connect Puppeteer or Playwright to a remote browser over a websocket, or call its REST API to get rendered HTML, screenshots, PDFs and scraped data. This template runs Browserless v2 from the official image, pinned to release v2.64.0, behind a generated token.
 
-## About Hosting Browserless 2.63 (Chromium)
+## About Hosting Browserless 2.64 (Chromium)
 
-Browserless is a single stateless service: it launches a fresh Chromium for each session and deletes the temporary profile afterwards, so no database or volume is needed. This template uses the official `ghcr.io/browserless/chromium:v2.63.2` image directly, with no wrapper or extra proxy. Every session, API, management and metrics route requires the generated `TOKEN` (as `?token=` or a Bearer header). The server listens on IPv4 and IPv6, so other services reach it over Railway's private network on port 3000. Session limits are sized for Railway: 5 concurrent sessions, a queue of 10 and a 5-minute session timeout, all adjustable. A healthcheck and restart-on-failure are set.
+Browserless is a single stateless service: it launches a fresh Chromium for each session and deletes the temporary profile afterwards, so no database or volume is needed. This template uses the official `ghcr.io/browserless/chromium:v2.64.0` image directly, with no wrapper or extra proxy. Every session, API, management and metrics route requires the generated `TOKEN` (as `?token=` or a Bearer header). The server listens on IPv4 and IPv6, so other services reach it over Railway's private network on port 3000. Session limits are sized for Railway: 5 concurrent sessions, a queue of 10 and a 5-minute session timeout, all adjustable. A healthcheck and restart-on-failure are set.
 
 ## Common Use Cases
 
@@ -13,9 +13,9 @@ Browserless is a single stateless service: it launches a fresh Chromium for each
 - Scrape JavaScript-heavy sites with Puppeteer or Playwright without installing Chrome in your app
 - Run end-to-end tests or monitoring scripts against a shared browser
 
-## Dependencies for Browserless 2.63 (Chromium) Hosting
+## Dependencies for Browserless 2.64 (Chromium) Hosting
 
-- Browserless (`ghcr.io/browserless/chromium:v2.63.2`), public, token required
+- Browserless (`ghcr.io/browserless/chromium:v2.64.0`), public, token required
 
 ### Deployment Dependencies
 
@@ -72,8 +72,8 @@ Security: anyone with the token can drive a browser from your service, including
 
 Licence: Browserless is dual-licensed under SSPL-1.0 or the Browserless commercial licence. It is source-available, not OSI open source. Upstream requires a commercial licence for closed-source commercial sites, applications or CI systems, and the SSPL has obligations if you offer Browserless as a service to others. This template deploys the unmodified official image; choosing and complying with the right licence is your responsibility.
 
-## Why Deploy Browserless 2.63 (Chromium) on Railway?
+## Why Deploy Browserless 2.64 (Chromium) on Railway?
 
 Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
 
-By deploying Browserless 2.63 (Chromium) on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.
+By deploying Browserless 2.64 (Chromium) on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.

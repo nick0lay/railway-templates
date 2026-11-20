@@ -7,7 +7,7 @@ Deploy Memgraph 3.14 with MAGE graph algorithms and Memgraph Lab on Railway: a p
 ## Overview
 
 - **Memgraph** from `memgraph/memgraph-mage:3.14.0`: the database plus MAGE (PageRank, community detection, centrality, shortest paths, link prediction and more)
-- **Memgraph Lab** from `memgraph/lab:3.14.2`: web IDE for Cypher, graph views, schema, import and logs
+- **Memgraph Lab** from `memgraph/lab:3.14.3`: web IDE for Cypher, graph views, schema, import and logs
 - **Volume** at `/var/lib/memgraph`: snapshots, write-ahead log, users and the TLS certificate survive redeploys
 - **Generated password** for the `memgraph` user, created on the first start
 - **Memory limit** of 2048 MiB by default, so a query that would use more fails cleanly
@@ -24,7 +24,7 @@ Deploy Memgraph 3.14 with MAGE graph algorithms and Memgraph Lab on Railway: a p
                 │ Lab, Memgraph login               │ Bolt, TLS, password
                 ▼                                   │
 ┌───────────────────────────────┐                   │
-│ Memgraph Lab 3.14.2           │                   │
+│ Memgraph Lab 3.14.3           │                   │
 │ 3000 HTTP                     │                   │
 └───────────────┬───────────────┘                   │
                 │ bolt+ssc://memgraph.railway.internal:7687
@@ -52,7 +52,7 @@ Deploy Memgraph 3.14 with MAGE graph algorithms and Memgraph Lab on Railway: a p
 | Service | Source | Role |
 |---------|--------|------|
 | Memgraph | `memgraph/memgraph-mage:3.14.0` | Graph database with MAGE. Private, plus a TCP proxy for Bolt with TLS and password |
-| Memgraph Lab | `memgraph/lab:3.14.2` | Web IDE. Public HTTPS domain, asks for the Memgraph login |
+| Memgraph Lab | `memgraph/lab:3.14.3` | Web IDE. Public HTTPS domain, asks for the Memgraph login |
 
 ## Environment Variables
 

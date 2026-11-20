@@ -29,9 +29,9 @@ Self-hosted [Rybbit](https://rybbit.com) on Railway: open-source, privacy-friend
 | Service | Source | Role |
 |---------|--------|------|
 | Rybbit | `caddy:2.11.9-alpine` | Public entry point: `/api` goes to the backend, everything else to the dashboard |
-| Backend | `ghcr.io/rybbit-io/rybbit-backend:v2.9.2` | Tracking script and event ingestion, API, login, database migrations |
-| Client | `ghcr.io/rybbit-io/rybbit-client:v2.9.2` | Web dashboard (login required) |
-| ClickHouse | `clickhouse/clickhouse-server:26.8.36.3` | Events (private) |
+| Backend | `ghcr.io/rybbit-io/rybbit-backend:v2.9.3` | Tracking script and event ingestion, API, login, database migrations |
+| Client | `ghcr.io/rybbit-io/rybbit-client:v2.9.3` | Web dashboard (login required) |
+| ClickHouse | `clickhouse/clickhouse-server:26.8.41.14` | Events (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, organizations, sites, settings (private) |
 | Redis | `redis:8.10.3-alpine` | Sessions, visitor identity, bot detection counters (private, `noeviction`) |
 
@@ -41,7 +41,7 @@ Self-hosted [Rybbit](https://rybbit.com) on Railway: open-source, privacy-friend
 - **One domain, as Rybbit expects.** The prebuilt dashboard calls the API at `/api` on its own domain, so a Caddy proxy serves both and passes on the visitor IP Railway forwards, for countries and cities.
 - **Works on Railway's IPv6 private network.** The prebuilt backend listens on `0.0.0.0` and its Redis client looks up IPv4 addresses only. The start script switches the backend to `::` and the Redis lookup to IPv4 and IPv6; the dashboard listens on `::` too.
 - **Private databases.** ClickHouse, Postgres and Redis have no public domain or TCP proxy.
-- **Pinned versions.** Rybbit v2.9.2 instead of `latest`, and the ClickHouse 26.8 LTS release our ClickHouse template uses.
+- **Pinned versions.** Rybbit v2.9.3 instead of `latest`, and the ClickHouse 26.8 LTS release our ClickHouse template uses.
 - **ClickHouse tuned for a small service.** High-volume internal log tables are off or kept for a few days, and inserts are batched (`async_insert`) as Rybbit recommends.
 - **Migrations on every start.** The backend runs the Postgres migrations and creates its ClickHouse tables before it starts, so upgrades need no manual step.
 

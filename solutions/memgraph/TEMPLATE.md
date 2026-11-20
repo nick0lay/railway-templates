@@ -18,7 +18,7 @@ This template runs `memgraph/memgraph-mage:3.14.0` with a volume, a generated us
 ## Dependencies for Memgraph 3.14 + Lab Hosting
 
 - Memgraph 3.14.0 with MAGE (`memgraph/memgraph-mage` image)
-- Memgraph Lab 3.14.2 (`memgraph/lab` image)
+- Memgraph Lab 3.14.3 (`memgraph/lab` image)
 
 ### Deployment Dependencies
 
@@ -53,7 +53,7 @@ driver.execute_query("CALL pagerank.get() YIELD node, rank RETURN node, rank LIM
 
 **This template:**
 
-- Pins Memgraph 3.14.0 with MAGE and Lab 3.14.2
+- Pins Memgraph 3.14.0 with MAGE and Lab 3.14.3
 - Generates a 32-character password, so the database is never open
 - Keeps snapshots and the write-ahead log on a volume, so your graph survives redeploys
 - Sets a memory limit (2048 MiB by default), so a large query fails cleanly instead of the service running out of memory
