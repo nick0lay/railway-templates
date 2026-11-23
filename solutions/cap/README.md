@@ -1,6 +1,8 @@
-# Cap
+# Cap (open-source Loom)
 
 Self-hosted [Cap](https://github.com/CapSoftware/Cap) on Railway: the open-source alternative to Loom. Record your screen with the Cap desktop app, and share a link that plays in any browser. This template runs the official web app and media server images pinned by digest, with MySQL 8.4 on a volume, recordings in a Railway Bucket, and every secret generated. You can log in without setting up email, and nobody else can create an account unless you allow it.
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/cap-open-source-loom?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

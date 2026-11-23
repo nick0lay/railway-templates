@@ -1,6 +1,8 @@
-# opencode
+# opencode 1.19
 
 Self-hosted [opencode](https://github.com/anomalyco/opencode) on Railway: the open-source AI coding agent, used from your browser. This template runs `opencode web` from the official image at a pinned stable version. A password protects every page and the API. Your projects, sessions and provider logins are kept on a volume, and git comes preinstalled.
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/opencode-119?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

@@ -1,6 +1,8 @@
-# Paperclip
+# Paperclip 2026.11
 
 Self-hosted [Paperclip](https://github.com/paperclipai/paperclip) on Railway: an open-source app for running AI agents as a company, with an org chart, goals, tasks, budgets and approvals. This template runs the official image at a pinned version with PostgreSQL 18, creates your owner account at deploy, keeps sign-ups closed and turns off the first-visitor "claim this instance" page.
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/paperclip-202611?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 

@@ -1,6 +1,8 @@
-# LiteLLM
+# LiteLLM 1.110 (Postgres + Redis)
 
 Self-hosted [LiteLLM](https://github.com/BerriAI/litellm) proxy on Railway: an OpenAI-compatible AI gateway for 100+ model providers, with virtual keys, budgets, rate limits, spend tracking and an admin UI. This template runs the official `litellm-database` image at a pinned version with PostgreSQL 18 for keys and spend, and Redis for response caching and shared rate limits. The admin UI requires a login with a generated password.
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/litellm-1110-postgres-redis?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Architecture
 
