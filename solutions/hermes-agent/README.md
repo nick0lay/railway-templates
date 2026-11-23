@@ -1,4 +1,4 @@
-# Hermes Agent 0.23
+# Hermes Agent by Nous Research (official image)
 
 Self-hosted [Hermes Agent](https://github.com/NousResearch/hermes-agent) on Railway: the open-source, self-improving AI agent from Nous Research. It keeps memory across sessions, writes its own skills, runs scheduled tasks, and talks to you from Telegram, Discord, Slack, WhatsApp, Signal or the web dashboard. This template runs the official image pinned to v0.23.2, puts the dashboard behind a generated password, and keeps all state on a volume.
 
