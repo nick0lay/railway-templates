@@ -48,7 +48,7 @@ This template runs the whole stack on Railway's private network: Postiz with the
 - Keeps PostgreSQL, Redis and Temporal private: only Postiz is public, and it requires a login
 - Stores uploads on a volume, Postiz data in PostgreSQL and Redis on volumes, and workflow history in Temporal's PostgreSQL
 - Generates `JWT_SECRET`, so redeploys don't log anyone out
-- Pins Postiz v2.26.0, Temporal 1.29.7, PostgreSQL 18 and Redis 8.10, with a healthcheck on the Postiz API
+- Pins Postiz v2.26.0, Temporal 1.29.7, PostgreSQL 18 and Redis 8.12, with a healthcheck on the Postiz API
 
 **Notes:** Postiz uses about 1.5 GB of RAM; the whole stack fits the Hobby plan. Uploaded media stays on the Postiz volume; set `STORAGE_PROVIDER=cloudflare` and the `CLOUDFLARE_*` variables to use R2 instead. When you add a custom domain, change `MAIN_URL`, `FRONTEND_URL` and `NEXT_PUBLIC_BACKEND_URL` to it, and delete `NOT_SECURED` for httpOnly login cookies.
 

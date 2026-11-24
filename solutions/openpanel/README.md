@@ -36,7 +36,7 @@ Self-hosted [OpenPanel](https://openpanel.dev) on Railway: open-source product a
 | Worker | `lindesvard/openpanel-worker:2.3.0` | Event batching into ClickHouse, sessions, scheduled jobs |
 | ClickHouse | `clickhouse/clickhouse-server:25.10.2.65-alpine` | Events and profiles (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, organizations, projects, clients, dashboards (private) |
-| Redis | `redis:8.10` | Queues and cache (private, `noeviction`) |
+| Redis | `redis:8.12` | Queues and cache (private, `noeviction`) |
 
 ## What this template does differently
 

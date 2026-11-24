@@ -46,7 +46,7 @@ Self-hosted [Lago](https://www.getlago.com) on Railway: open-source billing and 
 | ClickHouse | `solutions/clickhouse/clickhouse` (ClickHouse 26.3 LTS) | Event store, usage aggregation, API and activity logs (private, volume) |
 | Kafka | `apache/kafka:4.4.0` | Event stream between the API, the events processor and ClickHouse (private, volume) |
 | Postgres | `solutions/lago/postgres` (Railway's Postgres 17 image + pg_partman) | Customers, plans, subscriptions, invoices (private, volume) |
-| Redis | `redis:8.10` | Job queues and cache (private, volume) |
+| Redis | `redis:8.12` | Job queues and cache (private, volume) |
 | Bucket | Railway Bucket | Invoice PDFs and other files (S3) |
 
 ## What this template does differently
@@ -59,7 +59,7 @@ Self-hosted [Lago](https://www.getlago.com) on Railway: open-source billing and 
 - **Postgres with pg_partman.** Lago's database schema needs the pg_partman extension, which Railway's Postgres image doesn't include; this template adds it to Railway's Postgres 17 image.
 - **Private databases.** ClickHouse, Kafka, Postgres, Redis and the PDF service have no public domain or TCP proxy. The Sidekiq dashboard, which has no login, is off.
 - **Migrations on every start.** The API creates the Kafka topics and runs the Postgres and ClickHouse migrations before it starts, so upgrades need no manual step.
-- **Pinned versions.** Lago v1.57.0 for all Lago images, ClickHouse 26.3 LTS (ClickHouse 26.8 rejects some of the tables Lago creates), Kafka 4.4, PostgreSQL 17, Redis 8.10. Usage analytics sent to Lago are off.
+- **Pinned versions.** Lago v1.57.0 for all Lago images, ClickHouse 26.3 LTS (ClickHouse 26.8 rejects some of the tables Lago creates), Kafka 4.4, PostgreSQL 17, Redis 8.12. Usage analytics sent to Lago are off.
 
 ## After deploy
 

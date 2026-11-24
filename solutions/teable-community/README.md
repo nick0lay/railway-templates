@@ -32,13 +32,13 @@ This template uses the `teable-community` image: only the open-source features, 
 |---------|--------|------|
 | teable | `ghcr.io/teableio/teable-community:release.2026-10-26T07-49-03Z.1718` | Web app and API (public). Runs database migrations on start. Attachments on a volume |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Every table and record, users, spaces (private) |
-| Redis | `redis:8.10` | Cache, sessions and job queues, `noeviction` and append-only file on a volume (private) |
+| Redis | `redis:8.12` | Cache, sessions and job queues, `noeviction` and append-only file on a volume (private) |
 
 ## What this template does differently
 
 - **Admin account created at deploy.** On a fresh Teable install, the first person to sign up becomes the instance admin, and anyone can sign up after that. This template signs up the admin on first start with your `ADMIN_EMAIL` and a generated `ADMIN_PASSWORD`, creates a first space, and then turns off "Allow creating new accounts". Strangers get "The current instance disallow sign up by the administrator".
 - **No public default keys.** If its secrets aren't set, Teable starts with keys that are in its public git history and logs a security warning. This template generates `SECRET_KEY` and every encryption key and IV, so the warning doesn't appear.
-- **Pinned version.** A fixed Teable Community release instead of `latest` (which, for the community image, pointed to a build from April 2026 when we checked), plus Postgres 18 and Redis 8.10. Teable releases several times a week and migrates the database on start, so you upgrade when you choose.
+- **Pinned version.** A fixed Teable Community release instead of `latest` (which, for the community image, pointed to a build from April 2026 when we checked), plus Postgres 18 and Redis 8.12. Teable releases several times a week and migrates the database on start, so you upgrade when you choose.
 - **Redis for cache, sessions and queues**, with `noeviction` and an append-only file on a volume, and no public TCP proxy.
 - **Attachments on a volume**, so uploads survive redeploys.
 - **Private networking** for Postgres and Redis; healthcheck on `/health`.

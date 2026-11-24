@@ -45,7 +45,7 @@ It uses Teable's official image, which includes the paid features. **Paid featur
 - Generates `SECRET_KEY` and every encryption key and IV, so nothing runs on Teable's public default keys
 - Keeps attachments on a volume
 - Uses Redis for cache, sessions and queues, with an append-only file on a volume and no public port
-- Pins the Teable release, PostgreSQL 18 and Redis 8.10, and turns off the self-hosted telemetry report
+- Pins the Teable release, PostgreSQL 18 and Redis 8.12, and turns off the self-hosted telemetry report
 - Checks health on `/health`
 
 **License:** Teable licenses aren't set through a variable. Open System Admin → Self-hosted license, copy the Instance ID, subscribe on Teable's self-hosted pricing page (https://app.teable.ai/public/pricing?host=self-hosted), then paste the License Key there. Without a license the instance runs the free feature set; an expired license falls back to it and keeps your data.

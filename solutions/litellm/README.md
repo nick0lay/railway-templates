@@ -31,9 +31,9 @@ Self-hosted [LiteLLM](https://github.com/BerriAI/litellm) proxy on Railway: an O
 
 | Service | Source | Role |
 |---------|--------|------|
-| LiteLLM | `litellm/litellm-database:v1.110.1` | Proxy API and admin UI (public). Migrates its database on start, healthcheck `/health/liveliness` |
+| LiteLLM | `litellm/litellm-database:v1.110.3` | Proxy API and admin UI (public). Migrates its database on start, healthcheck `/health/liveliness` |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Virtual keys, teams, users, models added in the UI, spend logs (private, volume) |
-| Redis | `redis:8.10` | Response cache and rate-limit counters, password, append-only file on a volume, `maxmemory 256mb` with `volatile-lru` (private) |
+| Redis | `redis:8.12` | Response cache and rate-limit counters, password, append-only file on a volume, `maxmemory 256mb` with `volatile-lru` (private) |
 
 ## What this template does differently
 
@@ -43,7 +43,7 @@ Self-hosted [LiteLLM](https://github.com/BerriAI/litellm) proxy on Railway: an O
 - **Generated keys.** `LITELLM_MASTER_KEY` (admin API key) and `LITELLM_SALT_KEY` (encrypts provider keys stored in the database).
 - **Keys and models in Postgres.** `STORE_MODEL_IN_DB=True`: models, provider credentials and virtual keys added in the UI or API survive redeploys.
 - **Any model, one key.** The config routes any model name to its provider (`model: "*"`), so `gpt-4o-mini`, `anthropic/claude-haiku-4-5` or `gemini/gemini-2.5-flash` work as soon as the provider key is set. Unsupported parameters are dropped instead of failing the request.
-- **Pinned versions.** LiteLLM v1.110.1, PostgreSQL 18 and Redis 8.10 instead of `latest`. LiteLLM releases often; you upgrade when you choose.
+- **Pinned versions.** LiteLLM v1.110.3, PostgreSQL 18 and Redis 8.12 instead of `latest`. LiteLLM releases often; you upgrade when you choose.
 - **Private data services.** Postgres and Redis have volumes and no public TCP proxy; Redis has a password.
 - **Healthcheck and restart policy.** Railway waits for `/health/liveliness` before it switches traffic, and restarts a crashed service.
 - **Privacy defaults.** LiteLLM's anonymous telemetry is off, and the model price list bundled in the image is used instead of downloading it on start.

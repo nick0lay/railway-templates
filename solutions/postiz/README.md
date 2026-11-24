@@ -35,7 +35,7 @@ Self-hosted [Postiz](https://github.com/gitroomhq/postiz-app) on Railway: an ope
 |---------|--------|------|
 | Postiz | `ghcr.io/gitroomhq/postiz-app:v2.26.0` | Web app, API and orchestrator worker in one container (public, login required) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Postiz database (private) |
-| Redis | `redis:8.10` | Cache and rate limits, append-only file on a volume (private) |
+| Redis | `redis:8.12` | Cache and rate limits, append-only file on a volume (private) |
 | Temporal | `temporalio/auto-setup:1.29.7` | Workflow engine that runs scheduled posts; creates its schema on first start (private) |
 | Temporal DB | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Temporal persistence and workflow search (private) |
 

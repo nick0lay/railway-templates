@@ -6,7 +6,7 @@ Hermes Agent is the open-source, self-improving AI agent from Nous Research. It 
 
 Hermes runs as a long-lived gateway process that keeps its memory, skills, sessions and configuration on disk. In production it needs a persistent volume, an always-on process, and a dashboard that only you can open: since June 2026, Hermes refuses to serve the dashboard on a public address without an auth provider.
 
-This template runs the official `nousresearch/hermes-agent` image, pinned to v0.23.2, with the gateway and the web dashboard supervised together. The dashboard is behind a username and a generated password, and all state lives on a Railway volume.
+This template runs the official `nousresearch/hermes-agent` image, pinned to v0.23.4, with the gateway and the web dashboard supervised together. The dashboard is behind a username and a generated password, and all state lives on a Railway volume.
 
 ## Common Use Cases
 
@@ -38,7 +38,7 @@ This template runs the official `nousresearch/hermes-agent` image, pinned to v0.
 
 **This template:**
 
-- Runs the official image, pinned to Hermes Agent v0.23.2, instead of `latest` or a source build
+- Runs the official image, pinned to Hermes Agent v0.23.4, instead of `latest` or a source build
 - Starts the messaging gateway and the web dashboard together under the image's own process supervisor
 - Puts the dashboard behind a login with a generated password and session secret
 - Keeps memory, skills, sessions and configuration on a volume, so a redeploy keeps everything

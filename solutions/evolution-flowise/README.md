@@ -35,9 +35,9 @@ AI agents on WhatsApp, built visually and deployed on Railway. [Evolution API](h
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key). Calls your Flowise flow for each chat |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key). Calls your Flowise flow for each chat |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, contacts, bot sessions (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
 | flowise | `flowiseai/flowise:3.1.4` | Visual editor, REST API and prediction endpoints (public, owner login) |
 | Flowise Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Flows, users, API keys, encrypted credentials, chat history (private) |
 
@@ -48,7 +48,7 @@ AI agents on WhatsApp, built visually and deployed on Railway. [Evolution API](h
 - **Private wiring, ready to copy.** `flowise` has `PRIVATE_PREDICTION_URL`, the prediction base that Evolution API calls over the private network, and `EVOLUTION_API_URL`, Evolution API's private address.
 - **Separate databases.** Evolution API and Flowise each have their own Postgres. Flowise runs as a single process and uses Redis only in its optional queue mode, so it gets no Redis. Evolution's Redis is its own cache.
 - **Auth on every public service.** Evolution API needs the generated global API key and Flowise needs the owner login. The databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Flowise 3.1.4, Postgres 18, Redis 8.10.
+- **Pinned, tested versions:** Evolution API 2.3.8 (newer images need a license activation), Flowise 3.1.4, Postgres 18, Redis 8.12.
 
 ## After deploy
 
@@ -185,7 +185,7 @@ Read the release notes ([Evolution API](https://github.com/evolution-foundation/
 | Saved credentials stop working | `FLOWISE_SECRETKEY_OVERWRITE` was changed. Restore the old value |
 | The QR code expires | Call `/instance/connect/<name>` again or reopen the instance in the manager |
 
-Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.7 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number could trigger its bot and spend your LLM credits. Don't attach production bots to `EVOLUTION` instances.
+Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.8 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number could trigger its bot and spend your LLM credits. Don't attach production bots to `EVOLUTION` instances.
 
 WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and Flowise are not affiliated with WhatsApp or Meta.
 

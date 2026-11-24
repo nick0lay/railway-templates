@@ -39,15 +39,15 @@ WhatsApp chatbots on Railway without code: [Typebot](https://github.com/baptiste
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key). Calls the Typebot viewer for each chat |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key). Calls the Typebot viewer for each chat |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, contacts, bot sessions (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
 | typebot-builder | `baptistearno/typebot-builder:3.19` | Flow editor, sign-in, results, API (public) |
 | typebot-viewer | `baptistearno/typebot-viewer:3.19` | Runs published flows; Evolution API talks to it (public) |
 | mailpit | `axllent/mailpit:v1.34` | Catches Typebot's sign-in emails on a password-protected page (public) |
 | files | `rclone/rclone:1.76.0` | Read-only web server for the bucket's `public/` folder: images and files used in flows (public) |
 | Typebot Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Flows, results, users (private) |
-| Typebot Redis | `redis:8.10` | Typebot sessions and rate limits (private) |
+| Typebot Redis | `redis:8.12` | Typebot sessions and rate limits (private) |
 | Bucket | Railway Bucket | Uploaded images, videos and files |
 
 ## What this template does differently
@@ -58,7 +58,7 @@ WhatsApp chatbots on Railway without code: [Typebot](https://github.com/baptiste
 - **Sign-in without an email provider.** Typebot signs in with an emailed code. The code goes to Mailpit; open the `mailpit` URL with its password and copy it.
 - **Auth on every public service.** Evolution API needs the generated global API key, Typebot sign-up is closed to `ADMIN_EMAIL` and people you invite, and Mailpit has a generated password. Databases have no public TCP proxy.
 - **WhatsApp sessions in Postgres**, so a Redis restart doesn't log your number out, and messages, contacts and chats are stored for the API and manager.
-- **Pinned, tested versions:** Evolution API 2.3.7 (the image's `latest` tag is a release candidate), Typebot 3.19, Postgres 18, Redis 8.10.
+- **Pinned, tested versions:** Evolution API 2.3.8 (the image's `latest` tag is a release candidate), Typebot 3.19, Postgres 18, Redis 8.12.
 
 ## After deploy
 

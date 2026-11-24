@@ -27,8 +27,8 @@ Self-hosted [Elasticsearch](https://github.com/elastic/elasticsearch) 9 and [Kib
 
 | Service | Source | Role |
 |---------|--------|------|
-| Elasticsearch | `elastic/elasticsearch:9.5.6` | Search and analytics engine. Private, no public domain, volume at `/usr/share/elasticsearch/data` |
-| Kibana | `elastic/kibana:9.5.6` | Web UI: Discover, dashboards, Dev Tools console, index management (public, login required) |
+| Elasticsearch | `elastic/elasticsearch:9.5.7` | Search and analytics engine. Private, no public domain, volume at `/usr/share/elasticsearch/data` |
+| Kibana | `elastic/kibana:9.5.7` | Web UI: Discover, dashboards, Dev Tools console, index management (public, login required) |
 
 ## What this template does differently
 
@@ -128,3 +128,5 @@ The Elasticsearch and Kibana source code is available under AGPLv3, SSPL or the 
 ## Testing
 
 Tested on 2026-11-05 with Elasticsearch and Kibana 9.5.6 in a throwaway Railway project: both services healthy, the `kibana_system` password was set automatically about 30 seconds after Elasticsearch started, and Elasticsearch had no public domain or TCP proxy. On the Kibana domain, the login page loaded, API calls without a login returned 401, a wrong password was refused, and `elastic` with the generated password logged in. A document was indexed and found through Kibana. After Elasticsearch was redeployed, the setup step ran again, Kibana reconnected, and the document was still there.
+
+2026-11-24, after the update to Elasticsearch and Kibana 9.5.7: a fresh deploy from the template was healthy on both services; the functional checks were not repeated.

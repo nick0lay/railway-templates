@@ -37,9 +37,9 @@ WhatsApp support where a bot answers first and a person takes over when needed, 
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key). Calls Typebot and pushes messages into Chatwoot |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key). Calls Typebot and pushes messages into Chatwoot |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, bot sessions (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
 | Chatwoot | `chatwoot/chatwoot:v4.19.1-ce` | Agent inbox: Rails web and Sidekiq in one service, attachments on a volume (public, login) |
 | Chatwoot Postgres | `pgvector/pgvector:0.8.7-pg16` | Chatwoot data (private) |
 | Chatwoot Redis | `redis:8.2.11-alpine` | Sidekiq jobs, Action Cable, cache (private) |
@@ -48,7 +48,7 @@ WhatsApp support where a bot answers first and a person takes over when needed, 
 | mailpit | `axllent/mailpit:v1.34` | Catches Typebot's sign-in emails (public, password) |
 | files | `rclone/rclone:1.76.0` | Read-only server for the bucket's `public/` folder: media used in flows (public, no listing) |
 | Typebot Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Flows, results, users (private) |
-| Typebot Redis | `redis:8.10` | Typebot sessions and rate limits (private) |
+| Typebot Redis | `redis:8.12` | Typebot sessions and rate limits (private) |
 | Bucket | Railway Bucket | Uploaded images, videos and files |
 
 ## How bot and human share a chat
@@ -115,7 +115,7 @@ API reference: https://doc.evolution-api.com, https://docs.typebot.io, https://d
 ## Security
 
 - Evolution API needs the generated global API key; Chatwoot an agent login (the admin and its API token are created at deploy time and the public onboarding page is closed); Typebot sign-up is limited to `ADMIN_EMAIL` and invited people; Mailpit has a password. The Typebot viewer and `files` are public by design: they serve published bots and their media.
-- In Evolution API 2.3.7, `/chatwoot/webhook/<instance>` (where Chatwoot sends agent replies) has no API-key check. Use long, random-looking instance names and don't publish them.
+- In Evolution API 2.3.8, `/chatwoot/webhook/<instance>` (where Chatwoot sends agent replies) has no API-key check. Use long, random-looking instance names and don't publish them.
 - The built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number can inject messages and drive the bot. Put production bots on `WHATSAPP-BAILEYS` instances.
 - `ADMIN_ACCESS_TOKEN` gives full access to the Chatwoot account. Rotate it on the `Chatwoot` service (applied on restart), then run `/chatwoot/set` again for each instance.
 

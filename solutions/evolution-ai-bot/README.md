@@ -33,20 +33,20 @@ The lightest way to get an LLM answering a WhatsApp number, without n8n or any w
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API, manager UI and the OpenAI bot (public, API key) |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API, manager UI and the OpenAI bot (public, API key) |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, bot sessions with chat history (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
-| LiteLLM | `litellm/litellm-database:v1.110.1` | OpenAI-compatible gateway to any provider, virtual keys, budgets, spend logs, admin UI (public, master key and UI login) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
+| LiteLLM | `litellm/litellm-database:v1.110.3` | OpenAI-compatible gateway to any provider, virtual keys, budgets, spend logs, admin UI (public, master key and UI login) |
 | LiteLLM Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Virtual keys, models added in the UI, spend logs (private) |
 
 ## What this template does differently
 
 - **No workflow tool in the middle.** Evolution API's own OpenAI bot (chat completion mode) keeps a per-chat history and answers directly. Four services fewer than an n8n stack.
-- **Any provider, not just OpenAI.** Evolution API 2.3.7 uses the official OpenAI SDK, which reads `OPENAI_BASE_URL`. The template points it at LiteLLM's private address, so the bot calls whatever model name you give it: `gpt-4o-mini`, `anthropic/claude-haiku-4-5`, `gemini/gemini-2.5-flash`, `openrouter/...`.
+- **Any provider, not just OpenAI.** Evolution API 2.3.8 uses the official OpenAI SDK, which reads `OPENAI_BASE_URL`. The template points it at LiteLLM's private address, so the bot calls whatever model name you give it: `gpt-4o-mini`, `anthropic/claude-haiku-4-5`, `gemini/gemini-2.5-flash`, `openrouter/...`.
 - **One key per WhatsApp number, with budgets.** Each Evolution instance gets its own LiteLLM virtual key, so you see spend per number and can cap it. The master key never leaves LiteLLM.
 - **Only the OpenAI integration on in Evolution API.** `OPENAI_ENABLED=true` plus `OPENAI_BASE_URL`. No other integration is turned on.
 - **Auth on every public service.** Evolution API needs the generated global API key, LiteLLM needs the master key (API) or the generated UI password (admin UI). The databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), LiteLLM 1.110.1, Postgres 18, Redis 8.10.
+- **Pinned, tested versions:** Evolution API 2.3.8 (newer images need a license activation), LiteLLM 1.110.3, Postgres 18, Redis 8.12.
 
 ## After deploy
 
@@ -64,7 +64,7 @@ curl -X POST "$LITELLM/key/generate" -H "Authorization: Bearer <LITELLM_MASTER_K
   -H "content-type: application/json" -d '{"key_alias":"whatsapp-main","max_budget":5}'
 ```
 
-Copy the returned `key` (`sk-...`). Create one key per Evolution instance: Evolution API 2.3.7 stores credentials with a globally unique key **and** a globally unique name, so a second instance can't reuse either.
+Copy the returned `key` (`sk-...`). Create one key per Evolution instance: Evolution API 2.3.8 stores credentials with a globally unique key **and** a globally unique name, so a second instance can't reuse either.
 
 **3. Connect WhatsApp**
 
@@ -144,7 +144,7 @@ curl -X POST "$URL/openai/create/main" -H "apikey: $KEY" -H "content-type: appli
 
 ## Limits of Evolution's OpenAI bot through LiteLLM
 
-- **Voice notes are not transcribed.** Evolution API 2.3.7 sends audio straight to `api.openai.com` with the bot's credential, which is a LiteLLM key, so OpenAI rejects it and the contact gets "Sorry, I couldn't transcribe your audio message". Keep `speechToText` off.
+- **Voice notes are not transcribed.** Evolution API 2.3.8 sends audio straight to `api.openai.com` with the bot's credential, which is a LiteLLM key, so OpenAI rejects it and the contact gets "Sorry, I couldn't transcribe your audio message". Keep `speechToText` off.
 - **Use Chat Completion, not Assistant.** The Assistant type needs OpenAI's Assistants API, which LiteLLM doesn't serve for other providers.
 - **Errors reach the chat.** When the provider fails (bad key, no credit, unknown model), Evolution sends `Sorry, there was an error: <message>` to the contact. Test the model in LiteLLM first.
 - Images sent by contacts are passed as `image_url`; that works only with vision models.
@@ -177,7 +177,7 @@ Back up both Postgres services first.
 | The bot stops after you answered from the phone | `stopBotFromMe` is on; that is intended for human takeover |
 | The QR code expires | Call `/instance/connect/<name>` again or reopen the instance in the manager |
 
-Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.7 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number could trigger its bot and spend your LLM budget. Don't attach production bots to `EVOLUTION` instances.
+Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.8 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number could trigger its bot and spend your LLM budget. Don't attach production bots to `EVOLUTION` instances.
 
 WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and LiteLLM are not affiliated with WhatsApp, Meta or any LLM provider.
 

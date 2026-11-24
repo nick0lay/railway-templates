@@ -19,7 +19,7 @@ This template runs one Kafka 4.4 node in KRaft mode (broker and controller in on
 ## Dependencies for Apache Kafka 4.4 Hosting
 
 - Apache Kafka 4.4.0 (official `apache/kafka` image)
-- Kafka UI v1.5.0 (`ghcr.io/kafbat/kafka-ui`)
+- Kafka UI v1.5.1 (`ghcr.io/kafbat/kafka-ui`)
 
 ### Deployment Dependencies
 

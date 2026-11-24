@@ -34,7 +34,7 @@ Self-hosted [Apache Superset](https://superset.apache.org) on Railway with a [Cl
 | Superset Worker | same image | Celery worker and beat scheduler |
 | ClickHouse | `solutions/clickhouse/clickhouse` (`clickhouse/clickhouse-server:26.8`) | Analytics database, registered in Superset as **ClickHouse** (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Superset metadata: users, dashboards, charts, saved queries (private) |
-| Redis | `redis:8.10` | Caches, SQL Lab results, Celery queue (private) |
+| Redis | `redis:8.12` | Caches, SQL Lab results, Celery queue (private) |
 
 ## What this template does differently
 
@@ -45,7 +45,7 @@ Self-hosted [Apache Superset](https://superset.apache.org) on Railway with a [Cl
 - **Private databases.** ClickHouse, Postgres and Redis have no public domain or TCP proxy.
 - **Migrations on every start.** `superset db upgrade` and `superset init` run before the web server starts, so upgrades need no manual step.
 - **ClickHouse tuned for a small service.** High-volume internal log tables are off or kept for a few days.
-- **Pinned versions.** Superset 6.1.0, clickhouse-connect 0.15.1, ClickHouse 26.8 (LTS), PostgreSQL 18, Redis 8.10.
+- **Pinned versions.** Superset 6.1.0, clickhouse-connect 0.15.1, ClickHouse 26.8 (LTS), PostgreSQL 18, Redis 8.12.
 
 ## After deploy
 

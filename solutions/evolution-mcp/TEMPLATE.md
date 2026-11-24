@@ -44,7 +44,7 @@ claude.ai's custom connectors and ChatGPT expect OAuth and can't send a static b
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), mcp-evolution 0.7.0 (commit `44f1999`), Node 22.23.4, PostgreSQL 18 and Redis 8.10
+- Pins Evolution API 2.3.8 (newer images need a license activation), mcp-evolution 0.7.0 (commit `44f1999`), Node 22.23.4, PostgreSQL 18 and Redis 8.12
 - Protects the MCP endpoint with a generated 48-character bearer token, and Evolution API with a generated API key; the databases stay private
 - Keeps the Evolution key inside Railway and removes it from tool output
 - Leaves irreversible and broadcast tools (delete for everyone, log out, status posts, webhook, privacy and group changes) off; adds an instance allowlist and an optional recipient allowlist

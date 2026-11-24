@@ -45,7 +45,7 @@ It uses the Teable Community image: only the open-source features, under AGPL-3.
 - Generates `SECRET_KEY` and every encryption key and IV, so nothing runs on Teable's public default keys
 - Keeps attachments on a volume
 - Uses Redis for cache, sessions and queues, with an append-only file on a volume and no public port
-- Pins the Teable Community release, PostgreSQL 18 and Redis 8.10
+- Pins the Teable Community release, PostgreSQL 18 and Redis 8.12
 - Checks health on `/health`
 
 **Notes:** don't change `SECRET_KEY` or the encryption keys after the first deploy. Upgrade by changing the image tag; Teable migrates the database on start. Teable uses about 1.6 GB of RAM while idle. Don't switch to the community image's `latest` tag; it isn't the newest release.

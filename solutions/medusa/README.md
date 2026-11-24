@@ -36,7 +36,7 @@ Self-hosted [Medusa](https://github.com/medusajs/medusa) v2 on Railway: the open
 | Medusa Worker | `backend/Dockerfile` (same image, `MEDUSA_WORKER_MODE=worker`) | Background jobs, event subscribers, scheduled jobs (private) |
 | Storefront | `storefront/Dockerfile` (Next.js Starter, pinned commit) | Shop front for customers (public) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Products, orders, customers (private) |
-| Redis | `redis:8.10` | Event bus, workflow engine and locks shared by server and worker (private) |
+| Redis | `redis:8.12` | Event bus, workflow engine and locks shared by server and worker (private) |
 | Bucket | Railway Bucket | Product images and uploads (private, served through Medusa) |
 
 ## What this template does differently
@@ -47,7 +47,7 @@ Self-hosted [Medusa](https://github.com/medusajs/medusa) v2 on Railway: the open
 - **Images in a bucket.** Uploads go to a Railway Bucket. Buckets are private, so Medusa serves images at `https://<Medusa domain>/media/<file>`, and only image and video files: private uploads such as product import CSVs are never public.
 - **Demo store.** On an empty database the backend loads Medusa's demo data (a Europe region in EUR, shipping options, four products), so the storefront shows a working shop. Set `SEED_DEMO_DATA=false` before the first deploy for an empty store.
 - **Private by default.** PostgreSQL, Redis and the worker have no public domain or TCP proxy.
-- **Pinned versions:** Medusa 2.22.4 with a lockfile, Node 22.23.4, Next.js Starter at a fixed commit, PostgreSQL 18, Redis 8.10. Healthchecks on Medusa (`/health`) and the storefront (`/api/healthcheck`).
+- **Pinned versions:** Medusa 2.22.4 with a lockfile, Node 22.23.4, Next.js Starter at a fixed commit, PostgreSQL 18, Redis 8.12. Healthchecks on Medusa (`/health`) and the storefront (`/api/healthcheck`).
 
 ## After deploy
 

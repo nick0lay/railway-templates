@@ -47,7 +47,7 @@ This template sets all of that up in one deploy. The Medusa server, a separate M
 - Shares events, workflows and locks between server and worker through Redis
 - Stores product images in a Railway Bucket and serves them from the Medusa domain
 - Keeps PostgreSQL, Redis and the worker private; only the admin/API and the storefront are public
-- Pins Medusa 2.22.4, Node 22, PostgreSQL 18 and Redis 8.10, with healthchecks on the server and storefront
+- Pins Medusa 2.22.4, Node 22, PostgreSQL 18 and Redis 8.12, with healthchecks on the server and storefront
 
 **Notes:** card payments need a Stripe key and the Stripe provider in the backend; email needs a notification provider. Both are optional and covered in the Medusa docs.
 

@@ -49,7 +49,7 @@ Other services in the project connect with `${{Elasticsearch.ELASTICSEARCH_URL}}
 - Sizes the Java heap from one variable, `ES_HEAP_SIZE`
 - Fixes volume ownership, then runs Elasticsearch as a non-root user
 - Generates Kibana's encryption keys, turns off telemetry and checks health on `/api/status`
-- Pins Elasticsearch and Kibana 9.5.6
+- Pins Elasticsearch and Kibana 9.5.7
 
 **Notes:** the stack needs a few GB of RAM, so use a paid plan. Hobby volumes are 5 GB; Elasticsearch makes indices read-only when the disk is 95% full. Upgrade by changing both image tags to the same version, Elasticsearch first. To reach Elasticsearch from outside Railway, generate a domain for port 9200 (HTTPS, password still required). Elastic's images are under the Elastic License 2.0.
 

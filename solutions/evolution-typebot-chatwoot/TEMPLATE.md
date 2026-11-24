@@ -60,14 +60,14 @@ POST https://your-evolution-domain/typebot/create/support-x7k2q9
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), Typebot 3.19 and Chatwoot 4.19.1 CE
+- Pins Evolution API 2.3.8 (newer images need a license activation), Typebot 3.19 and Chatwoot 4.19.1 CE
 - Turns on only the Typebot (`latest` chat API) and Chatwoot integrations in Evolution API
 - Creates the Chatwoot admin and API token at deploy time and closes the public onboarding page
 - Limits Typebot sign-up to `ADMIN_EMAIL`, with sign-in codes caught by password-protected Mailpit
 - Gives each app its own PostgreSQL and Redis; all databases are private
 - Stores WhatsApp sessions in PostgreSQL so restarts don't log your number out
 
-**Security notes:** Evolution API 2.3.7's `/chatwoot/webhook/your-instance` has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production bots belong on `WHATSAPP-BAILEYS` instances. The Typebot viewer and `files` are public by design (they serve published bots).
+**Security notes:** Evolution API 2.3.8's `/chatwoot/webhook/your-instance` has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production bots belong on `WHATSAPP-BAILEYS` instances. The Typebot viewer and `files` are public by design (they serve published bots).
 
 **Notes:** Don't change `SECRET_KEY_BASE`, `ACTIVE_RECORD_ENCRYPTION_*` or Typebot's `ENCRYPTION_SECRET` after the first deploy. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API, Typebot and Chatwoot are not affiliated with WhatsApp or Meta.
 

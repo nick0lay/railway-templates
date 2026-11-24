@@ -44,7 +44,7 @@ This template deploys all of it on Railway's private network with persistent vol
 - Lets you sign in without an email provider (Mailpit catches the sign-in emails behind a password)
 - Uses a Railway Bucket instead of MinIO, with a small read-only file server (`files`) that publishes only the bucket's `public/` folder, because Railway Buckets are private
 - Closes sign-up: only `ADMIN_EMAIL` and invited people can create accounts
-- Pins tested versions (Typebot 3.19, Postgres 18, Redis 8.10) and has health checks on every service
+- Pins tested versions (Typebot 3.19, Postgres 18, Redis 8.12) and has health checks on every service
 - Unlocks all features for self-hosted workspaces (`DEFAULT_WORKSPACE_PLAN=UNLIMITED`)
 
 **Notes:**

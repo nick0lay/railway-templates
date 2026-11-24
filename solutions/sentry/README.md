@@ -44,7 +44,7 @@ Self-hosted [Sentry](https://github.com/getsentry/self-hosted) 26.11 on Railway:
 | ClickHouse | `clickhouse/clickhouse-server:26.8` | Event search and stats storage, on a volume (private, password) |
 | Kafka | `apache/kafka:4.4.0` | Event pipeline between Relay, Sentry and Snuba; one KRaft node on a volume (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, projects, issues and event payloads (private) |
-| Redis | `redis:8.10` | Caches, buffers, quotas, digests (private, password) |
+| Redis | `redis:8.12` | Caches, buffers, quotas, digests (private, password) |
 
 ## What this template does differently
 

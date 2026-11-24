@@ -46,7 +46,7 @@ This template creates your owner account at deploy and limits sign-up to people 
 - Creates and migrates both databases on every start, so upgrades need no manual step
 - Keeps geolocation data and temporary files on a volume
 - Generates the session secret and the two-factor encryption key
-- Pins Plausible v3.2.1, ClickHouse 24.12 and PostgreSQL 18, with a healthcheck that also checks both databases
+- Pins Plausible v3.2.2, ClickHouse 24.12 and PostgreSQL 18, with a healthcheck that also checks both databases
 
 **Notes:** the three services idle at about 1.1 GB of RAM together. Country-level geolocation works out of the box; city-level data needs a free MaxMind license key. Email needs an SMTP provider; without one, everything else works, but invitations and password-reset emails are not sent.
 

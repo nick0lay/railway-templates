@@ -34,9 +34,9 @@ A shared WhatsApp inbox for your team on Railway: [Evolution API](https://github
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key). Pushes messages into Chatwoot |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key). Pushes messages into Chatwoot |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, contacts (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
 | Chatwoot | `chatwoot/chatwoot:v4.19.1-ce` | Agent inbox: Rails web and Sidekiq in one service, attachments on a volume (public, login) |
 | Chatwoot Postgres | `pgvector/pgvector:0.8.7-pg16` | Chatwoot data; Chatwoot needs the pgvector extension (private) |
 | Chatwoot Redis | `redis:8.2.11-alpine` | Sidekiq jobs, Action Cable, cache (private) |
@@ -48,7 +48,7 @@ A shared WhatsApp inbox for your team on Railway: [Evolution API](https://github
 - **Chatwoot integration on in Evolution API.** `CHATWOOT_ENABLED=true`, plus `CHATWOOT_IMPORT_DATABASE_CONNECTION_URI` pointing at Chatwoot's Postgres, which Evolution API uses to import contacts and message history and to avoid duplicate messages. No other integration is turned on.
 - **Separate databases.** Each app has its own Postgres and Redis. Chatwoot's Postgres has pgvector; Evolution API's is Railway's Postgres 18.
 - **Auth on every public service.** Evolution API needs the generated global API key, Chatwoot an agent login. Databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Chatwoot 4.19.1 CE.
+- **Pinned, tested versions:** Evolution API 2.3.8 (newer images need a license activation), Chatwoot 4.19.1 CE.
 
 ## After deploy
 
@@ -114,7 +114,7 @@ API reference: https://doc.evolution-api.com and https://developers.chatwoot.com
 
 ## Security
 
-- In Evolution API 2.3.7, `/chatwoot/webhook/<instance>` (the URL Chatwoot calls with agent replies) has no API-key check. Anyone who knows an instance name can post to it and make that number send messages. Use long, random-looking instance names and don't publish them.
+- In Evolution API 2.3.8, `/chatwoot/webhook/<instance>` (the URL Chatwoot calls with agent replies) has no API-key check. Anyone who knows an instance name can post to it and make that number send messages. Use long, random-looking instance names and don't publish them.
 - The built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number can inject messages. Use `WHATSAPP-BAILEYS` instances for real numbers and production bots.
 - `ADMIN_ACCESS_TOKEN` gives full access to the Chatwoot account. Rotate it by changing the variable (Chatwoot restarts and applies it), then run `/chatwoot/set` again for each instance, because Evolution API stores the token per instance.
 

@@ -27,7 +27,7 @@ Self-hosted [Plausible Community Edition](https://github.com/plausible/community
 
 | Service | Source | Role |
 |---------|--------|------|
-| Plausible | `ghcr.io/plausible/community-edition:v3.2.1` | Dashboard, tracking script and event API (public, login required) |
+| Plausible | `ghcr.io/plausible/community-edition:v3.2.2` | Dashboard, tracking script and event API (public, login required) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, sites, goals and settings (private) |
 | ClickHouse | `clickhouse/clickhouse-server:24.12.6.70-alpine` | Pageviews and events (private) |
 
@@ -35,7 +35,7 @@ Self-hosted [Plausible Community Edition](https://github.com/plausible/community
 
 - **No one can claim your instance.** On a fresh Plausible, the first person to open the sign-up page becomes the owner. This template creates the owner from `ADMIN_EMAIL` and a generated `ADMIN_PASSWORD` before Plausible starts, and sign-up is limited to people you invite (`DISABLE_REGISTRATION=invite_only`).
 - **Private databases.** Postgres and ClickHouse have no public domain or TCP proxy.
-- **Pinned versions.** Plausible v3.2.1 and the ClickHouse version Plausible's own compose file uses, instead of moving tags such as `v2` or `latest`.
+- **Pinned versions.** Plausible v3.2.2 and the ClickHouse version Plausible's own compose file uses, instead of moving tags such as `v2` or `latest`.
 - **ClickHouse tuned for a small service.** Plausible's low-memory settings, and ClickHouse's high-volume internal log tables are turned off or kept for 7 days, so they don't fill the volume.
 - **Volume for Plausible.** Geolocation data and temporary files live on a volume.
 - **Databases created and migrated on every start**, so upgrades need no manual step. The healthcheck (`/api/system/health/ready`) also reports whether Postgres and ClickHouse are reachable.
@@ -118,3 +118,5 @@ Plausible Community Edition is [AGPL-3.0](https://github.com/plausible/analytics
 ## Testing
 
 Tested on 2026-11-07 with Plausible CE v3.2.1 in a throwaway Railway project deployed from the template. All three services were healthy about a minute after deploy, and the owner account was created on the first start. Without a login, the dashboard redirected to the login page and the stats API refused requests; a wrong password and a stranger opening the sign-up page were refused, and Postgres and ClickHouse had no public endpoint. The owner logged in and added a site, pageviews sent to `/api/event` appeared in the dashboard stats (visitors, top pages, source, browser and country from the visitor's real IP), and the tracking script was served. After redeploying all three services, the owner was left unchanged and the site and its stats were still there. At idle the three services used about 1.1 GB of RAM together. Not tested: email, Google Search Console, MaxMind and the browser dashboard UI (only its HTTP endpoints).
+
+2026-11-24, after the update to Plausible CE v3.2.2: a fresh deploy from the template was healthy on all three services; the functional checks were not repeated.

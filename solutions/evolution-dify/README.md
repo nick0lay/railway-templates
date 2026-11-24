@@ -36,9 +36,9 @@ Only `Evolution API` and the `Dify` gateway are public. Every other service, all
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key). Calls the Dify app for each chat |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key). Calls the Dify app for each chat |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, bot sessions |
-| Evolution Redis | `redis:8.10` | Evolution API cache |
+| Evolution Redis | `redis:8.12` | Evolution API cache |
 | Dify | `nginx:1.30.6-alpine` | Gateway: one public origin for the console, the APIs and plugin hooks (public, admin login) |
 | dify-api | `langgenius/dify-api:1.20.0` | Console and service API, runs migrations, creates the admin account |
 | dify-worker | `langgenius/dify-api:1.20.0` | Celery worker: document indexing, workflow storage, mail |
@@ -49,7 +49,7 @@ Only `Evolution API` and the `Dify` gateway are public. Every other service, all
 | dify-ssrf-proxy | `ubuntu/squid:6.6-24.04_beta` | Outbound proxy for HTTP nodes and Code nodes; blocks private addresses except Evolution API |
 | Dify Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Dify data (`railway` database) and plugin data (`dify_plugin`) |
 | Dify Vector | `pgvector/pgvector:0.8.7-pg16` | Vector store for knowledge bases |
-| Dify Redis | `redis:8.10` | Cache, sessions and the Celery queue |
+| Dify Redis | `redis:8.12` | Cache, sessions and the Celery queue |
 | Bucket | Railway Bucket | Uploaded files, knowledge base documents, workspace keys |
 
 ## What this template does differently
@@ -60,7 +60,7 @@ Only `Evolution API` and the `Dify` gateway are public. Every other service, all
 - **Dify integration on in Evolution API.** `DIFY_ENABLED=true`, nothing else.
 - **Private wiring, ready to copy.** The `Dify` service has `DIFY_PRIVATE_API_URL` (`http://dify-api.railway.internal:5001/v1`), the API URL Evolution API calls. The SSRF proxy allows Evolution API's private address, so Dify HTTP Request nodes can call Evolution back without leaving Railway.
 - **No default secrets.** Upstream compose ships fixed keys for the plugin daemon, the sandbox and the inner API. Here every one is generated per deploy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Dify 1.20.0 with the sandbox and plugin daemon versions its compose file pins.
+- **Pinned, tested versions:** Evolution API 2.3.8 (newer images need a license activation), Dify 1.20.0 with the sandbox and plugin daemon versions its compose file pins.
 
 Not included: the Agent V2 backend and its local sandbox (new in Dify 1.19 and off here: `NEXT_PUBLIC_ENABLE_AGENT_V2=false`), the collaboration websocket and the plugin remote-debugging port. Classic Agent apps, chatflows, workflows and knowledge bases work without them.
 
@@ -118,7 +118,7 @@ curl -X POST "$URL/dify/create/main" -H "apikey: $KEY" -H "content-type: applica
 curl "$URL/dify/find/main" -H "apikey: $KEY"
 ```
 
-`botType` is `chatBot`, `agent` or `textGenerator`. Evolution API 2.3.7 also accepts `workflow` but never calls Dify for it, so a Workflow app gets no messages. Wrap the workflow in a chatflow, or call it from a chatflow. Each WhatsApp chat keeps its own Dify conversation (`conversation_id` is stored in the bot session). `expire` closes a session after that many minutes without a message. `stopBotFromMe` pauses the bot when you reply from the phone, and `debounceTime` merges quick messages into one.
+`botType` is `chatBot`, `agent` or `textGenerator`. Evolution API 2.3.8 also accepts `workflow` but never calls Dify for it, so a Workflow app gets no messages. Wrap the workflow in a chatflow, or call it from a chatflow. Each WhatsApp chat keeps its own Dify conversation (`conversation_id` is stored in the bot session). `expire` closes a session after that many minutes without a message. `stopBotFromMe` pauses the bot when you reply from the phone, and `debounceTime` merges quick messages into one.
 
 **6. Call Evolution API from Dify**
 
@@ -189,7 +189,7 @@ Back up both Postgres services first.
 | Plugin install fails | Check `dify-plugin-daemon` logs; it needs internet access and time to install Python packages |
 | The QR code expires | Call `/instance/connect/<name>` again or reopen the instance in the manager |
 
-Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.7, the built-in `EVOLUTION` test channel takes messages on `/webhook/evolution` without checking the API key. Anyone who knows such an instance's number could trigger its bot. Keep production bots on `WHATSAPP-BAILEYS` instances, not `EVOLUTION` ones.
+Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.8, the built-in `EVOLUTION` test channel takes messages on `/webhook/evolution` without checking the API key. Anyone who knows such an instance's number could trigger its bot. Keep production bots on `WHATSAPP-BAILEYS` instances, not `EVOLUTION` ones.
 
 WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and Dify are not affiliated with WhatsApp or Meta.
 

@@ -37,14 +37,14 @@ WhatsApp automations and AI agents on Railway: [Evolution API](https://github.co
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key). Calls your n8n webhook for each chat |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key). Calls your n8n webhook for each chat |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, contacts, bot sessions (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
-| n8n | `n8nio/n8n:2.48.6` | Editor, REST API and webhooks; puts executions on the queue (public, owner login) |
-| n8n-worker | `n8nio/n8n:2.48.6` | Runs all executions from the queue, including manual ones (private) |
-| n8n-runner | `n8nio/runners:2.48.6` | Runs Code node JavaScript and Python for the worker, isolated from n8n (private) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
+| n8n | `n8nio/n8n:2.50.0` | Editor, REST API and webhooks; puts executions on the queue (public, owner login) |
+| n8n-worker | `n8nio/n8n:2.50.0` | Runs all executions from the queue, including manual ones (private) |
+| n8n-runner | `n8nio/runners:2.50.0` | Runs Code node JavaScript and Python for the worker, isolated from n8n (private) |
 | n8n Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Workflows, credentials, executions, binary data (private) |
-| n8n Redis | `redis:8.10` | Execution queue, append-only file on a volume (private) |
+| n8n Redis | `redis:8.12` | Execution queue, append-only file on a volume (private) |
 
 ## What this template does differently
 
@@ -55,7 +55,7 @@ WhatsApp automations and AI agents on Railway: [Evolution API](https://github.co
 - **Separate databases.** Evolution API and n8n each get their own Postgres and Redis. n8n's Redis holds the job queue and needs `noeviction` and persistence; Evolution's is a cache. A Redis or Postgres restart for one app doesn't touch the other.
 - **No n8n volume needed.** In queue mode n8n keeps binary data in Postgres, the encryption key is a variable, and community nodes you install from the UI are reinstalled after a redeploy (`N8N_REINSTALL_MISSING_PACKAGES=true`).
 - **Auth on every public service.** Evolution API needs the generated global API key, n8n needs the owner login. Worker, runner and databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), n8n 2.48.6 (the `stable` tag on the day of testing), Postgres 18, Redis 8.10.
+- **Pinned, tested versions:** Evolution API 2.3.8 (newer images need a license activation), n8n 2.50.0 (newest 2.x release), Postgres 18, Redis 8.12.
 
 ## After deploy
 
@@ -126,7 +126,7 @@ curl -X POST "$URL/n8n/create/main" -H "apikey: $KEY" -H "content-type: applicat
 curl "$URL/n8n/find/main" -H "apikey: $KEY"
 ```
 
-Use `basicAuthPass` for the password: Evolution API 2.3.7 validates a field called `basicAuthPassword` but stores and sends `basicAuthPass`, so a password sent as `basicAuthPassword` is dropped and n8n answers 401. `expire` closes a chat's session after that many minutes without a message, `keywordFinish` lets the user end it, `stopBotFromMe` pauses the bot when you answer from the phone yourself, and `debounceTime` waits that many seconds to merge quick consecutive messages into one call.
+Use `basicAuthPass` for the password: Evolution API 2.3.8 validates a field called `basicAuthPassword` but stores and sends `basicAuthPass`, so a password sent as `basicAuthPassword` is dropped and n8n answers 401. `expire` closes a chat's session after that many minutes without a message, `keywordFinish` lets the user end it, `stopBotFromMe` pauses the bot when you answer from the phone yourself, and `debounceTime` waits that many seconds to merge quick consecutive messages into one call.
 
 **5. Call Evolution API from n8n**
 
@@ -211,7 +211,7 @@ Read the release notes ([Evolution API](https://github.com/evolution-foundation/
 | `$env` access denied in an expression | n8n 2.x blocks it; paste the value into a credential instead |
 | The QR code expires | Call `/instance/connect/<name>` again or reopen the instance in the manager |
 
-Use the `WHATSAPP-BAILEYS` integration (QR code) for real numbers. In Evolution API 2.3.7 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number could trigger its bot. Don't attach production bots to `EVOLUTION` instances.
+Use the `WHATSAPP-BAILEYS` integration (QR code) for real numbers. In Evolution API 2.3.8 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number could trigger its bot. Don't attach production bots to `EVOLUTION` instances.
 
 WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and n8n are not affiliated with WhatsApp or Meta.
 

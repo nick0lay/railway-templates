@@ -1,22 +1,22 @@
-# LightRAG 1.5.7 + Neo4j (GraphRAG)
+# LightRAG 1.5.8 + Neo4j (GraphRAG)
 
 [LightRAG](https://github.com/HKUDS/LightRAG) GraphRAG server with its knowledge graph in Neo4j 2026.10 Community, and documents, chunks and vectors in PostgreSQL 18 with pgvector. Web UI with login, REST API with an API key, Neo4j Browser over HTTPS behind the Neo4j password.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157-neo4j?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
-This is the Neo4j variant of the [LightRAG 1.5.7](../lightrag/) template. Both are built from the same services and share one README: architecture, variables, models, API examples, backups, upgrades and troubleshooting are in **[../lightrag/README.md](../lightrag/README.md)**. The Neo4j service is the same as in the [Neo4j 2026.10 Community](../neo4j/) template.
+This is the Neo4j variant of the [LightRAG 1.5.8](../lightrag/) template. Both are built from the same services and share one README: architecture, variables, models, API examples, backups, upgrades and troubleshooting are in **[../lightrag/README.md](../lightrag/README.md)**. The Neo4j service is the same as in the [Neo4j 2026.10 Community](../neo4j/) template.
 
 ## Services
 
 | Service | Source | Role |
 |---------|--------|------|
-| LightRAG | `ghcr.io/hkuds/lightrag:v1.5.7` | Web UI, REST API and document pipeline (public, login and API key, volume) |
+| LightRAG | `ghcr.io/hkuds/lightrag:v1.5.8` | Web UI, REST API and document pipeline (public, login and API key, volume) |
 | Postgres | `pgvector/pgvector:0.8.7-pg18` | Documents, chunks, LLM cache, document status and vectors (private, volume) |
 | Neo4j | `neo4j:2026.10.1-community` | Knowledge graph with APOC. Browser on the public HTTPS domain and a Bolt TCP proxy (TLS, `bolt+ssc://`), both behind the generated password (volume) |
 
 ## What differs from the Postgres-only template
 
-| | LightRAG 1.5.7 | LightRAG 1.5.7 + Neo4j |
+| | LightRAG 1.5.8 | LightRAG 1.5.8 + Neo4j |
 |---|---|---|
 | Graph store | `PGTableGraphStorage` (Postgres tables) | `Neo4JStorage` (`NEO4J_URI=${{Neo4j.BOLT_URL}}`, `bolt+ssc://` over the private network) |
 | Look at the graph | LightRAG web UI | LightRAG web UI, Neo4j Browser, Cypher, any Neo4j driver |

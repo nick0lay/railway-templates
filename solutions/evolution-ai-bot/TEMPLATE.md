@@ -44,7 +44,7 @@ API equivalent: `POST /openai/creds/your-instance` with `{"name","apiKey"}`, the
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), LiteLLM 1.110.1, PostgreSQL 18 and Redis 8.10
+- Pins Evolution API 2.3.8 (newer images need a license activation), LiteLLM 1.110.3, PostgreSQL 18 and Redis 8.12
 - Points Evolution API's OpenAI bot at LiteLLM over the private network (`OPENAI_BASE_URL`), so any provider works
 - Turns on only the OpenAI integration in Evolution API
 - Routes any model name to its provider out of the box; add aliases, fallbacks or Ollama in the LiteLLM UI
@@ -53,7 +53,7 @@ API equivalent: `POST /openai/creds/your-instance` with `{"name","apiKey"}`, the
 - Protects every public service: generated Evolution API key, LiteLLM master key and admin UI password; databases stay private
 - Stores WhatsApp sessions in PostgreSQL so restarts don't log your number out
 
-**Notes:** Evolution API 2.3.7 requires a unique credential name and key per instance, so create one virtual key per number. Voice notes are not transcribed through LiteLLM (Evolution sends them to OpenAI directly), and the Assistant bot type is not supported; use Chat Completion. Provider errors are sent to the chat, so test the model first. Use Baileys instances for real numbers: the built-in EVOLUTION test channel accepts messages on `/webhook/evolution` without the API key. Don't change `LITELLM_SALT_KEY` after the first deploy. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and LiteLLM are not affiliated with WhatsApp, Meta or any LLM provider.
+**Notes:** Evolution API 2.3.8 requires a unique credential name and key per instance, so create one virtual key per number. Voice notes are not transcribed through LiteLLM (Evolution sends them to OpenAI directly), and the Assistant bot type is not supported; use Chat Completion. Provider errors are sent to the chat, so test the model first. Use Baileys instances for real numbers: the built-in EVOLUTION test channel accepts messages on `/webhook/evolution` without the API key. Don't change `LITELLM_SALT_KEY` after the first deploy. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and LiteLLM are not affiliated with WhatsApp, Meta or any LLM provider.
 
 ## Why Deploy WhatsApp AI Bot (Evolution API + LiteLLM) on Railway?
 

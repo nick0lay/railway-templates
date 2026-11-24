@@ -1,10 +1,10 @@
-# Deploy and Host LightRAG 1.5.7 on Railway
+# Deploy and Host LightRAG 1.5.8 on Railway
 
 LightRAG is an open-source GraphRAG server from HKU. It reads your documents, uses an LLM to build a knowledge graph of entities and relationships, and answers questions by combining graph retrieval with vector search. It has a web UI for uploads, a knowledge graph explorer and a query panel, a REST API, and an Ollama-compatible chat API.
 
-## About Hosting LightRAG 1.5.7
+## About Hosting LightRAG 1.5.8
 
-This template runs the official `ghcr.io/hkuds/lightrag` image, pinned to v1.5.7, with PostgreSQL 18 and pgvector 0.8.7. All of LightRAG's data lives in Postgres: documents, chunks and the LLM cache (`PGKVStorage`), vectors with an HNSW index (`PGVectorStorage`), document status, and the knowledge graph itself in plain Postgres tables (`PGTableGraphStorage`, no Apache AGE needed). Nothing is lost on redeploy. The web UI asks for a login with a generated admin password, the API and the Ollama-compatible routes need a generated API key, and Postgres has no public endpoint. You only enter your OpenAI (or OpenAI-compatible) API key at deploy.
+This template runs the official `ghcr.io/hkuds/lightrag` image, pinned to v1.5.8, with PostgreSQL 18 and pgvector 0.8.7. All of LightRAG's data lives in Postgres: documents, chunks and the LLM cache (`PGKVStorage`), vectors with an HNSW index (`PGVectorStorage`), document status, and the knowledge graph itself in plain Postgres tables (`PGTableGraphStorage`, no Apache AGE needed). Nothing is lost on redeploy. The web UI asks for a login with a generated admin password, the API and the Ollama-compatible routes need a generated API key, and Postgres has no public endpoint. You only enter your OpenAI (or OpenAI-compatible) API key at deploy.
 
 ## Common Use Cases
 
@@ -13,16 +13,16 @@ This template runs the official `ghcr.io/hkuds/lightrag` image, pinned to v1.5.7
 - Give an AI agent or chatbot a GraphRAG backend over the REST API, or as an Ollama-compatible model in Open WebUI
 - Compare graph retrieval with plain vector search on the same data (local, global, hybrid, naive and mix query modes)
 
-## Dependencies for LightRAG 1.5.7 Hosting
+## Dependencies for LightRAG 1.5.8 Hosting
 
-- LightRAG v1.5.7 (`ghcr.io/hkuds/lightrag:v1.5.7`), public, login and API key required, volume for uploaded files
+- LightRAG v1.5.8 (`ghcr.io/hkuds/lightrag:v1.5.8`), public, login and API key required, volume for uploaded files
 - PostgreSQL 18 with pgvector 0.8.7 (`pgvector/pgvector:0.8.7-pg18`), private, with a volume
 - An API key for OpenAI or any OpenAI-compatible provider (OpenRouter, Groq, DeepSeek, a LiteLLM gateway, vLLM)
 
 ### Deployment Dependencies
 
 - LightRAG on GitHub: https://github.com/HKUDS/LightRAG
-- All server settings: https://github.com/HKUDS/LightRAG/blob/v1.5.7/env.example
+- All server settings: https://github.com/HKUDS/LightRAG/blob/v1.5.8/env.example
 - LightRAG paper: https://arxiv.org/abs/2410.05779
 - pgvector: https://github.com/pgvector/pgvector
 
@@ -51,10 +51,10 @@ API docs are at `/docs`. Choose the models **before the first upload**:
 | `LLM_MODEL` | `gpt-5.4-mini` | Chat model for extraction and answers |
 | `EMBEDDING_MODEL` / `EMBEDDING_DIM` | `text-embedding-3-small` / `1536` | Use `3072` for `text-embedding-3-large`. Changing the model later means re-processing your documents |
 
-The vector index (`HNSW_HALFVEC`) supports embeddings up to 4,000 dimensions. In our test LightRAG used 0.35 to 0.7 GB of RAM at idle and Postgres about 0.05 GB. Your LLM provider bills extraction and queries separately. Want the graph in Neo4j instead, with Neo4j Browser and Cypher? Use the **LightRAG 1.5.7 + Neo4j** template.
+The vector index (`HNSW_HALFVEC`) supports embeddings up to 4,000 dimensions. In our test LightRAG used 0.35 to 0.7 GB of RAM at idle and Postgres about 0.05 GB. Your LLM provider bills extraction and queries separately. Want the graph in Neo4j instead, with Neo4j Browser and Cypher? Use the **LightRAG 1.5.8 + Neo4j** template.
 
-## Why Deploy LightRAG 1.5.7 on Railway?
+## Why Deploy LightRAG 1.5.8 on Railway?
 
 Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
 
-By deploying LightRAG 1.5.7 on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.
+By deploying LightRAG 1.5.8 on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.

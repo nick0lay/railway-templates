@@ -30,7 +30,7 @@ Self-hosted [Metabase](https://www.metabase.com) on Railway with a PostgreSQL ap
 
 | Service | Source | Role |
 |---------|--------|------|
-| Metabase | `metabase/metabase:v0.65.6.2` | BI web app (public, login required) |
+| Metabase | `metabase/metabase:v0.65.6.4` | BI web app (public, login required) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Metabase application database: users, settings, questions, dashboards (private, volume) |
 
 ## What this template does differently
@@ -39,7 +39,7 @@ Self-hosted [Metabase](https://www.metabase.com) on Railway with a PostgreSQL ap
 - **Production application database, kept private.** Metabase stores everything in PostgreSQL 18 on a volume instead of the built-in H2 file. PostgreSQL has no public domain and no TCP proxy.
 - **Stored credentials encrypted.** Connection details for the databases you add are encrypted with a generated `MB_ENCRYPTION_SECRET_KEY`. Without it, Metabase stores them in plain text in its application database.
 - **Memory capped.** `JAVA_OPTS=-Xmx2g` limits the Java heap. Without it, Java sizes the heap from the host's RAM, which on Railway can be far more than Metabase needs.
-- **Pinned versions.** Metabase 0.65.6.2 and PostgreSQL 18 instead of `latest`, so a redeploy never upgrades (and migrates) Metabase by surprise.
+- **Pinned versions.** Metabase 0.65.6.4 and PostgreSQL 18 instead of `latest`, so a redeploy never upgrades (and migrates) Metabase by surprise.
 - **Health check and restarts.** Railway waits for `/api/health`, restarts Metabase on failure and gives both services time to shut down cleanly on redeploy.
 
 ## After deploy
@@ -105,3 +105,5 @@ Metabase open-source edition is [AGPL-3.0](https://github.com/metabase/metabase/
 Tested on 2026-11-18 with Metabase 0.65.5.1 and PostgreSQL 18 in a throwaway Railway project deployed from the template. Both services were healthy within two minutes of the deploy and stayed up. PostgreSQL had no public domain or TCP proxy. The setup page was closed (no setup token), a setup request with a made-up token was refused, anonymous API calls were refused and a wrong password was refused. The admin logged in as a superuser with the site URL set to the Railway domain. A native SQL query on the bundled Sample Database returned rows; a PostgreSQL database added over the private network was queried through a saved SQL question. After redeploying PostgreSQL and Metabase, the start script skipped the setup, and the admin (still the only user), the saved question and the stored, encrypted connection all worked (30/30 checks in the final run, including after the redeploy). At idle Metabase used about 2.2 GB of RAM and PostgreSQL about 0.1 GB. Not tested: the Metabase UI in a real browser, email, and upgrades.
 
 2026-11-20, after the update to Metabase 0.65.6.2: a fresh deploy from the template was healthy; setup was closed, a made-up setup token, anonymous calls and a wrong password were refused, the admin logged in as a superuser, and a saved SQL question ran against the Postgres added over the private network.
+
+2026-11-24, after the update to Metabase 0.65.6.4: a fresh deploy from the template was healthy on both services; the functional checks were not repeated.

@@ -6,7 +6,7 @@ Deploy PuppyGraph 1.20 on Railway next to a Postgres 18 database that already ho
 
 ## Overview
 
-- **PuppyGraph** from `puppygraph/puppygraph:1.20.0`, the free Developer edition (see [Licence](#licence))
+- **PuppyGraph** from `puppygraph/puppygraph:1.20.1`, the free Developer edition (see [Licence](#licence))
 - **Postgres** from `pgvector/pgvector:0.8.7-pg18`, private, with demo tables in schema `modern`
 - **Demo schema** uploaded on the first start, so the first query works without setup
 - **Schema kept across redeploys**: the current schema, with its data source connections, is saved to a volume every 30 seconds and loaded back on every start
@@ -23,7 +23,7 @@ Deploy PuppyGraph 1.20 on Railway next to a Postgres 18 database that already ho
                                 │ web UI + REST API, login required
                                 ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│ PuppyGraph 1.20.0 (Developer edition)                            │
+│ PuppyGraph 1.20.1 (Developer edition)                            │
 │                                                                  │
 │   8081 web UI / REST   public, basic auth or UI login            │
 │   8182 Gremlin         private network, login required           │
@@ -44,7 +44,7 @@ Deploy PuppyGraph 1.20 on Railway next to a Postgres 18 database that already ho
 
 | Service | Source | Role |
 |---------|--------|------|
-| PuppyGraph | `puppygraph/puppygraph:1.20.0` | Graph query engine. Public HTTPS domain for the web UI and REST API (login). Gremlin and Bolt on the private network (login) |
+| PuppyGraph | `puppygraph/puppygraph:1.20.1` | Graph query engine. Public HTTPS domain for the web UI and REST API (login). Gremlin and Bolt on the private network (login) |
 | Postgres | `pgvector/pgvector:0.8.7-pg18` | Data source with the demo graph tables. Private |
 
 ## Environment Variables
@@ -167,3 +167,5 @@ Tested on Railway on 2026-11-09:
 - A schema changed through the API (one edge removed) was saved to the volume and came back after a redeploy, including its Postgres connection. A plain redeploy restored the demo schema the same way.
 
 After the update to PuppyGraph 1.20.0 (2026-11-20): a fresh deploy loaded the demo schema, the tutorial Cypher query returned its 2 paths and the Gremlin query `lop` and `ripple`, and requests without a login, with the tutorial password and schema upload without a login got 401.
+
+After the update to PuppyGraph 1.20.1 (2026-11-24): a fresh deploy from the template was healthy on both services; the functional checks were not repeated.

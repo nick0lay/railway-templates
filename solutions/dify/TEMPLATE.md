@@ -41,7 +41,7 @@ This template deploys the whole stack on Railway's private network, behind one p
 
 **This template:**
 
-- Pins Dify 1.20.0 with the sandbox (0.2.15) and plugin daemon (0.6.15) versions upstream pins, PostgreSQL 18, pgvector 0.8.7 and Redis 8.10
+- Pins Dify 1.20.0 with the sandbox (0.2.15) and plugin daemon (0.6.15) versions upstream pins, PostgreSQL 18, pgvector 0.8.7 and Redis 8.12
 - Creates the admin account at deploy time and guards `/install` with a generated init password
 - Includes the full upstream stack: API, worker, scheduler (beat), web, sandbox, plugin daemon with a volume, and the SSRF proxy that keeps HTTP nodes away from private addresses
 - Uses pgvector and a Railway Bucket instead of Weaviate and MinIO (MinIO is archived upstream)

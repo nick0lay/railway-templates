@@ -32,13 +32,13 @@ Self-hosted [Evolution API](https://github.com/evolution-foundation/evolution-ap
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | REST API and manager UI (public). Migrates the database on start |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | REST API and manager UI (public). Migrates the database on start |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, contacts, chats, labels (private) |
-| Redis | `redis:8.10` | Cache, append-only file on a volume (private) |
+| Redis | `redis:8.12` | Cache, append-only file on a volume (private) |
 
 ## What this template does differently
 
-- **Pinned stable release.** Evolution API 2.3.7, the latest stable release. The image's `latest` tag currently points to a 2.4.0 release candidate, so templates on `latest` run a pre-release.
+- **Pinned stable release.** Evolution API 2.3.8, the latest stable release. The image's `latest` tag currently points to a 2.4.0 release candidate, so templates on `latest` run a pre-release.
 - **Messages and contacts stored.** Evolution API stores messages, contacts and chats only when the `DATABASE_SAVE_*` variables are `true`. This template sets them, so the `findMessages`, `findContacts` and `findChats` endpoints and the manager's chat view have data.
 - **Sessions in Postgres.** WhatsApp sessions are kept in Postgres, not Redis (`CACHE_REDIS_SAVE_INSTANCES=false`), so a Redis restart doesn't log your numbers out. A volume on `/evolution/instances` keeps instance files too.
 - **Global API key generated** (64 hex characters). Every endpoint except the welcome page needs it in the `apikey` header.
@@ -90,7 +90,7 @@ API reference: https://doc.evolution-api.com
 | `LOG_LEVEL` | `ERROR,WARN,INFO,LOG,WEBHOOKS` | Add `DEBUG,VERBOSE` when troubleshooting |
 | `TELEMETRY_ENABLED` | `false` | Usage telemetry to the Evolution API project |
 
-Webhooks, RabbitMQ, SQS, S3 media storage, Typebot, Chatwoot, OpenAI and other integrations use more variables; see the [environment variable list](https://github.com/evolution-foundation/evolution-api/blob/2.3.7/.env.example). Most integrations can also be set per instance in the manager.
+Webhooks, RabbitMQ, SQS, S3 media storage, Typebot, Chatwoot, OpenAI and other integrations use more variables; see the [environment variable list](https://github.com/evolution-foundation/evolution-api/blob/2.3.8/.env.example). Most integrations can also be set per instance in the manager.
 
 ### Auto-configured (do not change)
 

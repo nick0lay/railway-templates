@@ -1,13 +1,13 @@
-# FalkorDB 6.0.4
+# FalkorDB 6.2.1
 
-Deploy FalkorDB 6.0.4 on Railway with a persistent volume (AOF and snapshots), a generated password, the FalkorDB Browser over HTTPS behind its login, the private network for your Railway services, and a password-protected, TLS-encrypted TCP proxy for outside clients.
+Deploy FalkorDB 6.2.1 on Railway with a persistent volume (AOF and snapshots), a generated password, the FalkorDB Browser over HTTPS behind its login, the private network for your Railway services, and a password-protected, TLS-encrypted TCP proxy for outside clients.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/falkordb-604?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Overview
 
-- **FalkorDB** from the official `falkordb/falkordb:6.0.4` image: Redis 8.10 with the FalkorDB graph module (6.0 is the new Rust engine) and the vector set module
-- **FalkorDB Browser 2.7.3**, bundled in the same image, on the public HTTPS domain. It asks for the database password
+- **FalkorDB** from the official `falkordb/falkordb:6.2.1-redis` image: Redis 8.10 with the FalkorDB graph module (6.x is the new Rust engine; the `-redis` tag keeps Redis, bare 6.2 tags run Valkey) and the vector set module
+- **FalkorDB Browser 2.9.1**, bundled in the same image, on the public HTTPS domain. It asks for the database password
 - **Volume** at `/var/lib/falkordb/data`: AOF (fsync every second) plus Redis's default snapshots, and the TLS certificate
 - **Password** generated at deploy (32 letters and digits) and required on every connection
 - **TLS on the TCP proxy**: Railway's TCP proxy forwards raw TCP, so FalkorDB encrypts it itself with a self-signed certificate created on the first start. Plaintext is refused on the proxy port
@@ -23,7 +23,7 @@ Deploy FalkorDB 6.0.4 on Railway with a persistent volume (AOF and snapshots), a
                 │ Browser, login with password      │ rediss:// (TLS), password
                 ▼                                   ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│ FalkorDB 6.0.4 (one container)                                   │
+│ FalkorDB 6.2.1 (one container)                                   │
 │                                                                  │
 │   3000  FalkorDB Browser ──► localhost:6379                      │
 │   6380  Redis protocol, TLS only (TCP proxy)                     │
@@ -45,7 +45,7 @@ Deploy FalkorDB 6.0.4 on Railway with a persistent volume (AOF and snapshots), a
 
 | Service | Source | Role |
 |---------|--------|------|
-| FalkorDB | `falkordb/falkordb:6.0.4` | Graph database and FalkorDB Browser. Public HTTPS domain for the Browser (login), TLS TCP proxy, private network |
+| FalkorDB | `falkordb/falkordb:6.2.1-redis` | Graph database and FalkorDB Browser. Public HTTPS domain for the Browser (login), TLS TCP proxy, private network |
 
 ## Environment Variables
 
@@ -158,4 +158,4 @@ Tested on Railway on 2026-11-09:
 
 ## Licence
 
-FalkorDB is licensed under the Server Side Public License v1 (SSPL). Running it for your own applications in your own Railway account is fine. Offering FalkorDB itself as a service to third parties triggers the SSPL's source-disclosure conditions. The template only references FalkorDB's official image.
+Since 6.2.0, FalkorDB is available under the Server Side Public License v1 (SSPL) or AGPLv3, at your choice. Running it for your own applications in your own Railway account is fine under either. Offering FalkorDB itself as a service to third parties triggers the source-disclosure conditions of the licence you choose. The template only references FalkorDB's official image.

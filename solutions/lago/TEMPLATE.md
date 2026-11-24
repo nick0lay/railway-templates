@@ -48,7 +48,7 @@ This template runs Lago's official images with the full high-volume pipeline: ev
 - Keeps ClickHouse, Kafka, PostgreSQL, Redis and the PDF service private; the Sidekiq dashboard, which has no login, is off
 - Runs on Railway's IPv6 private network
 - Creates the Kafka topics and runs the Postgres and ClickHouse migrations on every start
-- Pins Lago v1.57.0, ClickHouse 26.3 LTS, Kafka 4.4, PostgreSQL 17 and Redis 8.10
+- Pins Lago v1.57.0, ClickHouse 26.3 LTS, Kafka 4.4, PostgreSQL 17 and Redis 8.12
 
 **Notes:** ten services and a bucket, so it needs more memory than a basic Lago setup; it is built for high event volumes. The first start takes a few minutes while the API runs the migrations. Invoice emails need SMTP settings; without them, everything else works.
 

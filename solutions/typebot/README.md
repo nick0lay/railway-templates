@@ -36,7 +36,7 @@ Self-hosted [Typebot](https://github.com/baptisteArno/typebot.io) on Railway: a 
 | mailpit | `axllent/mailpit:v1.34` | Catches the emails Typebot sends, such as sign-in links, and shows them on a password-protected page (public) |
 | files | `rclone/rclone:1.76.0` | Read-only web server for the bucket's `public/` folder (public) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Bots, results, users (private) |
-| Redis | `redis:8.10` | Sessions and rate limits (private) |
+| Redis | `redis:8.12` | Sessions and rate limits (private) |
 | Bucket | Railway Bucket | Uploaded images, videos and files |
 
 ## What this template does differently
@@ -44,7 +44,7 @@ Self-hosted [Typebot](https://github.com/baptisteArno/typebot.io) on Railway: a 
 - **Sign-in works without an email provider.** Typebot only signs you in with an emailed link. Other templates need working SMTP settings at deploy time, and when they're wrong nobody can sign in. Here the emails go to Mailpit: open the `mailpit` URL, log in as `admin` with `MAILPIT_PASSWORD`, and click the link. Switch to a real provider any time (see below).
 - **Railway Bucket instead of MinIO.** No MinIO, MinIO console and bucket-setup container to run. Railway Buckets are private, and Typebot needs public URLs for images in your bots, so the small `files` service serves only the `public/` folder: no folder listing, and nothing outside `public/`.
 - **Sign-up closed.** Only `ADMIN_EMAIL` and people you invite can create an account.
-- **Pinned, tested versions.** Typebot 3.19, Postgres 18, Redis 8.10, Mailpit 1.33, rclone 1.75. The builder and viewer must stay on the same version.
+- **Pinned, tested versions.** Typebot 3.19, Postgres 18, Redis 8.12, Mailpit 1.33, rclone 1.75. The builder and viewer must stay on the same version.
 - **All features on.** `DEFAULT_WORKSPACE_PLAN=UNLIMITED`, so self-hosted workspaces aren't limited to the free plan.
 
 ## After deploy

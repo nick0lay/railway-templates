@@ -33,9 +33,9 @@ WhatsApp tools for Claude and other AI agents, on Railway. [Evolution API](https
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key) |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key) |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, WhatsApp sessions, messages, contacts (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
 | Evolution MCP | `node:22.23.4-alpine3.24` running [billyfranklim1/mcp-evolution](https://github.com/billyfranklim1/mcp-evolution) 0.7.0 (commit `44f1999`) | MCP server over streamable HTTP at `/mcp` (public, bearer token). Talks to Evolution API over the private network |
 
 ## What this template does differently
@@ -44,7 +44,7 @@ WhatsApp tools for Claude and other AI agents, on Railway. [Evolution API](https
 - **The Evolution key stays inside Railway.** The MCP server reads Evolution API's global key from a reference variable and calls Evolution API over the private network. It removes the key from every tool result and error, so your agent only ever holds the MCP token.
 - **Guard rails on by default.** Tools that can't be undone or that broadcast (delete for everyone, log out, post a status, change the webhook, privacy or groups) are not registered at all. The agent can only address the instances you list in `EVOLUTION_INSTANCES`, and you can add a recipient allowlist.
 - **A pinned server build.** mcp-evolution has no release image, so the service runs the official Node image and builds a pinned commit of the GitHub repo when it starts (about 15 seconds). The npm package called `mcp-evolution` is by a different author and is not used.
-- **Evolution API as it is.** MCP isn't an Evolution API integration module, so no integration flag is turned on. Evolution API is our tested standalone configuration: version 2.3.7 (newer images need a license activation) with sessions stored in Postgres.
+- **Evolution API as it is.** MCP isn't an Evolution API integration module, so no integration flag is turned on. Evolution API is our tested standalone configuration: version 2.3.8 (newer images need a license activation) with sessions stored in Postgres.
 - **No extra database.** The MCP server is stateless: each request gets a fresh server with the same guards.
 
 ## After deploy
@@ -178,7 +178,7 @@ The optional `EVOLUTION_DB_URL` of mcp-evolution (needed only by `get_group_reso
 | Evolution MCP crashes after you edit `EVOLUTION_INSTANCES` | `EVOLUTION_DEFAULT_INSTANCE` must be one of the listed names, or empty |
 | Evolution MCP doesn't start | Its logs show the build; it needs GitHub and the npm registry reachable at start |
 
-Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.7 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number can inject messages that your agent then reads. Keep production instances on `WHATSAPP-BAILEYS`.
+Use the `WHATSAPP-BAILEYS` integration (QR code or pairing code) for real numbers. In Evolution API 2.3.8 the built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number can inject messages that your agent then reads. Keep production instances on `WHATSAPP-BAILEYS`.
 
 An agent with send tools can message anyone on your behalf. Use the recipient allowlist while you try it out. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and mcp-evolution are not affiliated with WhatsApp or Meta.
 

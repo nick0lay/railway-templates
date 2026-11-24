@@ -39,17 +39,17 @@ One WhatsApp instance is linked to both: Evolution API sends each incoming messa
 
 | Service | Source | Role |
 |---------|--------|------|
-| Evolution API | `evoapicloud/evolution-api:v2.3.7` | WhatsApp REST API and manager UI (public, API key) |
+| Evolution API | `evoapicloud/evolution-api:v2.3.8` | WhatsApp REST API and manager UI (public, API key) |
 | Evolution Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Instances, sessions, messages, bot sessions (private) |
-| Evolution Redis | `redis:8.10` | Evolution API cache (private) |
+| Evolution Redis | `redis:8.12` | Evolution API cache (private) |
 | Chatwoot | `chatwoot/chatwoot:v4.19.1-ce` | Agent inbox: Rails web and Sidekiq in one service, attachments on a volume (public, login) |
 | Chatwoot Postgres | `pgvector/pgvector:0.8.7-pg16` | Chatwoot data, with the pgvector extension Chatwoot needs (private) |
 | Chatwoot Redis | `redis:8.2.11-alpine` | Sidekiq jobs, Action Cable, cache (private) |
-| n8n | `n8nio/n8n:2.48.6` | Editor, REST API and webhooks; queues executions (public, owner login) |
-| n8n-worker | `n8nio/n8n:2.48.6` | Runs every execution from the queue (private) |
-| n8n-runner | `n8nio/runners:2.48.6` | Runs Code node JavaScript and Python for the worker (private) |
+| n8n | `n8nio/n8n:2.50.0` | Editor, REST API and webhooks; queues executions (public, owner login) |
+| n8n-worker | `n8nio/n8n:2.50.0` | Runs every execution from the queue (private) |
+| n8n-runner | `n8nio/runners:2.50.0` | Runs Code node JavaScript and Python for the worker (private) |
 | n8n Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Workflows, credentials, executions (private) |
-| n8n Redis | `redis:8.10` | Execution queue, append-only file on a volume (private) |
+| n8n Redis | `redis:8.12` | Execution queue, append-only file on a volume (private) |
 
 ## What this template does differently
 
@@ -60,7 +60,7 @@ One WhatsApp instance is linked to both: Evolution API sends each incoming messa
 - **n8n in queue mode** with a worker and an external task runner, on the official images.
 - **Separate databases.** Each app has its own Postgres and Redis.
 - **Auth on every public service.** Evolution API needs the generated API key, Chatwoot and n8n a login. Worker, runner and databases have no public domain or TCP proxy.
-- **Pinned, tested versions:** Evolution API 2.3.7 (newer images need a license activation), Chatwoot 4.19.1 CE, n8n 2.48.6.
+- **Pinned, tested versions:** Evolution API 2.3.8 (newer images need a license activation), Chatwoot 4.19.1 CE, n8n 2.50.0.
 
 ## After deploy
 
@@ -106,7 +106,7 @@ curl -X POST "$URL/n8n/create/$INST" -H "apikey: $KEY" -H "content-type: applica
 }'
 ```
 
-Evolution API creates a Chatwoot inbox named after the instance, with its webhook pointing back to Evolution API. Send the password as `basicAuthPass`: Evolution API 2.3.7 drops a field named `basicAuthPassword`.
+Evolution API creates a Chatwoot inbox named after the instance, with its webhook pointing back to Evolution API. Send the password as `basicAuthPass`: Evolution API 2.3.8 drops a field named `basicAuthPassword`.
 
 In the manager instead: open `https://<evolution-domain>/manager` (server URL and API key), create the instance (channel **Baileys**), then **Integrations → Chatwoot** (URL, account `1`, token, **Auto create** on) and **Integrations → n8n** (webhook URL, basic auth, trigger, **Stop bot from me** on).
 
@@ -131,13 +131,13 @@ curl -X POST "$URL/n8n/changeStatus/$INST" -H "apikey: $KEY" -H "content-type: a
   -d '{"remoteJid":"5511999999999@s.whatsapp.net","status":"opened"}'
 ```
 
-`"status":"paused"` pauses the bot for that contact (from an n8n HTTP Request node or by hand; we tested `opened`, not `paused`), `"status":"closed"` ends the session (the next message starts a new one), `"delete"` removes it. In the 2.3.7 source, a paused session stays paused until you change it; `expire` doesn't reopen it (not tested). The customer can end the bot session with `keywordFinish`.
+`"status":"paused"` pauses the bot for that contact (from an n8n HTTP Request node or by hand; we tested `opened`, not `paused`), `"status":"closed"` ends the session (the next message starts a new one), `"delete"` removes it. In the 2.3.8 source, a paused session stays paused until you change it; `expire` doesn't reopen it (not tested). The customer can end the bot session with `keywordFinish`.
 
 API reference: https://doc.evolution-api.com, https://developers.chatwoot.com, https://docs.n8n.io
 
 ## Security
 
-- In Evolution API 2.3.7, `/chatwoot/webhook/<instance>` (the URL Chatwoot calls with agent replies) has no API-key check. Anyone who knows an instance name can make that number send messages. Use long, random instance names and don't publish them.
+- In Evolution API 2.3.8, `/chatwoot/webhook/<instance>` (the URL Chatwoot calls with agent replies) has no API-key check. Anyone who knows an instance name can make that number send messages. Use long, random instance names and don't publish them.
 - The built-in `EVOLUTION` test channel accepts messages on `/webhook/evolution` without the API key, so anyone who knows such an instance's number can inject messages and trigger its bot. Use `WHATSAPP-BAILEYS` instances for real numbers and production bots.
 - `ADMIN_ACCESS_TOKEN` gives full access to the Chatwoot account. To rotate it, change the variable (Chatwoot applies it on restart), then link each instance again, because Evolution API stores the token per instance.
 

@@ -44,7 +44,7 @@ This template creates your admin account at deploy and turns off sign-up, protec
 - Keeps ClickHouse private and password-protected
 - Runs ClickHouse with an embedded Keeper and installs SigNoz's histogram function
 - Runs the ClickHouse schema migrations on every collector start, so upgrades apply them automatically
-- Pins SigNoz v0.151.0, collector v0.144.16 and ClickHouse 25.12.11, with healthchecks on all three services
+- Pins SigNoz v0.151.0, collector v0.144.18 and ClickHouse 25.12.11, with healthchecks on all three services
 
 **Notes:** the stack idles at about 0.7 GB of RAM; ClickHouse memory and the volume grow with the data you send. SigNoz's default retention is set under Settings.
 

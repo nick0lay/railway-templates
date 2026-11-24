@@ -34,7 +34,7 @@ Self-hosted [Immich](https://github.com/immich-app/immich) on Railway: a photo a
 | immich-server | `ghcr.io/immich-app/immich-server:v3.3.6` | Web app, API and background jobs (public). Library on a volume at `/data` |
 | immich-machine-learning | `ghcr.io/immich-app/immich-machine-learning:v3.3.6` | CPU models for smart search, face detection and recognition, OCR (private). Model cache on a volume at `/cache` |
 | Postgres | `ghcr.io/immich-app/postgres:17-vectorchord0.4.3-pgvector0.8.1` | Immich's own Postgres image with the VectorChord vector extension (private, volume) |
-| Valkey | `valkey/valkey:9.1.3` | Job queues, password-protected (private) |
+| Valkey | `valkey/valkey:9.2.0` | Job queues, password-protected (private) |
 
 ## What this template does differently
 

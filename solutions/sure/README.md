@@ -31,7 +31,7 @@ Self-hosted [Sure](https://github.com/we-promise/sure) on Railway: an open-sourc
 | Sure | `ghcr.io/we-promise/sure:0.7.6-hotfix.1` | Web app (public). Runs `rails db:prepare` on every start, healthcheck `/up` |
 | Sure Worker | `ghcr.io/we-promise/sure:0.7.6-hotfix.1` | Sidekiq background jobs: account syncs, imports, exchange rates and prices, scheduled jobs (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | All finance data (private, volume) |
-| Redis | `redis:8.10` | Sidekiq queues and cache, `noeviction` and append-only file on a volume (private) |
+| Redis | `redis:8.12` | Sidekiq queues and cache, `noeviction` and append-only file on a volume (private) |
 | Bucket | Railway Bucket | Uploaded files (receipts, statements, imports, exports), shared by web and worker |
 
 ## What this template does differently
@@ -39,7 +39,7 @@ Self-hosted [Sure](https://github.com/we-promise/sure) on Railway: an open-sourc
 - **Owner account created at deploy, sign-ups closed.** On a fresh Sure install, whoever opens the URL first signs up and becomes the super admin. This template creates the owner (super admin) on first start from `OWNER_EMAIL` and a generated `OWNER_PASSWORD`, and sets `ONBOARDING_STATE=closed`, so nobody else can register. The setup step runs on every start but does nothing once a user exists.
 - **Background worker included.** Sure needs Sidekiq for account syncs, imports, exchange rates and scheduled jobs. Without it, uploads and syncs sit in the queue forever.
 - **One set of secrets for web and worker.** `SECRET_KEY_BASE` and the three `ACTIVE_RECORD_ENCRYPTION_*` keys are generated once on `Sure`, and the worker reads them from there. If the worker had different keys, it couldn't read the API keys and tokens the web app encrypted.
-- **Pinned version.** Sure 0.7.6-hotfix.1 (the current `stable`), Postgres 18 and Redis 8.10 instead of `latest`. Sure migrates the database on start, so you upgrade when you choose.
+- **Pinned version.** Sure 0.7.6-hotfix.1 (the current `stable`), Postgres 18 and Redis 8.12 instead of `latest`. Sure migrates the database on start, so you upgrade when you choose.
 - **Uploads in a Railway Bucket.** Railway volumes can't be shared between services, so files go to a bucket that both the web app and the worker can reach. Receipts and imports survive redeploys.
 - **Private databases.** Postgres and Redis have volumes and no public TCP proxy; Redis has a generated password.
 - **HTTPS behind Railway's proxy.** `RAILS_FORCE_SSL` and `RAILS_ASSUME_SSL` are on, so cookies are secure and plain HTTP redirects to HTTPS.

@@ -1,4 +1,4 @@
-# txtai 9.14
+# txtai 9.15
 
 Self-hosted [txtai](https://github.com/neuml/txtai) on Railway. txtai is an embeddings database: a vector index, a SQLite content store and a semantic graph in one process, with semantic search, graph queries, retrieval augmented generation (RAG) and a Model Context Protocol (MCP) server behind one REST API.
 
@@ -29,11 +29,11 @@ It is the lightweight end of GraphRAG: no separate graph or vector database, no 
 
 | Service | Source | Role |
 |---------|--------|------|
-| txtai | `neuml/txtai-cpu:9.14.0` | REST API, MCP server, embeddings, index and graph (public, bearer token, volume `/data`) |
+| txtai | `neuml/txtai-cpu:9.15.0` | REST API, MCP server, embeddings, index and graph (public, bearer token, volume `/data`) |
 
 ## What this template does
 
-- **Official image, pinned.** `neuml/txtai-cpu:9.14.0`, the CPU build published by NeuML. No custom build.
+- **Official image, pinned.** `neuml/txtai-cpu:9.15.0`, the CPU build published by NeuML. No custom build.
 - **Bearer token on every route.** txtai's API has token auth built in but off by default, and it expects the SHA-256 hash of the token in `TOKEN`. The start command hashes the generated `API_TOKEN` into `TOKEN` before it starts the server, so you only ever handle the plain token. The MCP endpoint (`/mcp` and `/mcp/messages/`) is checked by the same token.
 - **Data on a volume.** The index is saved to `/data/index` after every `/index` or `/upsert` call and loaded again at start. The Hugging Face model cache is on the volume too (`HF_HOME=/data/hf`), so the model is downloaded once.
 - **Works without an API key.** Embeddings run inside the service. Search, the graph and indexing need no key. `/rag` uses LiteLLM, so any provider works.

@@ -45,7 +45,7 @@ This template deploys the whole stack on Railway's private network. Evolution AP
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), Dify 1.20.0, PostgreSQL 18, pgvector 0.8.7 and Redis 8.10
+- Pins Evolution API 2.3.8 (newer images need a license activation), Dify 1.20.0, PostgreSQL 18, pgvector 0.8.7 and Redis 8.12
 - Creates the Dify admin account at deploy time and guards `/install` with a generated init password, so nobody else can claim a fresh instance
 - Uses pgvector and a Railway Bucket instead of Weaviate and MinIO (MinIO is archived upstream)
 - Serves the Dify console and APIs from one public gateway, so login cookies work
@@ -54,7 +54,7 @@ This template deploys the whole stack on Railway's private network. Evolution AP
 - Lets Dify HTTP nodes call Evolution API over the private network; other private addresses stay blocked by the SSRF proxy
 - Protects every public service: Evolution API key and Dify admin login. Workers, sandbox, plugin daemon and databases stay private
 
-**Notes:** Use botType Chatbot, Agent or Text Generator. Evolution API 2.3.7 never calls Dify for Workflow apps. Evolution API sends `remoteJid`, `pushName`, `instanceName`, `serverUrl` and `apiKey` as inputs; in a chatflow, declare them with a max length of 256. The `EVOLUTION` test channel accepts `/webhook/evolution` without a key, so keep production bots on `WHATSAPP-BAILEYS` instances. Dify's license forbids multi-tenant SaaS without a commercial license. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and Dify are not affiliated with WhatsApp or Meta.
+**Notes:** Use botType Chatbot, Agent or Text Generator. Evolution API 2.3.8 never calls Dify for Workflow apps. Evolution API sends `remoteJid`, `pushName`, `instanceName`, `serverUrl` and `apiKey` as inputs; in a chatflow, declare them with a max length of 256. The `EVOLUTION` test channel accepts `/webhook/evolution` without a key, so keep production bots on `WHATSAPP-BAILEYS` instances. Dify's license forbids multi-tenant SaaS without a commercial license. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and Dify are not affiliated with WhatsApp or Meta.
 
 ## Why Deploy Evolution API + Dify on Railway?
 

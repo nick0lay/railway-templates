@@ -21,7 +21,7 @@ In this template Yente and Elasticsearch have no public domain. A Caddy proxy is
 ## Dependencies for Yente 5.5 + Elasticsearch Hosting
 
 - Yente 5.5.1 (`ghcr.io/opensanctions/yente`)
-- Elasticsearch 9.5.6 (`elastic/elasticsearch`)
+- Elasticsearch 9.5.7 (`elastic/elasticsearch`)
 - Caddy 2.11.9 as the token proxy
 - OpenSanctions data, downloaded at runtime from data.opensanctions.org
 
@@ -66,7 +66,7 @@ The API paths use the scope: `/match/your-scope`, `/search/your-scope`.
 
 **This template:**
 
-- Pins Yente 5.5.1 and Elasticsearch 9.5.6
+- Pins Yente 5.5.1 and Elasticsearch 9.5.7
 - Keeps Yente and Elasticsearch private; one public proxy with a generated 48-character bearer token
 - Turns on Elasticsearch security with a generated password
 - Writes Yente's manifest from a variable, since Railway can't mount files

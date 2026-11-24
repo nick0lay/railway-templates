@@ -30,7 +30,7 @@ Self-hosted [Ollama](https://github.com/ollama/ollama) with [Open WebUI](https:/
 | Service | Source | Role |
 |---------|--------|------|
 | Open WebUI | `ghcr.io/open-webui/open-webui:v0.13.0` | Chat UI and API (public, login required) |
-| Ollama | `ollama/ollama:0.40.16` | Runs the models (private, no public domain) |
+| Ollama | `ollama/ollama:0.40.18` | Runs the models (private, no public domain) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, chats, settings (private) |
 
 ## What this template does differently
@@ -94,7 +94,7 @@ Usage is billed by Railway for what the services use. Ollama uses CPU only while
 
 ## Upgrading
 
-Change the image tags (for example `ollama/ollama:0.40.16` or `ghcr.io/open-webui/open-webui:v0.13.1`). Downloaded models stay on the volume. Open WebUI migrates its database on start and can't go back to an older version after that; read the [Open WebUI](https://github.com/open-webui/open-webui/releases) and [Ollama](https://github.com/ollama/ollama/releases) release notes first.
+Change the image tags (for example `ollama/ollama:0.40.18` or `ghcr.io/open-webui/open-webui:v0.13.1`). Downloaded models stay on the volume. Open WebUI migrates its database on start and can't go back to an older version after that; read the [Open WebUI](https://github.com/open-webui/open-webui/releases) and [Ollama](https://github.com/ollama/ollama/releases) release notes first.
 
 ## Troubleshooting
 

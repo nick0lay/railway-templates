@@ -45,7 +45,7 @@ This template does all of that at deploy. The official ClickHouse plugin is inst
 - Generates the Grafana admin password and turns off sign-up and anonymous access
 - Keeps Grafana's database and ClickHouse's data on volumes
 - Gives ClickHouse a generated password, IPv6 and IPv4 listening, and small internal log tables
-- Pins Grafana 13.3.1, plugin 4.23.5 and ClickHouse 26.8, with healthchecks on both services
+- Pins Grafana 13.3.2, plugin 4.23.5 and ClickHouse 26.8, with healthchecks on both services
 
 **Notes:** ClickHouse has a public HTTPS domain so you can load data from outside Railway; it requires the generated password. Remove the domain if all your data comes from inside the project. Grafana alert emails need SMTP variables (see the README).
 

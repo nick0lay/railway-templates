@@ -10,7 +10,7 @@ Deploy Apache Kafka 4.4 on Railway in KRaft mode (no ZooKeeper), with a persiste
 - **Volume** at `/var/lib/kafka` (log directory `/var/lib/kafka/data`), so topics and messages survive redeploys
 - **Private listener** on port 9092: plaintext, reachable only from services in the same Railway project
 - **External listener** on port 9094 behind a Railway TCP proxy: SASL/SCRAM-SHA-512 with a generated password
-- **Kafka UI** (`ghcr.io/kafbat/kafka-ui:v1.5.0`): web console for topics, messages, consumer groups and broker settings, behind a login form
+- **Kafka UI** (`ghcr.io/kafbat/kafka-ui:v1.5.1`): web console for topics, messages, consumer groups and broker settings, behind a login form
 
 ## Architecture
 
@@ -44,7 +44,7 @@ Deploy Apache Kafka 4.4 on Railway in KRaft mode (no ZooKeeper), with a persiste
 | Service | Source | Role |
 |---------|--------|------|
 | Kafka | `apache/kafka:4.4.0` | Broker and KRaft controller. Private listener plus SASL listener on a TCP proxy |
-| Kafka UI | `ghcr.io/kafbat/kafka-ui:v1.5.0` | Web console (public, login form) |
+| Kafka UI | `ghcr.io/kafbat/kafka-ui:v1.5.1` | Web console (public, login form) |
 
 Both are upstream images. Kafka starts from a short script kept in the `KAFKA_RUN_SH` variable: it writes `server.properties`, formats the volume on the first start, and sets the SASL user.
 

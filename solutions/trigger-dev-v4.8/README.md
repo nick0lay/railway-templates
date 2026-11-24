@@ -1,6 +1,6 @@
 # Trigger.dev v4.8
 
-Self-hosted Trigger.dev v4.8.7 on Railway (webapp and data services) plus a DigitalOcean droplet for the supervisor that runs your tasks. The template runs the official upstream images, not a patched fork.
+Self-hosted Trigger.dev v4.8.10 on Railway (webapp and data services) plus a DigitalOcean droplet for the supervisor that runs your tasks. The template runs the official upstream images, not a patched fork.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/triggerdev-v48?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
@@ -35,9 +35,9 @@ The earlier [`trigger-dev`](../trigger-dev/) template (v4.0.0, patched image) st
 
 | Service | Source | Role |
 |---------|--------|------|
-| trigger.dev | image `ghcr.io/triggerdotdev/trigger.dev:v4.8.7` | Webapp, API, dashboard (public). Healthcheck `/healthcheck` |
+| trigger.dev | image `ghcr.io/triggerdotdev/trigger.dev:v4.8.10` | Webapp, API, dashboard (public). Healthcheck `/healthcheck` |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:16` | Primary database (private) |
-| Redis | `redis:8.10` | Queues, cache, pub/sub (private) |
+| Redis | `redis:8.12` | Queues, cache, pub/sub (private) |
 | ClickHouse | `clickhouse/Dockerfile` (`clickhouse/clickhouse-server:26.10` plus one setting) | Analytics for runs and logs (private) |
 | Bucket | Railway Bucket | S3-compatible storage for large payloads |
 | registry | `registry/Dockerfile` (`registry:2` with basic auth, volume at `/var/lib/registry`) | Docker registry for deployed task images (public, password-protected) |

@@ -31,7 +31,7 @@ Self-hosted [Rybbit](https://rybbit.com) on Railway: open-source, privacy-friend
 | Rybbit | `caddy:2.11.9-alpine` | Public entry point: `/api` goes to the backend, everything else to the dashboard |
 | Backend | `ghcr.io/rybbit-io/rybbit-backend:v2.9.3` | Tracking script and event ingestion, API, login, database migrations |
 | Client | `ghcr.io/rybbit-io/rybbit-client:v2.9.3` | Web dashboard (login required) |
-| ClickHouse | `clickhouse/clickhouse-server:26.8.41.14` | Events (private) |
+| ClickHouse | `clickhouse/clickhouse-server:26.8.46.6` | Events (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, organizations, sites, settings (private) |
 | Redis | `redis:8.10.3-alpine` | Sessions, visitor identity, bot detection counters (private, `noeviction`) |
 

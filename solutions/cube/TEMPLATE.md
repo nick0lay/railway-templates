@@ -1,6 +1,6 @@
 # Deploy and Host Cube 1.8 on Railway
 
-Cube is the open-source semantic layer: define metrics and dimensions once, then query them from apps, BI tools and AI agents over REST and GraphQL with consistent numbers and fast cached answers. This template runs Cube Core 1.8.30 in its production layout. Connect your own database with `CUBEJS_DB_*` on Cube API. Until then, a demo cube answers from DuckDB in memory, so the API works right after deploy.
+Cube is the open-source semantic layer: define metrics and dimensions once, then query them from apps, BI tools and AI agents over REST and GraphQL with consistent numbers and fast cached answers. This template runs Cube Core 1.8.34 in its production layout. Connect your own database with `CUBEJS_DB_*` on Cube API. Until then, a demo cube answers from DuckDB in memory, so the API works right after deploy.
 
 ## About Hosting Cube 1.8
 
@@ -15,8 +15,8 @@ A production Cube deployment has four parts: API instances, a refresh worker tha
 
 ## Dependencies for Cube 1.8 Hosting
 
-- Cube 1.8.30 (`cubejs/cube`), API and refresh worker
-- Cube Store 1.8.30 (`cubejs/cubestore`), router and worker
+- Cube 1.8.34 (`cubejs/cube`), API and refresh worker
+- Cube Store 1.8.34 (`cubejs/cubestore`), router and worker
 - Railway Bucket (S3 storage for Cube Store)
 
 ### Deployment Dependencies
@@ -45,11 +45,11 @@ curl -s "https://your-cube-api.up.railway.app/cubejs-api/v1/load" -H "Authorizat
 
 The answer comes from the `orders_by_month` pre-aggregation in Cube Store, built by the refresh worker a minute or two after the first deploy.
 
-**Data model:** edit `CUBE_MODEL` (YAML cubes and views) on Cube API, then redeploy Cube API and Cube Refresh Worker. For bigger models, keep a `model/` folder in a repo with a two-line Dockerfile (`FROM cubejs/cube:v1.8.30`, `COPY model /cube/conf/model`) and point both Cube services at it; the README shows how. `CUBE_CONFIG_JS` takes an optional `cube.js` for row-level security or multi-tenancy.
+**Data model:** edit `CUBE_MODEL` (YAML cubes and views) on Cube API, then redeploy Cube API and Cube Refresh Worker. For bigger models, keep a `model/` folder in a repo with a two-line Dockerfile (`FROM cubejs/cube:v1.8.34`, `COPY model /cube/conf/model`) and point both Cube services at it; the README shows how. `CUBE_CONFIG_JS` takes an optional `cube.js` for row-level security or multi-tenancy.
 
 **This template:**
 
-- Pins Cube and Cube Store 1.8.30
+- Pins Cube and Cube Store 1.8.34
 - Runs the production layout: API, refresh worker, Cube Store router + worker, Railway Bucket
 - Keeps Cube Store and the refresh worker private; only the API is public
 - Requires a JWT (HS256, generated 64-character secret) on every request; dev mode off

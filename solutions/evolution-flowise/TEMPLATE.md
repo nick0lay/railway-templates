@@ -46,7 +46,7 @@ The same steps work through the API with `POST /flowise/create/your-instance` an
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), Flowise 3.1.4, PostgreSQL 18 and Redis 8.10
+- Pins Evolution API 2.3.8 (newer images need a license activation), Flowise 3.1.4, PostgreSQL 18 and Redis 8.12
 - Creates the Flowise owner account at deploy time, so nobody else can claim a fresh instance
 - Turns on only the Flowise integration in Evolution API
 - Puts Flowise's private prediction URL and Evolution API's private URL in variables, ready to paste

@@ -29,11 +29,11 @@ Self-hosted [Langfuse](https://github.com/langfuse/langfuse) v4 (open-source LLM
 
 | Service | Source | Role |
 |---------|--------|------|
-| langfuse-web | `langfuse/langfuse:4.83` | UI, public API, OpenTelemetry ingestion, MCP endpoint (public) |
-| langfuse-worker | `langfuse/langfuse-worker:4.83` | Processes ingested events, evaluations, exports (private) |
+| langfuse-web | `langfuse/langfuse:4.85` | UI, public API, OpenTelemetry ingestion, MCP endpoint (public) |
+| langfuse-worker | `langfuse/langfuse-worker:4.85` | Processes ingested events, evaluations, exports (private) |
 | ClickHouse | `../clickhouse/clickhouse/Dockerfile` (our ClickHouse component, 26.8 LTS) | Traces, observations, scores (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Users, organizations, projects, API keys, prompts (private) |
-| Redis | `redis:8.10` with `--maxmemory-policy noeviction` | Job queues and cache (private) |
+| Redis | `redis:8.12` with `--maxmemory-policy noeviction` | Job queues and cache (private) |
 | Bucket | Railway Bucket | S3-compatible storage for raw events, media and batch exports |
 
 ## What this template does differently

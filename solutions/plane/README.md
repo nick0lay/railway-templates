@@ -33,7 +33,7 @@ Self-hosted [Plane](https://github.com/makeplane/plane) on Railway: open-source 
 |---------|--------|------|
 | Plane | `makeplane/plane-aio-community:v1.5.0` | Web app, admin panel, spaces, API, worker, scheduler, real-time server and proxy in one container (public). Migrates the database on start |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Workspaces, projects, work items, users (private) |
-| Redis | `redis:8.10` | Cache, append-only file on a volume (private) |
+| Redis | `redis:8.12` | Cache, append-only file on a volume (private) |
 | RabbitMQ | `rabbitmq:3.13.7-alpine` | Queue for background jobs: activity history, notifications, emails, webhooks (private) |
 | Bucket | Railway Bucket | Attachments, images and exports |
 
@@ -43,7 +43,7 @@ Self-hosted [Plane](https://github.com/makeplane/plane) on Railway: open-source 
 - **Public sign-up off.** Only people invited to a workspace can create an account. You can turn sign-up on in the admin panel.
 - **One app service.** Plane's official all-in-one image runs every Plane process behind its own proxy, so you get one public URL with no path routing to set up and one image tag to upgrade.
 - **Attachments in a Railway Bucket**, with no MinIO to run. Browsers upload straight to the Bucket with signed URLs.
-- **Pinned versions.** Plane 1.5.0, Postgres 18, Redis 8.10 and RabbitMQ 3.13.7 (the RabbitMQ line Plane's own compose file uses) instead of `stable` or `latest`.
+- **Pinned versions.** Plane 1.5.0, Postgres 18, Redis 8.12 and RabbitMQ 3.13.7 (the RabbitMQ line Plane's own compose file uses) instead of `stable` or `latest`.
 - **Secrets generated.** `SECRET_KEY` and `LIVE_SERVER_SECRET_KEY` are generated once, so sessions survive redeploys.
 - **Logs in Railway.** Plane's processes write to log files inside the container; the start command streams the error logs and the worker log to the Railway log view.
 - **Private networking** for Postgres, Redis and RabbitMQ; healthcheck on `/api/instances/`.

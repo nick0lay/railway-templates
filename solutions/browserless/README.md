@@ -1,6 +1,6 @@
 # Browserless 2.64 (Chromium)
 
-Headless Chrome as a service. This template runs [Browserless](https://github.com/browserless/browserless) v2 from the official image `ghcr.io/browserless/chromium:v2.64.0` on Railway, behind a generated token. Connect Puppeteer or Playwright over a websocket, or call the REST API for page content, screenshots, PDFs and scraping, from n8n, Flowise, LangChain, browser agents or your own code.
+Headless Chrome as a service. This template runs [Browserless](https://github.com/browserless/browserless) v2 from the official image `ghcr.io/browserless/chromium:v2.64.3` on Railway, behind a generated token. Connect Puppeteer or Playwright over a websocket, or call the REST API for page content, screenshots, PDFs and scraping, from n8n, Flowise, LangChain, browser agents or your own code.
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/browserless-263-chromium?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
@@ -14,7 +14,7 @@ Your app / Puppeteer / Playwright / n8n
    v
 +------------------------------------------------+
 | Browserless (public)                           |
-| ghcr.io/browserless/chromium:v2.64.0  :3000    |
+| ghcr.io/browserless/chromium:v2.64.3  :3000    |
 | REST API + websocket endpoints, 401 without    |
 | the token; one Chromium per session            |
 +------------------------------------------------+
@@ -27,7 +27,7 @@ Other services in the same project
 
 | Service | Source | Role |
 |---------|--------|------|
-| Browserless | `ghcr.io/browserless/chromium:v2.64.0` | Public. REST API and websocket endpoints for Puppeteer, Playwright and CDP clients. Launches a fresh Chromium for each session and closes it at the end |
+| Browserless | `ghcr.io/browserless/chromium:v2.64.3` | Public. REST API and websocket endpoints for Puppeteer, Playwright and CDP clients. Launches a fresh Chromium for each session and closes it at the end |
 
 One service, no database and no volume: Browserless is stateless by design. Each session gets a temporary profile that is deleted when it ends, so nothing needs to persist across redeploys. The image is pinned to a release tag.
 

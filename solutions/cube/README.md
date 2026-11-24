@@ -14,7 +14,7 @@ Your app, BI tool or AI agent
    ▼
 ┌──────────────────────────┐                    ┌──────────────────────────┐
 │ Cube API (public) :4000  │        SQL         │ Your database            │
-│ cubejs/cube:v1.8.30      │ ─────────────────▶ │ set with CUBEJS_DB_*     │
+│ cubejs/cube:v1.8.34      │ ─────────────────▶ │ set with CUBEJS_DB_*     │
 │ REST, GraphQL, JWT       │                    │ (default: DuckDB demo)   │
 └─────────────┬────────────┘                    └─────────────┬────────────┘
               │ rollups, :3030                                ▲
@@ -22,13 +22,13 @@ Your app, BI tool or AI agent
 ┌──────────────────────────┐   builds rollups   ┌─────────────┴────────────┐
 │ Cube Store Router        │ ◀───────────────── │ Cube Refresh Worker      │
 │ (private) :3030, :9999   │                    │ (private)                │
-│ cubejs/cubestore:v1.8.30 │                    │ cubejs/cube:v1.8.30      │
+│ cubejs/cubestore:v1.8.34 │                    │ cubejs/cube:v1.8.34      │
 └─────────────┬────────────┘                    └──────────────────────────┘
               │ :10001
               ▼
 ┌──────────────────────────┐
 │ Cube Store Worker        │
-│ (private) v1.8.30        │
+│ (private) v1.8.34        │
 └─────────────┬────────────┘
               │ S3: rollup files and metastore snapshots (router and worker)
               ▼
@@ -41,10 +41,10 @@ Your app, BI tool or AI agent
 
 | Service | Source | Role |
 |---------|--------|------|
-| Cube API | `cubejs/cube:v1.8.30` | Public. REST (`/cubejs-api/v1`) and GraphQL API, JWT required. Reads the data model from `CUBE_MODEL` |
-| Cube Refresh Worker | `cubejs/cube:v1.8.30` | Private. Builds and refreshes pre-aggregations into Cube Store on schedule (`CUBEJS_REFRESH_WORKER=true`). Shares the API's settings |
-| Cube Store Router | `cubejs/cubestore:v1.8.30` | Private. Cube Store metastore and query router; Cube API queries pre-aggregations here |
-| Cube Store Worker | `cubejs/cubestore:v1.8.30` | Private. Stores and scans pre-aggregation partitions |
+| Cube API | `cubejs/cube:v1.8.34` | Public. REST (`/cubejs-api/v1`) and GraphQL API, JWT required. Reads the data model from `CUBE_MODEL` |
+| Cube Refresh Worker | `cubejs/cube:v1.8.34` | Private. Builds and refreshes pre-aggregations into Cube Store on schedule (`CUBEJS_REFRESH_WORKER=true`). Shares the API's settings |
+| Cube Store Router | `cubejs/cubestore:v1.8.34` | Private. Cube Store metastore and query router; Cube API queries pre-aggregations here |
+| Cube Store Worker | `cubejs/cubestore:v1.8.34` | Private. Stores and scans pre-aggregation partitions |
 | Bucket | Railway Bucket | Private S3 storage shared by router and worker: pre-aggregation files and metastore snapshots |
 
 ## After deploy
@@ -94,7 +94,7 @@ The sample cube `orders` has the measures `count`, `total_amount`, `average_amou
 1. Create a repo with a `model/` folder (your `.yml` or `.js` files) and this Dockerfile:
 
 ```dockerfile
-FROM cubejs/cube:v1.8.30
+FROM cubejs/cube:v1.8.34
 COPY model /cube/conf/model
 # optional: COPY cube.js /cube/conf/cube.js
 ```
@@ -189,7 +189,7 @@ Cube Store memory grows with the size of your pre-aggregations; the bucket grows
 
 ## Versions
 
-- Cube 1.8.30 and Cube Store 1.8.30: pinned tags; update both together (same version).
+- Cube 1.8.34 and Cube Store 1.8.34: pinned tags; update both together (same version).
 
 ## Tested
 
@@ -198,6 +198,8 @@ Cube Store memory grows with the size of your pre-aggregations; the bucket grows
 2026-11-18, after the update to Cube and Cube Store 1.8.27: the same checks passed again, including the redeploy of every service.
 
 2026-11-20, after the update to Cube and Cube Store 1.8.30: a fresh deploy passed the same checks (auth refusals, the README snippet, the rollup served from Cube Store); the redeploy was not repeated.
+
+2026-11-24, after the update to Cube and Cube Store 1.8.34: a fresh deploy from the template was healthy on all services; the functional checks were not repeated.
 
 ## Links
 

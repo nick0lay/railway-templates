@@ -52,7 +52,7 @@ POST https://your-evolution-domain/instance/create   (header apikey: your-authen
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation) and Chatwoot 4.19.1 CE
+- Pins Evolution API 2.3.8 (newer images need a license activation) and Chatwoot 4.19.1 CE
 - Creates the Chatwoot admin and closes the public onboarding page at deploy time, so nobody else can claim a fresh instance
 - Sets the admin's Chatwoot API token from a generated variable and exposes it, with Chatwoot's private URL and account id, on Evolution API
 - Turns on only the Chatwoot integration in Evolution API, with Chatwoot's database connected for contact and history import
@@ -60,7 +60,7 @@ POST https://your-evolution-domain/instance/create   (header apikey: your-authen
 - Protects every public service: generated Evolution API key and Chatwoot login; databases stay private
 - Stores WhatsApp sessions in PostgreSQL so restarts don't log your number out
 
-**Security notes:** In Evolution API 2.3.7 the Chatwoot webhook route (`/chatwoot/webhook/your-instance`) has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production numbers belong on `WHATSAPP-BAILEYS` instances. `ADMIN_ACCESS_TOKEN` is applied on every Chatwoot start; rotate it there, then run `/chatwoot/set` again for each instance.
+**Security notes:** In Evolution API 2.3.8 the Chatwoot webhook route (`/chatwoot/webhook/your-instance`) has no API-key check, so use hard-to-guess instance names. The built-in `EVOLUTION` test channel's `/webhook/evolution` has no API-key check either, so production numbers belong on `WHATSAPP-BAILEYS` instances. `ADMIN_ACCESS_TOKEN` is applied on every Chatwoot start; rotate it there, then run `/chatwoot/set` again for each instance.
 
 **Notes:** Add Chatwoot's `SMTP_*` variables to send agent invitations and password resets. Don't change `SECRET_KEY_BASE` or the `ACTIVE_RECORD_ENCRYPTION_*` keys after the first deploy. WhatsApp may ban numbers that send bulk or unsolicited messages. Evolution API and Chatwoot are not affiliated with WhatsApp or Meta.
 

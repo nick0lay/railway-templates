@@ -46,7 +46,7 @@ curl -X POST "https://<your-domain>/message/sendText/<instance>" \
 
 **This template:**
 
-- Pins Evolution API 2.3.7, the latest stable release (the image's `latest` tag is a 2.4.0 release candidate), PostgreSQL 18 and Redis 8.10
+- Pins Evolution API 2.3.8, the latest stable release (the image's `latest` tag is a 2.4.0 release candidate), PostgreSQL 18 and Redis 8.12
 - Generates a 64-character global API key; every endpoint except the welcome page requires it
 - Stores WhatsApp sessions in PostgreSQL, not Redis, so a restart doesn't log your numbers out
 - Saves messages, message updates, contacts, chats, labels and history (`DATABASE_SAVE_*`), so the find endpoints and the manager's chat view have data

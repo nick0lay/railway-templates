@@ -14,7 +14,7 @@ MCP client (Claude, Cursor, agents)
    ▼
 ┌──────────────────────────┐   private network     ┌──────────────────────────┐   Bolt TLS (bolt+ssc)   ┌───────────────────────────┐
 │ Token Proxy (public)     │ ────────────────────▶ │ Neo4j MCP (private)      │ ──────────────────────▶ │ Neo4j (Browser public,    │
-│ caddy:2.11.9-alpine :8080│ http :8000            │ neo4j/mcp:v2.1.1         │        :7687            │ password; Bolt TCP proxy) │
+│ caddy:2.11.9-alpine :8080│ http :8000            │ neo4j/mcp:v2.1.2         │        :7687            │ password; Bolt TCP proxy) │
 │ 401 without the token    │ /db/neo4j/mcp         │ streamable HTTP          │                         │ neo4j:2026.10.1-community │
 │ sets Neo4j Basic auth +  │ + Basic auth          │                          │                         │ APOC, volume /data        │
 │ X-Neo4j-MCP-URI          │ + X-Neo4j-MCP-URI     │                          │                         │                           │
@@ -26,7 +26,7 @@ MCP client (Claude, Cursor, agents)
 | Service | Source | Role |
 |---------|--------|------|
 | Token Proxy | `caddy:2.11.9-alpine` | Public HTTPS. Checks the bearer token, rewrites `/mcp` to `/db/neo4j/mcp`, sets the Neo4j credentials and Bolt address, streams responses |
-| Neo4j MCP | `neo4j/mcp:v2.1.1` | Official Neo4j MCP server, HTTP transport, private, no domain |
+| Neo4j MCP | `neo4j/mcp:v2.1.2` | Official Neo4j MCP server, HTTP transport, private, no domain |
 | Neo4j | `neo4j:2026.10.1-community` | Graph database with APOC (the MCP server's `get-schema` needs it), volume. Browser over HTTPS and a Bolt TCP proxy (TLS, self-signed certificate), both behind a generated password |
 
 No LLM key is needed: your MCP client's own model writes the Cypher.

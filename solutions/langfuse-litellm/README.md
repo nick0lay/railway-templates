@@ -38,13 +38,13 @@ It is the [Langfuse v4 template](../langfuse/) plus LiteLLM and LiteLLM's own Po
 
 | Service | Source | Role |
 |---------|--------|------|
-| litellm | `litellm/litellm-database:v1.110.1` | OpenAI-compatible gateway, virtual keys, budgets, admin UI (public) |
+| litellm | `litellm/litellm-database:v1.110.3` | OpenAI-compatible gateway, virtual keys, budgets, admin UI (public) |
 | litellm-postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | LiteLLM models, virtual keys, spend logs (private) |
-| langfuse-web | `langfuse/langfuse:4.83` | Langfuse UI, public API, OpenTelemetry ingestion, MCP endpoint (public) |
-| langfuse-worker | `langfuse/langfuse-worker:4.83` | Processes ingested events, evaluations, exports (private) |
+| langfuse-web | `langfuse/langfuse:4.85` | Langfuse UI, public API, OpenTelemetry ingestion, MCP endpoint (public) |
+| langfuse-worker | `langfuse/langfuse-worker:4.85` | Processes ingested events, evaluations, exports (private) |
 | ClickHouse | `../clickhouse/clickhouse/Dockerfile` (26.8 LTS) | Traces, observations, scores (private) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:18` | Langfuse users, projects, API keys, prompts (private) |
-| Redis | `redis:8.10` with `--maxmemory-policy noeviction` | Langfuse job queues (private) |
+| Redis | `redis:8.12` with `--maxmemory-policy noeviction` | Langfuse job queues (private) |
 | Bucket | Railway Bucket | Raw events, media and batch exports |
 
 ## What this template does differently

@@ -25,7 +25,7 @@
 
 | Service | Source | Role |
 |---------|--------|------|
-| Grafana | `grafana/grafana:13.3.1` + `grafana-clickhouse-datasource` 4.23.5 | Dashboards, alerts and Explore (public, login required) |
+| Grafana | `grafana/grafana:13.3.2` + `grafana-clickhouse-datasource` 4.23.5 | Dashboards, alerts and Explore (public, login required) |
 | ClickHouse | `solutions/clickhouse/clickhouse` (official image, newest tested LTS: 26.8) | Analytics database (HTTPS domain with password, private network for Grafana) |
 
 ## What this template does differently
@@ -35,7 +35,7 @@
 - **Nobody can claim your Grafana.** The admin password is generated at deploy (not `admin`/`admin`), sign-up is off and anonymous access is off.
 - **Data on volumes.** Grafana's database (users, dashboards, alerts) and ClickHouse's data survive redeploys.
 - **ClickHouse tuned for a small service.** It listens on IPv6 and IPv4 for Railway's private network, and the high-volume internal log tables are off. The query log is kept for 7 days, which is what the starter dashboard reads.
-- **Pinned versions.** Grafana 13.3.1, plugin 4.23.5 and the newest ClickHouse LTS tested with the template, instead of `latest`.
+- **Pinned versions.** Grafana 13.3.2, plugin 4.23.5 and the newest ClickHouse LTS tested with the template, instead of `latest`.
 
 ## After deploy
 
@@ -105,3 +105,5 @@ Grafana is [AGPL-3.0](https://github.com/grafana/grafana/blob/main/LICENSE). The
 ## Testing
 
 Tested on 2026-11-13 with Grafana 13.3.1, plugin 4.23.5 and ClickHouse 26.8 in a throwaway Railway project deployed from the template. Both services were healthy about two minutes after deploy. Without a login, and with a wrong password, the Grafana API refused requests; sign-up and anonymous access were off, and ClickHouse refused a wrong password. The admin logged in with the generated password, the plugin was installed at the pinned version, and the provisioned data source passed Grafana's health check. A table created and filled through ClickHouse's public URL was queried through Grafana as a table and as a time series with `$__timeFilter`. Every panel of the starter dashboard returned data without errors. After redeploying Grafana, a folder created before the redeploy was still there and the data source still worked. Not tested: alerting, email and the browser UI (only its HTTP API).
+
+2026-11-24, after the update to Grafana 13.3.2: a fresh deploy from the template was healthy on both services; the functional checks were not repeated.

@@ -43,7 +43,7 @@ This template runs LiteLLM with PostgreSQL 18 and Redis on Railway's private net
 
 - Requires a login on the admin UI (generated `UI_PASSWORD`) and a key on every API call
 - Generates the master key and the salt key that encrypts provider keys stored in the database
-- Pins LiteLLM v1.110.1 (`litellm-database` image), PostgreSQL 18 and Redis 8.10 instead of `latest`
+- Pins LiteLLM v1.110.3 (`litellm-database` image), PostgreSQL 18 and Redis 8.12 instead of `latest`
 - Stores virtual keys, teams, models and spend logs in PostgreSQL, so keys and models added in the UI survive redeploys
 - Wires Redis into the proxy: opt-in response cache (10 minute TTL) and rate limits and usage shared across replicas
 - Keeps PostgreSQL and Redis on volumes, private, with no public TCP proxy; Redis has a generated password

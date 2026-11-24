@@ -44,7 +44,7 @@ This template creates your owner account at deploy, keeps sign-ups closed, and r
 - Creates the owner (super admin) account on first start and keeps sign-ups closed, so nobody else can claim your instance
 - Includes the Sidekiq worker that Sure needs for syncs, imports, exchange rates and scheduled jobs
 - Generates `SECRET_KEY_BASE` and all three Active Record encryption keys once and shares them with the worker, so the worker can read the API keys the web app encrypted
-- Pins Sure 0.7.6-hotfix.1, PostgreSQL 18 and Redis 8.10 instead of `latest`
+- Pins Sure 0.7.6-hotfix.1, PostgreSQL 18 and Redis 8.12 instead of `latest`
 - Keeps PostgreSQL and Redis on volumes, private, with no public TCP proxy
 - Stores receipts, statements and imports in a Railway Bucket shared by web and worker
 - Turns on HTTPS redirects and secure cookies behind Railway's proxy

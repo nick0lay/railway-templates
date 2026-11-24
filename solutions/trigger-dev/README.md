@@ -37,7 +37,7 @@ Self-hosted Trigger.dev v4 on Railway (webapp and data services) plus a DigitalO
 |---------|--------|------|
 | trigger.dev | `webapp/Dockerfile` (`ghcr.io/nick0lay/trigger.dev-railway:v4.0.0`) | Webapp, API, dashboard (public) |
 | Postgres | `ghcr.io/railwayapp-templates/postgres-ssl:16` | Primary database (private) |
-| Redis | `redis:8.10` (Railway's Redis) | Queues, cache, pub/sub (private) |
+| Redis | `redis:8.12` (Railway's Redis) | Queues, cache, pub/sub (private) |
 | ClickHouse | `clickhouse/clickhouse-server` | Analytics for runs and logs (private) |
 | Bucket | Railway Bucket | S3-compatible storage for large payloads |
 | registry | `registry/Dockerfile` (`registry:2` with basic auth, volume at `/var/lib/registry`) | Docker registry for deployed task images (public, password-protected) |
@@ -73,7 +73,7 @@ This replaced MinIO in November 2026. MinIO stopped publishing community images 
 
 ## Redis
 
-The template uses Railway's own Redis service definition, pinned to `redis:8.10` (volume at `/data`). The webapp connects with `REDIS_URL=${{Redis.REDIS_URL}}?family=0`, and the patched image enables dual-stack DNS lookups. Without that, connections fail with `getaddrinfo ENOTFOUND redis.railway.internal`, because Railway's private network is IPv6.
+The template uses Railway's own Redis service definition, pinned to `redis:8.12` (volume at `/data`). The webapp connects with `REDIS_URL=${{Redis.REDIS_URL}}?family=0`, and the patched image enables dual-stack DNS lookups. Without that, connections fail with `getaddrinfo ENOTFOUND redis.railway.internal`, because Railway's private network is IPv6.
 
 ## Registry
 

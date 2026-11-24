@@ -17,7 +17,7 @@ This template sets all of that up. Postgres starts with the demo tables (people,
 
 ## Dependencies for PuppyGraph 1.20 + Postgres Hosting
 
-- PuppyGraph 1.20.0 Developer edition (`puppygraph/puppygraph` image)
+- PuppyGraph 1.20.1 Developer edition (`puppygraph/puppygraph` image)
 - PostgreSQL 18 with pgvector 0.8.7 (`pgvector/pgvector:0.8.7-pg18` image)
 
 ### Deployment Dependencies
@@ -63,7 +63,7 @@ PUPPYGRAPH_GREMLIN=${{PuppyGraph.GREMLIN_URL}}
 
 **This template:**
 
-- Pins PuppyGraph 1.20.0 and pgvector Postgres 18
+- Pins PuppyGraph 1.20.1 and pgvector Postgres 18
 - Generates the login password, the token signing key and the internal cluster key (the image defaults are public)
 - Requires the login on Gremlin and Bolt too, which the image leaves open by default
 - Keeps Postgres, Gremlin and Bolt private. Only the web UI and REST API are public, and they need the login

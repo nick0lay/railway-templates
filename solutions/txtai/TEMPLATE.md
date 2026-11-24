@@ -1,10 +1,10 @@
-# Deploy and Host txtai 9.14 on Railway
+# Deploy and Host txtai 9.15 on Railway
 
 txtai is an open-source, all-in-one embeddings database from NeuML. One service holds a vector index, a SQLite content store and a semantic graph that links similar documents. On top of it you get semantic search, graph queries, retrieval augmented generation (RAG) with any LLM, and an MCP server for AI agents, all behind one REST API.
 
-## About Hosting txtai 9.14
+## About Hosting txtai 9.15
 
-This template runs the official `neuml/txtai-cpu` image, pinned to 9.14.0, as a single service with a volume. The index, the content database, the graph and the downloaded embedding model all live on the volume at `/data`, so restarts and redeploys keep your data. Every API route and the MCP endpoint need a generated bearer token: upstream ships the API without a token, and this template turns it on. Embeddings run on CPU inside the service (default `all-MiniLM-L6-v2`), so indexing and search need no API key at all. Add an OpenAI key (or any LiteLLM provider) only if you want `/rag` answers.
+This template runs the official `neuml/txtai-cpu` image, pinned to 9.15.0, as a single service with a volume. The index, the content database, the graph and the downloaded embedding model all live on the volume at `/data`, so restarts and redeploys keep your data. Every API route and the MCP endpoint need a generated bearer token: upstream ships the API without a token, and this template turns it on. Embeddings run on CPU inside the service (default `all-MiniLM-L6-v2`), so indexing and search need no API key at all. Add an OpenAI key (or any LiteLLM provider) only if you want `/rag` answers.
 
 ## Common Use Cases
 
@@ -13,9 +13,9 @@ This template runs the official `neuml/txtai-cpu` image, pinned to 9.14.0, as a 
 - Long-term memory and knowledge search for AI agents over MCP (Claude Code, Cursor and other MCP clients that can send a header)
 - Explore how documents relate: graph search returns the nodes and edges between results, and graph path queries walk the links
 
-## Dependencies for txtai 9.14 Hosting
+## Dependencies for txtai 9.15 Hosting
 
-- txtai 9.14.0 (`neuml/txtai-cpu:9.14.0`), public, bearer token required, volume for index and model cache
+- txtai 9.15.0 (`neuml/txtai-cpu:9.15.0`), public, bearer token required, volume for index and model cache
 - Optional: an OpenAI API key or another LiteLLM-supported provider key for `/rag`
 
 ### Deployment Dependencies
@@ -61,8 +61,8 @@ claude mcp add --transport sse txtai https://your-domain/mcp --header "Authoriza
 
 The API docs page (`/docs`) and `/openapi.json` stay open so Railway can health-check the service; they list routes but return no data. In our test txtai used about 1 GB of RAM at idle with the default model. Your LLM provider bills RAG answers separately.
 
-## Why Deploy txtai 9.14 on Railway?
+## Why Deploy txtai 9.15 on Railway?
 
 Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
 
-By deploying txtai 9.14 on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.
+By deploying txtai 9.15 on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.

@@ -1,10 +1,10 @@
 # Deploy and Host Browserless 2.64 (Chromium) on Railway
 
-Browserless is headless Chrome as a service. Connect Puppeteer or Playwright to a remote browser over a websocket, or call its REST API to get rendered HTML, screenshots, PDFs and scraped data. This template runs Browserless v2 from the official image, pinned to release v2.64.0, behind a generated token.
+Browserless is headless Chrome as a service. Connect Puppeteer or Playwright to a remote browser over a websocket, or call its REST API to get rendered HTML, screenshots, PDFs and scraped data. This template runs Browserless v2 from the official image, pinned to release v2.64.3, behind a generated token.
 
 ## About Hosting Browserless 2.64 (Chromium)
 
-Browserless is a single stateless service: it launches a fresh Chromium for each session and deletes the temporary profile afterwards, so no database or volume is needed. This template uses the official `ghcr.io/browserless/chromium:v2.64.0` image directly, with no wrapper or extra proxy. Every session, API, management and metrics route requires the generated `TOKEN` (as `?token=` or a Bearer header). The server listens on IPv4 and IPv6, so other services reach it over Railway's private network on port 3000. Session limits are sized for Railway: 5 concurrent sessions, a queue of 10 and a 5-minute session timeout, all adjustable. A healthcheck and restart-on-failure are set.
+Browserless is a single stateless service: it launches a fresh Chromium for each session and deletes the temporary profile afterwards, so no database or volume is needed. This template uses the official `ghcr.io/browserless/chromium:v2.64.3` image directly, with no wrapper or extra proxy. Every session, API, management and metrics route requires the generated `TOKEN` (as `?token=` or a Bearer header). The server listens on IPv4 and IPv6, so other services reach it over Railway's private network on port 3000. Session limits are sized for Railway: 5 concurrent sessions, a queue of 10 and a 5-minute session timeout, all adjustable. A healthcheck and restart-on-failure are set.
 
 ## Common Use Cases
 
@@ -15,7 +15,7 @@ Browserless is a single stateless service: it launches a fresh Chromium for each
 
 ## Dependencies for Browserless 2.64 (Chromium) Hosting
 
-- Browserless (`ghcr.io/browserless/chromium:v2.64.0`), public, token required
+- Browserless (`ghcr.io/browserless/chromium:v2.64.3`), public, token required
 
 ### Deployment Dependencies
 

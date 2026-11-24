@@ -17,7 +17,7 @@ Your app, script or workflow tool
 ┌──────────────────────────┐  private network  ┌──────────────────────────┐  private network  ┌──────────────────────────┐
 │ Token Proxy (public)     │ ────────────────▶ │ Yente (private)          │ ────────────────▶ │ Elasticsearch (private)  │
 │ caddy:2.11.9-alpine :8080│   http :8000      │ ghcr.io/opensanctions/   │  http :9200,      │ elastic/elasticsearch    │
-│ 401 without the token    │                   │ yente:5.5.1              │  user + password  │ 9.5.6, volume            │
+│ 401 without the token    │                   │ yente:5.5.1              │  user + password  │ 9.5.7, volume            │
 └──────────────────────────┘                   └────────────┬─────────────┘                   └──────────────────────────┘
                                                             │ HTTPS, every hour
                                                             ▼
@@ -31,7 +31,7 @@ Your app, script or workflow tool
 |---------|--------|------|
 | Token Proxy | `caddy:2.11.9-alpine` | Public HTTPS. Checks the bearer token and forwards to Yente. `/healthz` is the only open path |
 | Yente | `ghcr.io/opensanctions/yente:5.5.1` | Screening API (`/match`, `/search`, `/entities`, `/reconcile`). Downloads OpenSanctions data and indexes it into Elasticsearch. Private, no domain |
-| Elasticsearch | `elastic/elasticsearch:9.5.6` | Search index on a volume. Security on (password), private, no domain or TCP proxy |
+| Elasticsearch | `elastic/elasticsearch:9.5.7` | Search index on a volume. Security on (password), private, no domain or TCP proxy |
 
 ## First start: indexing
 

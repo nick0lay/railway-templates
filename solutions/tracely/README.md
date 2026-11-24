@@ -32,7 +32,7 @@ This template deploys the full self-hosted stack: API, worker, web UI, Postgres 
 | worker | `backend/Dockerfile` | Celery worker with the scheduler (scoring, failure clustering, monitors). Private |
 | Postgres | `pgvector/pgvector:0.8.7-pg17` | Projects, users, evaluators, regression tests. Private |
 | ClickHouse | `solutions/clickhouse/clickhouse` | Trace events and scores. Private |
-| Redis | `redis:8.10` | Celery broker. Private |
+| Redis | `redis:8.12` | Celery broker. Private |
 | Bucket | Railway Bucket | S3-compatible storage for raw trace events, the source of truth before processing. Private, access by key only |
 
 Tracely publishes no Docker images or release tags, so `backend` and `frontend` build from the upstream source at a pinned commit (`TRACELY_REF`).

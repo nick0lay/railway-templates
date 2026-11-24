@@ -45,7 +45,7 @@ To send messages from other workflows, use an HTTP Request node with `EVOLUTION_
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (newer images need a license activation), n8n 2.48.6, PostgreSQL 18 and Redis 8.10
+- Pins Evolution API 2.3.8 (newer images need a license activation), n8n 2.50.0, PostgreSQL 18 and Redis 8.12
 - Creates the n8n owner account at deploy time, so nobody else can claim a fresh instance
 - Runs n8n in queue mode with a worker and an external task runner for JavaScript and Python Code nodes, all on the official images
 - Turns on only the n8n integration in Evolution API

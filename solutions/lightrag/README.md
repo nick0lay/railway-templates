@@ -1,4 +1,4 @@
-# LightRAG 1.5.7 (GraphRAG)
+# LightRAG 1.5.8 (GraphRAG)
 
 Self-hosted [LightRAG](https://github.com/HKUDS/LightRAG) on Railway. LightRAG is a GraphRAG server: it reads your documents, uses an LLM to extract a knowledge graph of entities and relationships, and answers questions by combining graph retrieval with vector search. It comes with a web UI for uploads, a graph explorer and a query panel, a REST API, and an Ollama-compatible chat API.
 
@@ -6,18 +6,18 @@ There are two templates, built from the same tested parts:
 
 | Template | Services | Graph store | Deploy |
 |---|---|---|---|
-| [LightRAG 1.5.7](./) | LightRAG + Postgres (pgvector) | Postgres tables | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
-| [LightRAG 1.5.7 + Neo4j](../lightrag-neo4j/) | LightRAG + Postgres (pgvector) + Neo4j | Neo4j | Deploy button in [lightrag-neo4j](../lightrag-neo4j/) |
+| [LightRAG 1.5.8](./) | LightRAG + Postgres (pgvector) | Postgres tables | [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/lightrag-157?referralCode=CG2P3Y&utm_medium=integration&utm_source=template&utm_campaign=generic) |
+| [LightRAG 1.5.8 + Neo4j](../lightrag-neo4j/) | LightRAG + Postgres (pgvector) + Neo4j | Neo4j | Deploy button in [lightrag-neo4j](../lightrag-neo4j/) |
 
 This README covers both. The Neo4j variant's folder has its own marketplace description and a short README with the Neo4j-specific parts.
 
-Choose **LightRAG 1.5.7** to start: one database, about 0.4 to 0.75 GB of RAM at idle. Choose **+ Neo4j** when you want to explore and query the knowledge graph with Cypher and Neo4j Browser, or when the graph gets large. Neo4j adds about 1.2 to 1.7 GB of RAM.
+Choose **LightRAG 1.5.8** to start: one database, about 0.4 to 0.75 GB of RAM at idle. Choose **+ Neo4j** when you want to explore and query the knowledge graph with Cypher and Neo4j Browser, or when the graph gets large. Neo4j adds about 1.2 to 1.7 GB of RAM.
 
 In both templates the web UI needs a login, the API needs an API key, and the databases are private (Neo4j's Browser and Bolt TCP proxy need the Neo4j password).
 
 ## Architecture
 
-### LightRAG 1.5.7
+### LightRAG 1.5.8
 
 ```
         Browser (web UI, login)        Apps / scripts (X-API-Key)
@@ -41,7 +41,7 @@ In both templates the web UI needs a login, the API needs an API key, and the da
   Your LLM and embedding provider (OpenAI or any OpenAI-compatible API)
 ```
 
-### LightRAG 1.5.7 + Neo4j
+### LightRAG 1.5.8 + Neo4j
 
 ```
         Browser (web UI, login)        Apps / scripts (X-API-Key)
@@ -65,13 +65,13 @@ In both templates the web UI needs a login, the API needs an API key, and the da
 
 | Service | Source | Role |
 |---------|--------|------|
-| LightRAG | `ghcr.io/hkuds/lightrag:v1.5.7` | Web UI, REST API and document pipeline (public, login and API key, volume) |
+| LightRAG | `ghcr.io/hkuds/lightrag:v1.5.8` | Web UI, REST API and document pipeline (public, login and API key, volume) |
 | Postgres | `pgvector/pgvector:0.8.7-pg18` | PostgreSQL 18 with pgvector 0.8.7: key-value data, vectors, document status and (in the first template) the graph (private, volume) |
 | Neo4j (+ Neo4j template only) | `neo4j:2026.10.1-community` | Knowledge graph, with APOC. Browser on the public HTTPS domain and a Bolt TCP proxy (TLS), both behind the generated password (volume) |
 
 ## What these templates do
 
-- **Official images, pinned.** LightRAG `v1.5.7` from the project's own registry, pgvector's official image, and the official Neo4j image. No custom builds.
+- **Official images, pinned.** LightRAG `v1.5.8` from the project's own registry, pgvector's official image, and the official Neo4j image. No custom builds.
 - **Everything in databases.** LightRAG's default JSON and NetworkX files are replaced with `PGKVStorage`, `PGVectorStorage` and `PGDocStatusStorage`. The graph goes into `PGTableGraphStorage` (plain Postgres tables, no Apache AGE extension needed) or into Neo4j (`Neo4JStorage`). Restarts and redeploys keep everything.
 - **Login on every public endpoint.** A generated admin password for the web UI (`AUTH_ACCOUNTS` + `TOKEN_SECRET`), a generated `LIGHTRAG_API_KEY` for the API, and `WHITELIST_PATHS=/health`, so the Ollama-compatible `/api/*` routes need the key too. Upstream leaves `/api/*` open by default.
 - **One key to fill in.** Enter your OpenAI (or OpenAI-compatible) API key at deploy. Embeddings use the same key unless you change it.
@@ -122,7 +122,7 @@ Set the models **before the first upload**:
 
 The vector tables are named after the embedding model and dimension (for example `lightrag_vdb_chunks_text_embedding_3_small_1536d`). If you change the embedding model later, LightRAG creates new, empty vector tables, and you have to re-process your documents.
 
-Other providers have their own bindings (`azure_openai`, `gemini`, `bedrock`, `ollama`). See LightRAG's [env.example](https://github.com/HKUDS/LightRAG/blob/v1.5.7/env.example) for their variables.
+Other providers have their own bindings (`azure_openai`, `gemini`, `bedrock`, `ollama`). See LightRAG's [env.example](https://github.com/HKUDS/LightRAG/blob/v1.5.8/env.example) for their variables.
 
 ## Variables
 
@@ -141,7 +141,7 @@ Other providers have their own bindings (`azure_openai`, `gemini`, `bedrock`, `o
 | `WEBUI_TITLE` | `LightRAG` | Name in the web UI header and the login page |
 | `RERANK_BY_DEFAULT` | `false` | No reranker is configured. To add one, set `RERANK_BINDING` (`cohere`, `jina`, `aliyun`), `RERANK_MODEL`, `RERANK_BINDING_HOST` and `RERANK_BINDING_API_KEY`, then remove this variable |
 
-Any other LightRAG setting from [env.example](https://github.com/HKUDS/LightRAG/blob/v1.5.7/env.example) can be added as a variable, for example `MAX_ASYNC_LLM` (parallel LLM calls, default 4), `CHUNK_SIZE` or `ENABLE_LLM_CACHE`.
+Any other LightRAG setting from [env.example](https://github.com/HKUDS/LightRAG/blob/v1.5.8/env.example) can be added as a variable, for example `MAX_ASYNC_LLM` (parallel LLM calls, default 4), `CHUNK_SIZE` or `ENABLE_LLM_CACHE`.
 
 ### Auto-configured (do not change)
 
@@ -177,7 +177,7 @@ Any other LightRAG setting from [env.example](https://github.com/HKUDS/LightRAG/
 
 Measured at idle in our tests:
 
-| Service | LightRAG 1.5.7 | + Neo4j |
+| Service | LightRAG 1.5.8 | + Neo4j |
 |---|---|---|
 | LightRAG | 0.35 to 0.7 GB | 0.35 to 0.7 GB |
 | Postgres | about 0.05 GB | about 0.05 GB |

@@ -48,7 +48,7 @@ This template builds Superset 6.1 with the Postgres and ClickHouse drivers, gene
 - Keeps ClickHouse, Postgres and Redis private, with no public domain or TCP proxy
 - Runs the metadata migrations on every start, so upgrades need no manual step
 - Tunes ClickHouse for a small service: high-volume internal logs off or kept for a few days
-- Pins Superset 6.1.0, ClickHouse 26.8 (LTS), PostgreSQL 18 and Redis 8.10
+- Pins Superset 6.1.0, ClickHouse 26.8 (LTS), PostgreSQL 18 and Redis 8.12
 
 **Notes:** extra settings (feature flags, email for alerts and reports) go in `SUPERSET_CONFIG_EXTRA`. To load data from outside Railway, add a public domain to the ClickHouse service.
 

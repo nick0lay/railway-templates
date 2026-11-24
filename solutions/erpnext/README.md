@@ -31,8 +31,8 @@ Self-hosted [ERPNext](https://github.com/frappe/erpnext) v16 on Railway: open-so
 |---------|--------|------|
 | ERPNext | `frappe/erpnext:v16.60.0` | Web server, realtime server, background worker, scheduler and nginx in one container (public). Site config and attachments on a volume |
 | MariaDB | `mariadb:11.8.9` | Database, with the utf8mb4 settings Frappe requires (private, volume) |
-| Redis Cache | `redis:8.10` | Cache, in memory only, least-recently-used eviction at 256 MB (private) |
-| Redis Queue | `redis:8.10` | Background job queue and realtime events, append-only file on a volume (private) |
+| Redis Cache | `redis:8.12` | Cache, in memory only, least-recently-used eviction at 256 MB (private) |
+| Redis Queue | `redis:8.12` | Background job queue and realtime events, append-only file on a volume (private) |
 
 ## What this template does differently
 

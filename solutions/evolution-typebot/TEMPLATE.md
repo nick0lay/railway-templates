@@ -44,7 +44,7 @@ This template deploys the whole stack on Railway's private network: Evolution AP
 
 **This template:**
 
-- Pins Evolution API 2.3.7 (the image's `latest` tag is a release candidate), Typebot 3.19, PostgreSQL 18 and Redis 8.10
+- Pins Evolution API 2.3.8 (the image's `latest` tag is a release candidate), Typebot 3.19, PostgreSQL 18 and Redis 8.12
 - Turns on the Typebot integration with `TYPEBOT_API_VERSION=latest`, Typebot's current chat API (Evolution API 2.3 otherwise defaults to the deprecated one)
 - Puts the viewer URL in a `TYPEBOT_URL` variable, ready to paste
 - Gives each app its own database, because both run Prisma migrations in the same schema name
